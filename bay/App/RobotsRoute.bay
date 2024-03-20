@@ -1,0 +1,55 @@
+namespace Runtime.WordPress.Components;
+
+use Runtime.BaseStruct;
+use Runtime.DateTime;
+use Runtime.Crypt.JWT;
+use Runtime.Crypt.Password;
+use Runtime.Web.ApiResult;
+use Runtime.Web.App;
+use Runtime.Web.BaseRoute;
+use Runtime.Web.Bus;
+use Runtime.Web.Cookie;
+use Runtime.Web.RenderContainer;
+use Runtime.Web.Request;
+use Runtime.Web.Response;
+use Runtime.Web.RouteInfo;
+use Runtime.WordPress.WP_Helper;
+
+
+class RobotsRoute extends BaseRoute
+{
+	/**
+	 * Returns routes
+	 */
+	pure Collection<RouteInfo> getRoutes()
+	{
+		return
+		[
+			new RouteInfo
+			{
+				"uri": "/robots.txt",
+				"name": "site:robots",
+				"method": "actionIndex",
+				"enable_locale": false,
+			},
+		];
+	}
+	
+	
+	/**
+	 * Action index
+	 */
+	async void actionIndex()
+	{
+		string content = WP_Helper::get_option("robots.txt");
+		
+		/* Create response */
+		Response response = new Response();
+		response <= content <= content;
+		response <= headers <= "Content-Type" <= "text/plain; charset=UTF-8";
+        
+        /* Set response */
+		this.container.setResponse(response);
+	}
+	
+}

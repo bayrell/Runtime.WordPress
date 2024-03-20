@@ -1,0 +1,17 @@
+{
+	"name": "Runtime.WordPress.Admin",
+	"assets":
+	[
+		"ModuleDescription.bay"
+	],
+	"src": "./",
+	"dest":
+	{
+		"php": "./../../php/Admin",
+		"es6": "./../../es6/Admin"
+	},
+	"allow":
+	[
+		"\\.bay$"
+	]
+}

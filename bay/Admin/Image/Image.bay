@@ -1,0 +1,177 @@
+<!--
+ *  Bayrell Runtime Library
+ *
+ *  (c) Copyright 2016-2023 "Ildar Bikmamatov" <support@bayrell.org>
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
+ *
+ *      https://www.apache.org/licenses/LICENSE-2.0
+ *
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
+-->
+
+<class name="Runtime.WordPress.Components.Image">
+
+<use name="Runtime.ModelProxy" />
+<use name="Runtime.Web.Message" />
+<use name="Runtime.Web.Crud.Button" component="true" />
+<use name="Runtime.Web.Crud.Helper" />
+<use name="Runtime.Web.Events.ChangeEvent" />
+<use name="Runtime.Web.Events.MouseClickEvent" />
+<use name="Runtime.Web.RenderProvider" />
+
+
+<style>
+.component_image__table{
+	max-width: 100px;
+	max-height: 100px;
+}
+.component_image__form{
+	max-width: 200px;
+	max-height: 200px;
+}
+.component_image__upload_button{
+	padding-bottom: 10px;
+}
+</style>
+
+
+<template>
+	<div class="component_image">
+		%set string crud_action = render_params["crud_action"];
+		%set string value = Helper::getValue(layout, model_path, render_params);
+		
+		%if (crud_action == "table")
+		{
+			%if (value)
+			{
+				%set string image_size = render_params["image_table_size"];
+				%set string image = static::getImage(value, image_size);
+				
+				%if (image)
+				{
+					<img class="component_image__table" src={{ image }} />
+				}
+			}
+		}
+		%if (crud_action == "form")
+		{
+			<div class="component_image__upload_button">
+				<Button type="small"
+					@event:MouseClickEvent="onUploadImage"
+				>Upload image</Button>
+			</div>
+			%if (value)
+			{
+				%set string image_size = render_params["image_form_size"];
+				%set string image = static::getImage(value, image_size);
+				
+				%if (image)
+				{
+					<img class="component_image__form" src={{ image }} />
+				}
+			}
+		}
+	</div>
+</template>
+
+
+<script>
+
+
+/**
+ * Return image
+ */
+pure string getImage(Dict value, string image_size)
+{
+	string image = value["file"]
+	Dict image2 = value["sizes", image_size];
+	
+	if (image2)
+	{
+		image = image2["file"];
+	}
+	
+	return image;
+}
+
+
+/**
+ * On upload image
+ */
+public void onUploadImage(Message<MouseClickEvent> msg)
+{
+	string image_foreign_key = this.params["image_foreign_key"];
+	
+	ModelProxy model = this.modelProxy();
+	ModelProxy model2 = new ModelProxy(model.container, model.path.removeLastIm())
+		.proxy(image_foreign_key);
+	
+	#ifcode ES6 then
+	
+	var uploader = wp.media
+	({
+		title: "Файлы",
+		button: {
+			text: "Выбрать файл"
+		},
+		multiple: false
+	})
+	.on('select', () => {
+		let attachments = uploader.state().get('selection').toJSON();
+		let attachment = attachments[0];
+		
+		let sizes = {};
+		for (let size_name in attachment.sizes)
+		{
+			let size = attachment.sizes[size_name];
+			sizes[size_name] = {
+				"size": size_name,
+				"file": size.url,
+				"width": size.width,
+				"height": size.height,
+				"mime_type": "",
+			};
+		}
+		
+		let image = Runtime.Dict.from({
+			"id": attachment.id,
+			"width": attachment.width,
+			"height": attachment.height,
+			"file": attachment.url,
+			"sizes": Runtime.Dict.from(sizes),
+		});
+		
+		model.setNewModel(image);
+		model2.setNewModel(attachment.id);
+	})
+	.open();
+	
+	#endif
+}
+
+
+/**
+ * On change
+ */
+public void onChange(Message<ChangeEvent> msg)
+{
+	if (this.model_path != "")
+	{
+		RenderProvider provider = @.provider(classof RenderProvider);
+		provider.commitComponent( this, msg.event.value );
+	}
+	
+	ChangeEvent event = msg.event.clone({ "field_name": this.params["name"] });
+	this.sendEvent(event);
+}
+
+</script>
+
+</class>

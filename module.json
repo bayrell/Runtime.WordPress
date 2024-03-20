@@ -1,0 +1,23 @@
+{
+	"name": "Runtime.WordPress",
+	"assets":
+	[
+		"ModuleDescription.bay"
+	],
+	"src": "./bay",
+	"dest":
+	{
+		"php": "./php",
+		"es6": "./es6"
+	},
+	"allow":
+	[
+		"\\.bay$",
+		"\\.php$",
+		"\\.js$"
+	],
+	"exclude":
+	[
+		"Admin/"
+	]
+}
