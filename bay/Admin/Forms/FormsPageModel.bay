@@ -16,48 +16,42 @@
  *  limitations under the License.
  */
 
-namespace Runtime.WordPress;
+namespace Runtime.WordPress.Admin.Forms;
 
-use Runtime.Entity.Hook;
+use Runtime.Web.BaseRoute;
+use Runtime.Widget.Crud.CrudPageModel;
 
 
-class ModuleDescription
+struct FormsPageModel extends CrudPageModel
 {
-	
 	/**
-	 * Returns module name
+	 * Constructor
 	 */
-	pure string getModuleName() => "Runtime.WordPress";	
-	
-	
-	/**
-	 * Returns module version
-	 */
-	pure string getModuleVersion() => "0.1.0";
-	
-	
-	/**
-	 * Returns required modules
-	 * @return Map<string>
-	 */
-	pure Dict<string> requiredModules() =>
+	void constructor(Dict params = null)
 	{
-		'Runtime': '>=0.12',
-		'Runtime.Web': '>=0.12',
-		'Runtime.Widget': '>=0.12',
-		'Runtime.Widget.Crud': '>=0.12',
+		parent(params);
 		
-		#ifdef BACKEND then
-		'Runtime.ORM': '>=0.12',
-		#endif
-	};
+		string route_name = this.layout.route.name;
+		if (route_name == "admin:forms:index")
+		{
+			/*this.setAction("index");*/
+		}
+	}
 	
+	
+	#ifdef BACKEND then
 	
 	/**
-	 * Returns enities
+	 * Route After
 	 */
-	pure Collection<Dict> entities() => 
-	[
-	];
+	async void onRouteAfter(BaseRoute route)
+	{
+		/* Set title */
+		if (this.action == "index")
+		{
+			this.layout.setPageTitle("Forms");
+		}
+	}
 	
+	#endif
 }

@@ -18,6 +18,15 @@
 
 namespace Runtime.WordPress;
 
+use Runtime.lib;
+use Runtime.RawString;
+use Runtime.Web.BaseApp;
+use Runtime.Web.RenderContainer;
+use Runtime.Web.RenderResponse;
+use Runtime.Web.RouteInfo;
+use Runtime.Web.RouteList;
+use Runtime.WordPress.Admin.AdminUI;
+
 
 class WP_Helper
 {
@@ -120,6 +129,52 @@ class WP_Helper
 		
 		#endif
 	}
+	
+	
+	/**
+	 * Call wp admin route
+	 */
+	static string wp_admin_route(string route_name)
+	{
+		string content = "";
+		
+		/* Create render container */
+		BaseApp app = @.getApp();
+		RenderContainer container = app.createRenderContainer();
+		
+		/* Setup route */
+		RouteList routes = @.provider(classof RouteList);
+		RouteInfo route = routes.routes_list.findItem(lib::equalAttr("name", route_name));
+		container.route = route;
+		
+		/* Resolve route */
+		app.resolveRoute(container);
+		
+		if (container.response instanceof RenderResponse and container.response.content == null)
+		{
+			/* Create component */
+			AdminUI component = rtl::newInstance(classof AdminUI);
+			component.container = container;
+			component.layout = container.layout;
+			component.model = container.layout;
+			
+			/* Render component */
+			content = RawString::normalize(component.render());
+		}
+		
+		else if (container.response != null)
+		{
+			content = container.response.content;
+		}
+		
+		else
+		{
+			content = "<p>404 Response not found</p>";
+		}
+		
+		return content;
+	}
+	
 	
 	#endif
 }

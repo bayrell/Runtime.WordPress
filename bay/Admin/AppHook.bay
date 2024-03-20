@@ -1,5 +1,5 @@
 /*!
- *  BayLang Technology
+ *  Bayrell Runtime Library
  *
  *  (c) Copyright 2016-2024 "Ildar Bikmamatov" <support@bayrell.org>
  *
@@ -16,48 +16,30 @@
  *  limitations under the License.
  */
 
-namespace Runtime.WordPress;
+namespace Runtime.WordPress.Admin;
 
-use Runtime.Entity.Hook;
+use Runtime.Web.Hooks.AppHook as BaseAppHook;
+use Runtime.WordPress.Admin.CSS;
 
 
-class ModuleDescription
+class AppHook extends BaseAppHook
 {
-	
 	/**
-	 * Returns module name
+	 * Register hooks
 	 */
-	pure string getModuleName() => "Runtime.WordPress";	
-	
-	
-	/**
-	 * Returns module version
-	 */
-	pure string getModuleVersion() => "0.1.0";
-	
-	
-	/**
-	 * Returns required modules
-	 * @return Map<string>
-	 */
-	pure Dict<string> requiredModules() =>
+	void register_hooks()
 	{
-		'Runtime': '>=0.12',
-		'Runtime.Web': '>=0.12',
-		'Runtime.Widget': '>=0.12',
-		'Runtime.Widget.Crud': '>=0.12',
-		
-		#ifdef BACKEND then
-		'Runtime.ORM': '>=0.12',
-		#endif
-	};
-	
-	
-	/**
-	 * Returns enities
+        this.register(static::COMPONENTS);
+    }
+    
+    
+    /**
+	 * Components
 	 */
-	pure Collection<Dict> entities() => 
-	[
-	];
-	
+	void components(Map params)
+    {
+		params["components"].appendItems([
+			classof CSS,
+		]);
+    }
 }

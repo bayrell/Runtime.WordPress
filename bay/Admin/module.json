@@ -2,6 +2,9 @@
 	"name": "Runtime.WordPress.Admin",
 	"assets":
 	[
+		"Forms/FormsPageModel.bay",
+		"AppHook.bay",
+		"CSS.bay",
 		"ModuleDescription.bay"
 	],
 	"src": "./",

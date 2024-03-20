@@ -16,48 +16,39 @@
  *  limitations under the License.
  */
 
-namespace Runtime.WordPress;
+namespace Runtime.WordPress.Admin;
 
-use Runtime.Entity.Hook;
+use Runtime.Web.BaseRoute;
+use Runtime.Web.RouteInfo;
 
 
-class ModuleDescription
+class Routes extends BaseRoute
 {
-	
 	/**
-	 * Returns module name
+	 * Returns layout name
 	 */
-	pure string getModuleName() => "Runtime.WordPress";	
-	
-	
-	/**
-	 * Returns module version
+	string getLayoutName() => "default";
+    
+    
+    /**
+	 * Returns routes
 	 */
-	pure string getModuleVersion() => "0.1.0";
-	
-	
-	/**
-	 * Returns required modules
-	 * @return Map<string>
-	 */
-	pure Dict<string> requiredModules() =>
+	pure Collection<RouteInfo> getRoutes()
 	{
-		'Runtime': '>=0.12',
-		'Runtime.Web': '>=0.12',
-		'Runtime.Widget': '>=0.12',
-		'Runtime.Widget.Crud': '>=0.12',
-		
-		#ifdef BACKEND then
-		'Runtime.ORM': '>=0.12',
-		#endif
-	};
-	
-	
-	/**
-	 * Returns enities
-	 */
-	pure Collection<Dict> entities() => 
-	[
-	];
-	
+		return
+		[
+			new RouteInfo
+			{
+				"uri": "admin.php?page=elberos-forms",
+				"name": "admin:forms:index",
+				"model": "Runtime.WordPress.Admin.Forms.FormsPageModel",
+			},
+			new RouteInfo
+			{
+				"uri": "admin.php?page=elberos-forms&action=edit",
+				"name": "admin:forms:edit",
+				"model": "Runtime.WordPress.Admin.Forms.FormsPageModel",
+			},
+		];
+	}
 }

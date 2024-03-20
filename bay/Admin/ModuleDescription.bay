@@ -21,12 +21,10 @@ namespace Runtime.WordPress.Admin;
 use Runtime.Entity.Hook;
 use Runtime.Web.Annotations.Api;
 use Runtime.Web.Annotations.Route;
-use Runtime.Web.Annotations.RemoteClass;
 
 
 class ModuleDescription
 {
-	
 	/**
 	 * Returns module name
 	 */
@@ -54,6 +52,10 @@ class ModuleDescription
 	 */
 	pure Collection<Dict> entities() => 
 	[
+		new Hook("Runtime.WordPress.Admin.AppHook"),
+		
+		#ifdef BACKEND then
+		new Route("Runtime.WordPress.Admin.Routes"),
+		#endif
 	];
-	
 }
