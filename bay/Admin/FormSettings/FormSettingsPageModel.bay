@@ -16,42 +16,45 @@
  *  limitations under the License.
  */
 
-namespace Runtime.WordPress.Admin.Forms;
+namespace Runtime.WordPress.Admin.FormSettings;
 
 use Runtime.Web.BaseRoute;
 use Runtime.Widget.Crud.CrudPageModel;
+use Runtime.WordPress.Admin.FormSettings.FormSettingsTableModel;
 
 
-struct FormsPageModel extends CrudPageModel
+struct FormSettingsPageModel extends CrudPageModel
 {
 	/**
-	 * Constructor
+	 * Init widget settings
 	 */
-	void constructor(Dict params = null)
+	void initWidget()
 	{
-		parent(params);
+		parent();
 		
 		string route_name = this.layout.route.name;
-		if (route_name == "admin:forms:index")
+		if (route_name == "admin:forms:settings:index")
 		{
-			/*this.setAction("index");*/
+			this.setAction("index");
+			
+			/* Create table widget */
+			FormSettingsTableModel table = this.addWidget(classof FormSettingsTableModel);
+			
+			/* Set page */
+			table.storage.setPage(this.layout.request_query.get("page", 1));
 		}
 	}
 	
-	
-	#ifdef BACKEND then
 	
 	/**
 	 * Route After
 	 */
 	async void onRouteAfter(BaseRoute route)
 	{
-		/* Set title */
 		if (this.action == "index")
 		{
+			/* Set title */
 			this.layout.setPageTitle("Forms");
 		}
 	}
-	
-	#endif
 }
