@@ -21,8 +21,8 @@ namespace Runtime.WordPress.ORM;
 use Runtime.BaseObject;
 use Runtime.BaseProvider;
 use Runtime.Entity.Entity;
+use Runtime.ORM.Provider;
 use Runtime.ORM.Factory.ConnectionFactory;
-use Runtime.ORM.SQLite.ConnectionSQLite;
 
 
 struct WP_Factory extends ConnectionFactory
@@ -51,12 +51,12 @@ struct WP_Factory extends ConnectionFactory
 		$provider->addConnection($conn);
 		
 		/* Add base connection */
-		$conn = new \Runtime\WordPress\ORM\WP_Connection("base_prefix");
+		$conn = new \Runtime\WordPress\ORM\WP_Connection("default");
 		$conn->prefix = $wpdb->base_prefix;
 		$provider->addConnection($conn);
 		
 		/* Add no prefix connection */
-		$conn = new \Runtime\WordPress\ORM\WP_Connection("default");
+		$conn = new \Runtime\WordPress\ORM\WP_Connection("no_prefix");
 		$provider->addConnection($conn);
 		
 		#endif

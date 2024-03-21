@@ -24,7 +24,6 @@ use Runtime.WordPress.ORM.WP_Cursor;
 
 class WP_Connection extends ConnectionMySQL
 {
-    
     /**
 	 * Connect
 	 */
@@ -46,30 +45,6 @@ class WP_Connection extends ConnectionMySQL
 	 * Create new cursor
 	 */
 	WP_Cursor createCursor() => new WP_Cursor(this);
-	
-	
-	/**
-	 * Begin transaction
-	 */
-	async void beginTransaction()
-	{
-	}
-	
-	
-	/**
-	 * Commit
-	 */
-	async void commit()
-	{
-	}
-	
-	
-	/**
-	 * rollBack
-	 */
-	async void rollBack()
-	{
-	}
 	
 	
 	/**

@@ -40,8 +40,13 @@ class WP_Cursor extends CursorMySQL
 		
 		global $wpdb;
 		
+		/* Build sql */
+		$builder = new \Runtime\ORM\MySQL\SQLBuilder($this, null);
+		$builder->sql = $sql;
+		$builder->data = $data;
+		$sql = $builder->formatSQL();
+		
 		/* Execute query */
-		$sql = $this->conn->formatSQL($sql, $data);
 		$return_val = $wpdb->query($sql);
 		
 		if ($wpdb->last_error != '')
@@ -65,7 +70,7 @@ class WP_Cursor extends CursorMySQL
 	/**
 	 * Fetch next row
 	 */
-	async var fetchDict()
+	async var fetchMap()
 	{
 		#ifcode PHP then
 		
@@ -73,7 +78,7 @@ class WP_Cursor extends CursorMySQL
 		
 		$item = $this->last_result[ $this->last_result_pos ];
 		$this->last_result_pos = $this->last_result_pos + 1;
-		$item = \Runtime\Dict::from($item);
+		$item = \Runtime\Map::from($item);
 		
 		return $item;
 		#endif
@@ -98,5 +103,4 @@ class WP_Cursor extends CursorMySQL
 	 * Close cursor
 	 */
 	async WP_Cursor close() => this;
-	
 }

@@ -18,6 +18,9 @@
 
 <class name="Runtime.WordPress.Admin.CSS">
 
+<use name="Runtime.Widget.Crud.Table.Table" component="true" />
+
+
 <style global="true">
 :root{
 	--widget-font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif;
@@ -25,6 +28,23 @@
 #core_ui_root{
 	margin-top: 20px;
 }
+%(Table)widget_table__table{
+	border: 1px solid #ccc;
+	.widget_table__th{
+		text-align: left;
+	}
+	.widget_table__th, .widget_table__td{
+		border-bottom: 1px solid #ccc;
+		padding: 10px;
+	}
+	.widget_table__tr:nth-child(odd){
+		background-color: white;
+	}
+	.widget_table__tr:nth-child(even){
+		background-color: #f0f0f0;
+	}
+}
 </style>
+
 
 </class>

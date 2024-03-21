@@ -19,6 +19,8 @@
 namespace Runtime.WordPress;
 
 use Runtime.Entity.Hook;
+use Runtime.ORM.Annotations.Database;
+use Runtime.WordPress.ORM.WP_Factory;
 
 
 class ModuleDescription
@@ -58,6 +60,10 @@ class ModuleDescription
 	 */
 	pure Collection<Dict> entities() => 
 	[
+		#ifdef BACKEND then
+		new Database("Runtime.WordPress.Database.Schema"),
+		new WP_Factory(),
+		#endif
 	];
 	
 }

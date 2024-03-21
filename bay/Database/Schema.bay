@@ -1,0 +1,57 @@
+/*!
+ *  BayLang Technology
+ *
+ *  (c) Copyright 2016-2024 "Ildar Bikmamatov" <support@bayrell.org>
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
+ *
+ *      https://www.apache.org/licenses/LICENSE-2.0
+ *
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
+ */
+
+namespace Runtime.WordPress.Database;
+
+use Runtime.re;
+use Runtime.BaseStruct;
+use Runtime.DateTime;
+use Runtime.ORM.DatabaseSchema;
+use Runtime.ORM.Relation;
+use Runtime.ORM.Annotations.AutoIncrement;
+use Runtime.ORM.Annotations.BigIntType;
+use Runtime.ORM.Annotations.BooleanType;
+use Runtime.ORM.Annotations.CollectionType;
+use Runtime.ORM.Annotations.DateTimeType;
+use Runtime.ORM.Annotations.DictType;
+use Runtime.ORM.Annotations.ForeignKey;
+use Runtime.ORM.Annotations.Index;
+use Runtime.ORM.Annotations.Primary;
+use Runtime.ORM.Annotations.StringType;
+use Runtime.ORM.Annotations.Table;
+use Runtime.ORM.Annotations.TinyIntType;
+use Runtime.ORM.Annotations.Unique;
+
+
+class Schema extends DatabaseSchema
+{
+    /**
+	 * Forms
+	 */
+	@Table{ "name": "forms" }
+	pure memorize Collection<BaseStruct> applications() =>
+	[
+        /* Fields */
+		new BigIntType{"name": "id"},
+        new StringType{"name": "name"},
+        new StringType{"name": "api_name"},
+        new StringType{"name": "settings"},
+        new StringType{"name": "email_to"},
+        new BooleanType{"name": "is_deleted"},
+    ];
+}

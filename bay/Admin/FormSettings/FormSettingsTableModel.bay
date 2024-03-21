@@ -56,17 +56,17 @@ struct FormSettingsTableModel extends TableDialogModel
 				"name": "row_number",
 			},
 			{
-				"api_name": "name",
+				"name": "name",
 				"label": "Name",
 				"component": classof Label,
 			},
 			{
-				"api_name": "api_name",
+				"name": "api_name",
 				"label": "Api name",
 				"component": classof Label,
 			},
 			{
-				"api_name": "email_to",
+				"name": "email_to",
 				"label": "Email to",
 				"component": classof Label,
 			},
@@ -75,5 +75,8 @@ struct FormSettingsTableModel extends TableDialogModel
 				"model": this.row_buttons,
 			}
 		]);
+		
+		/* Dialog width */
+		this.getWidget("save_dialog").setWidth("600px");
 	}
 }
