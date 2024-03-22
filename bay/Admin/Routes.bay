@@ -39,6 +39,12 @@ class Routes extends BaseRoute
 		[
 			new RouteInfo
 			{
+				"uri": "admin.php?page=elberos-forms",
+				"name": "admin:forms:data:index",
+				"model": "Runtime.WordPress.Admin.FormData.FormDataPageModel",
+			},
+			new RouteInfo
+			{
 				"uri": "admin.php?page=elberos-forms-settings",
 				"name": "admin:forms:settings:index",
 				"model": "Runtime.WordPress.Admin.FormSettings.FormSettingsPageModel",

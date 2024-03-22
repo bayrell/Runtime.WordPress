@@ -31,6 +31,7 @@ use Runtime.ORM.Annotations.DateTimeType;
 use Runtime.ORM.Annotations.DictType;
 use Runtime.ORM.Annotations.ForeignKey;
 use Runtime.ORM.Annotations.Index;
+use Runtime.ORM.Annotations.JsonType;
 use Runtime.ORM.Annotations.Primary;
 use Runtime.ORM.Annotations.StringType;
 use Runtime.ORM.Annotations.Table;
@@ -41,10 +42,10 @@ use Runtime.ORM.Annotations.Unique;
 class Schema extends DatabaseSchema
 {
 	/**
-	 * Forms
+	 * Forms settings
 	 */
 	@Table{ "name": "forms" }
-	pure memorize Collection<BaseStruct> applications() =>
+	pure memorize Collection<BaseStruct> forms() =>
 	[
 		/* Fields */
 		new BigIntType{"name": "id"},
@@ -53,6 +54,31 @@ class Schema extends DatabaseSchema
 		new StringType{"name": "settings"},
 		new StringType{"name": "email_to"},
 		new BooleanType{"name": "is_deleted"},
+		
+		/* Index */
+		new AutoIncrement{"name": "id"},
+		new Primary{"keys": ["id"]},
+	];
+	
+	
+	/**
+	 * Forms data
+	 */
+	@Table{ "name": "forms_data" }
+	pure memorize Collection<BaseStruct> forms_data() =>
+	[
+		/* Fields */
+		new BigIntType{"name": "id"},
+		new BigIntType{"name": "form_id"},
+		new StringType{"name": "form_title"},
+		new StringType{"name": "form_position"},
+		new JsonType{"name": "data"},
+		new StringType{"name": "utm"},
+		new StringType{"name": "send_email_uuid"},
+		new TinyIntType{"name": "send_email_code"},
+		new StringType{"name": "send_email_error"},
+		new BooleanType{"name": "spam"},
+		new DateTimeType{"name": "gmtime_add"},
 		
 		/* Index */
 		new AutoIncrement{"name": "id"},

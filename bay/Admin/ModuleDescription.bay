@@ -55,6 +55,7 @@ class ModuleDescription
 		new Hook("Runtime.WordPress.Admin.AppHook"),
 		
 		#ifdef BACKEND then
+		new Api("Runtime.WordPress.Admin.FormData.FormDataApi"),
 		new Api("Runtime.WordPress.Admin.FormSettings.FormSettingsApi"),
 		new Route("Runtime.WordPress.Admin.Routes"),
 		#endif

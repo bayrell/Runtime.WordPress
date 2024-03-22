@@ -16,7 +16,7 @@
  *  limitations under the License.
  */
 
-namespace Runtime.WordPress.Admin.FormSettings;
+namespace Runtime.WordPress.Admin.FormData;
 
 use Runtime.re;
 use Runtime.DateTime;
@@ -31,18 +31,18 @@ use Runtime.Widget.Crud.Required;
 use Runtime.Widget.Crud.Unique;
 
 
-class FormSettingsApi extends CrudApi
+class FormDataApi extends CrudApi
 {
 	/**
 	 * Returns api name
 	 */
-	pure string getApiName() => "admin.wordpress.forms.settings::crud";
+	pure string getApiName() => "admin.wordpress.forms.data::crud";
 	
 	
 	/**
 	 * Returns table name
 	 */
-	pure string getTableName() => "forms";
+	pure string getTableName() => "forms_data";
 	
 	
 	/**
@@ -50,10 +50,10 @@ class FormSettingsApi extends CrudApi
 	 */
 	Collection getItemFields() => [
 		"id",
-		"name",
-		"api_name",
-		"settings",
-		"email_to",
+		"form_title",
+		"form_position",
+		"data",
+		"gmtime_add",
 	];
 	
 	
@@ -61,10 +61,6 @@ class FormSettingsApi extends CrudApi
 	 * Returns save fields
 	 */
 	Collection getSaveFields() => [
-		"name",
-		"api_name",
-		"settings",
-		"email_to",
 	];
 	
 	
@@ -73,10 +69,6 @@ class FormSettingsApi extends CrudApi
 	 */
 	Collection<CrudRule> getRules() =>
 	[
-		new Purify{ "name": "api_name" },
-		new LowerCase{ "name": "api_name" },
-		new Required{ "name": "api_name" },
-		new Unique{"keys": ["api_name"]},
 	];
 	
 	
@@ -86,9 +78,9 @@ class FormSettingsApi extends CrudApi
 	async Query buildSearchQuery(Query q)
 	{
 		q.addFields([
-			"forms.*"
+			"forms_data.*"
 		]);
-		q.orderBy("api_name", "asc");
+		q.orderBy("gmtime_add", "desc");
 		return q;
 	}
 	
@@ -100,25 +92,5 @@ class FormSettingsApi extends CrudApi
 	async void actionSearch()
 	{
 		await parent::actionSearch();
-	}
-	
-	
-	/**
-	 * Action save
-	 */
-	@ApiMethod
-	async void actionSave()
-	{
-		await parent::actionSave();
-	}
-	
-	
-	/**
-	 * Action delete
-	 */
-	@ApiMethod
-	async void actionDelete()
-	{
-		await parent::actionDelete();
 	}
 }

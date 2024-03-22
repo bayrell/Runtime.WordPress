@@ -2,6 +2,9 @@
 	"name": "Runtime.WordPress.Admin",
 	"assets":
 	[
+		"FormData/FormDataFormModel.bay",
+		"FormData/FormDataPageModel.bay",
+		"FormData/FormDataTableModel.bay",
 		"FormSettings/FormSettingsFormModel.bay",
 		"FormSettings/FormSettingsPageModel.bay",
 		"FormSettings/FormSettingsTableModel.bay",
