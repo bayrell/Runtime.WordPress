@@ -1,5 +1,5 @@
 /*!
- *  Bayrell Runtime Library
+ *  BayLang Technology
  *
  *  (c) Copyright 2016-2024 "Ildar Bikmamatov" <support@bayrell.org>
  *
@@ -16,43 +16,36 @@
  *  limitations under the License.
  */
 
-namespace Runtime.WordPress.Admin;
+namespace Runtime.WordPress;
 
-use Runtime.Web.Hooks.AppHook as BaseAppHook;
-use Runtime.WordPress.Admin.CSS;
+use Runtime.Web.BaseApp;
 
 
-class AppHook extends BaseAppHook
+class WP_App extends BaseApp
 {
-	/**
-	 * Register hooks
-	 */
-	void register_hooks()
-	{
-		this.register(static::CALL_API_BEFORE);
-		this.register(static::COMPONENTS);
-	}
-	
+	#ifcode PHP then
 	
 	/**
-	 * Call api before
+	 * Read POST
 	 */
-	void call_api_before(Map params)
+	function readPost($ctx)
 	{
-		string api_url = "/wp-admin/admin-ajax.php?action=admin_call_api&api_name=" ~
-			rs::url_encode(params.get("post_data").get("api_name"))
-		;
-		params.set("api_url", api_url);
+		$content_type = isset($_SERVER['HTTP_CONTENT_TYPE']) ? $_SERVER['HTTP_CONTENT_TYPE'] : "";
+		if (substr($content_type, 0, strlen('application/json')) == 'application/json')
+		{
+			$json = file_get_contents("php://input");
+			$json = @json_decode($json, true);
+			return $json;
+		}
+		
+		$method = isset($_SERVER['REQUEST_METHOD']) ? $_SERVER['REQUEST_METHOD'] : "";
+		if ($method == "POST")
+		{
+			return stripslashes_deep($_POST);
+		}
+		
+		return null;
 	}
 	
-	
-	/**
-	 * Components
-	 */
-	void components(Map params)
-	{
-		params["components"].appendItems([
-			classof CSS,
-		]);
-	}
+	#endif
 }

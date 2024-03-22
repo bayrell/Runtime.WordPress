@@ -86,7 +86,8 @@ class WP_Connection extends ConnectionMySQL
 	string quote(string value)
 	{
 		#ifcode PHP then
-		$value = esc_sql($value);
+		$value = "'" . esc_sql($value) . "'";
+		/*$value = "'" . json_encode($value) . "'";*/
 		#endif
 		return value;
 	}

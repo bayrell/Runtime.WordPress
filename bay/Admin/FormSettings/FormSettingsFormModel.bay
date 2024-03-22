@@ -47,22 +47,22 @@ struct FormSettingsFormModel extends FormModel
 		/* Add fields */
 		this.addFields([
 			{
-				"api_name": "name",
+				"name": "name",
 				"label": "Name",
 				"component": classof Input,
 			},
 			{
-				"api_name": "api_name",
+				"name": "api_name",
 				"label": "Api name",
 				"component": classof Input,
 			},
 			{
-				"api_name": "email_to",
+				"name": "email_to",
 				"label": "Email to",
 				"component": classof Input,
 			},
 			{
-				"api_name": "settings",
+				"name": "settings",
 				"label": "Settings",
 				"component": classof TextArea,
 			},

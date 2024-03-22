@@ -18,18 +18,24 @@
 
 <class name="Runtime.WordPress.Admin.CSS">
 
+<use name="Runtime.Widget.Button" component="true" />
+<use name="Runtime.Widget.Input" component="true" />
+<use name="Runtime.Widget.TextArea" component="true" />
+<use name="Runtime.Widget.Dialog.Dialog" component="true" />
 <use name="Runtime.Widget.Crud.Table.Table" component="true" />
 
 
 <style global="true">
 :root{
 	--widget-font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif;
+	--widget-line-height: 1.4em;
 }
 #core_ui_root{
 	margin-top: 20px;
 }
 %(Table)widget_table__table{
 	border: 1px solid #ccc;
+	border-radius: 4px;
 	.widget_table__th{
 		text-align: left;
 	}
@@ -43,6 +49,13 @@
 	.widget_table__tr:nth-child(even){
 		background-color: #f0f0f0;
 	}
+}
+%(Input)widget_input, %(TextArea)widget_textarea,
+%(Button)widget_button, %(Dialog)widget_dialog__container{
+	border-radius: 4px;
+}
+%(Button)widget_button--small{
+	line-height: 1.2em;
 }
 </style>
 

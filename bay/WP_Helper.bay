@@ -134,21 +134,40 @@ class WP_Helper
 	/**
 	 * Call wp admin route
 	 */
-	static string wp_admin_route(string route_name)
+	async static string wp_admin_route(string route_name, fn route_before = null)
 	{
 		string content = "";
 		
 		/* Create render container */
 		BaseApp app = @.getApp();
 		RenderContainer container = app.createRenderContainer();
+		await app.initLayout(container);
 		
 		/* Setup route */
 		RouteList routes = @.provider(classof RouteList);
 		RouteInfo route = routes.routes_list.findItem(lib::equalAttr("name", route_name));
 		container.route = route;
 		
+		/* Call route before */
+		if (route_before)
+		{
+			await rtl::apply(route_before, [container]);
+		}
+		
 		/* Resolve route */
-		app.resolveRoute(container);
+		await app.resolveRoute(container);
+		
+		/* Return container */
+		return container;
+	}
+	
+	
+	/**
+	 * Render
+	 */
+	async static string wp_render(RenderContainer container)
+	{
+		string content = "";
 		
 		if (container.response instanceof RenderResponse and container.response.content == null)
 		{
@@ -173,6 +192,20 @@ class WP_Helper
 		}
 		
 		return content;
+	}
+	
+	
+	/**
+	 * Render page
+	 */
+	async static void wp_render_page(string route_name)
+	{
+		RenderContainer container = static::wp_admin_route(route_name);
+		string content = static::wp_render(container);
+		
+		#ifcode PHP then
+		echo $content;
+		#endif
 	}
 	
 	

@@ -40,18 +40,22 @@ use Runtime.ORM.Annotations.Unique;
 
 class Schema extends DatabaseSchema
 {
-    /**
+	/**
 	 * Forms
 	 */
 	@Table{ "name": "forms" }
 	pure memorize Collection<BaseStruct> applications() =>
 	[
-        /* Fields */
+		/* Fields */
 		new BigIntType{"name": "id"},
-        new StringType{"name": "name"},
-        new StringType{"name": "api_name"},
-        new StringType{"name": "settings"},
-        new StringType{"name": "email_to"},
-        new BooleanType{"name": "is_deleted"},
-    ];
+		new StringType{"name": "name"},
+		new StringType{"name": "api_name"},
+		new StringType{"name": "settings"},
+		new StringType{"name": "email_to"},
+		new BooleanType{"name": "is_deleted"},
+		
+		/* Index */
+		new AutoIncrement{"name": "id"},
+		new Primary{"keys": ["id"]},
+	];
 }

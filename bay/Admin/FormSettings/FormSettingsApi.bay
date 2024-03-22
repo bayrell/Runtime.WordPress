@@ -73,9 +73,6 @@ class FormSettingsApi extends CrudApi
 	 */
 	Collection<CrudRule> getRules() =>
 	[
-        new Purify{ "name": "name" },
-        new Purify{ "name": "settings" },
-        new Purify{ "name": "email_to" },
 		new Purify{ "name": "api_name" },
 		new LowerCase{ "name": "api_name" },
 		new Required{ "name": "api_name" },

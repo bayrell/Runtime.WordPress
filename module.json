@@ -2,6 +2,7 @@
 	"name": "Runtime.WordPress",
 	"assets":
 	[
+		"WP_App.bay",
 		"ModuleDescription.bay"
 	],
 	"src": "./bay",

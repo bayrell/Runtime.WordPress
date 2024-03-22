@@ -41,7 +41,7 @@ class WP_Cursor extends CursorMySQL
 		global $wpdb;
 		
 		/* Build sql */
-		$builder = new \Runtime\ORM\MySQL\SQLBuilder($this, null);
+		$builder = new \Runtime\ORM\MySQL\SQLBuilder($this->conn, null);
 		$builder->sql = $sql;
 		$builder->data = $data;
 		$sql = $builder->formatSQL();
