@@ -16,19 +16,20 @@
  *  limitations under the License.
  */
 
-namespace Runtime.WordPress.Admin.FormSettings;
+namespace Runtime.WordPress.Admin.MailSettings;
 
 use Runtime.Callback;
 use Runtime.Web.BaseRoute;
 use Runtime.Widget.ButtonModel;
 use Runtime.Widget.Label;
 use Runtime.Widget.RowButtonsModel;
+use Runtime.Widget.SelectLabel;
 use Runtime.Widget.Crud.CrudApiStorage;
 use Runtime.Widget.Crud.Table.TableDialogModel;
-use Runtime.WordPress.Admin.FormSettings.FormSettingsFormModel;
+use Runtime.WordPress.Admin.MailSettings.MailSettingsFormModel;
 
 
-class FormSettingsTableModel extends TableDialogModel
+class MailSettingsTableModel extends TableDialogModel
 {
 	string pagination_name = "p";
 	
@@ -38,7 +39,7 @@ class FormSettingsTableModel extends TableDialogModel
 	 */
 	CrudApiStorage createDataStorage() => new CrudApiStorage{
 		"layout": this.layout,
-		"class_name": "admin.wordpress.forms.settings",
+		"class_name": "admin.wordpress.mail.settings",
 		"primary_keys": ["id"],
 	};
 	
@@ -49,7 +50,7 @@ class FormSettingsTableModel extends TableDialogModel
 	void initWidget()
 	{
 		/* Create form */
-		this.addWidget(classof FormSettingsFormModel);
+		this.addWidget(classof MailSettingsFormModel);
 		
 		parent();
 		
@@ -59,19 +60,46 @@ class FormSettingsTableModel extends TableDialogModel
 				"name": "row_number",
 			},
 			{
-				"name": "name",
-				"label": "Name",
+				"name": "enable",
+				"label": "Enable",
+				"component": classof SelectLabel,
+				"props": {
+					"options": [
+						{"label": "Yes", "value": "1"},
+						{"label": "No", "value": "0"},
+					],
+				},
+			},
+			{
+				"name": "plan",
+				"label": "Plan",
 				"component": classof Label,
 			},
 			{
-				"name": "api_name",
-				"label": "Api name",
+				"name": "host",
+				"label": "Host",
 				"component": classof Label,
 			},
 			{
-				"name": "email_to",
-				"label": "Email to",
+				"name": "port",
+				"label": "Port",
 				"component": classof Label,
+			},
+			{
+				"name": "login",
+				"label": "Login",
+				"component": classof Label,
+			},
+			{
+				"name": "ssl_enable",
+				"label": "SSL",
+				"component": classof SelectLabel,
+				"props": {
+					"options": [
+						{"label": "Yes", "value": "1"},
+						{"label": "No", "value": "0"},
+					],
+				},
 			},
 			{
 				"name": "row_buttons",

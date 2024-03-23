@@ -16,30 +16,27 @@
  *  limitations under the License.
  */
 
-namespace Runtime.WordPress.Admin.FormSettings;
+namespace Runtime.WordPress.Admin.Robots;
 
-use Runtime.Callback;
 use Runtime.Web.BaseRoute;
-use Runtime.Widget.ButtonModel;
-use Runtime.Widget.Label;
-use Runtime.Widget.RowButtonsModel;
+use Runtime.Widget.Input;
+use Runtime.Widget.Select;
+use Runtime.Widget.TextArea;
 use Runtime.Widget.Crud.CrudApiStorage;
-use Runtime.Widget.Crud.Table.TableDialogModel;
-use Runtime.WordPress.Admin.FormSettings.FormSettingsFormModel;
+use Runtime.Widget.Crud.Form.FormModel;
+use Runtime.Widget.Crud.Form.SaveButtonModel;
 
 
-class FormSettingsTableModel extends TableDialogModel
+class RobotsFormModel extends FormModel
 {
-	string pagination_name = "p";
-	
-	
 	/**
 	 * Create data storage
 	 */
 	CrudApiStorage createDataStorage() => new CrudApiStorage{
 		"layout": this.layout,
-		"class_name": "admin.wordpress.forms.settings",
+		"class_name": "admin.wordpress.robots",
 		"primary_keys": ["id"],
+		"item_pk": true,
 	};
 	
 	
@@ -48,35 +45,32 @@ class FormSettingsTableModel extends TableDialogModel
 	 */
 	void initWidget()
 	{
-		/* Create form */
-		this.addWidget(classof FormSettingsFormModel);
-		
 		parent();
 		
 		/* Add fields */
 		this.addFields([
 			{
-				"name": "row_number",
+				"name": "content",
+				"component": classof TextArea,
 			},
-			{
-				"name": "name",
-				"label": "Name",
-				"component": classof Label,
-			},
-			{
-				"name": "api_name",
-				"label": "Api name",
-				"component": classof Label,
-			},
-			{
-				"name": "email_to",
-				"label": "Email to",
-				"component": classof Label,
-			},
-			{
-				"name": "row_buttons",
-				"model": this.row_buttons,
-			}
 		]);
+		
+		/* Add save button */
+		this.bottom_buttons.addWidget(
+			classof SaveButtonModel,
+			{
+				"form": this,
+				"styles": ["large"],
+			}
+		);
+	}
+	
+	
+	/**
+	 * Get page title
+	 */
+	string getPageTitle(string action = "")
+	{
+		return "Robots TXT";
 	}
 }

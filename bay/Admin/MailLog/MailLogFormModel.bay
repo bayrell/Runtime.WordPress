@@ -1,0 +1,129 @@
+/*!
+ *  BayLang Technology
+ *
+ *  (c) Copyright 2016-2024 "Ildar Bikmamatov" <support@bayrell.org>
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
+ *
+ *      https://www.apache.org/licenses/LICENSE-2.0
+ *
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
+ */
+
+namespace Runtime.WordPress.Admin.MailLog;
+
+use Runtime.Web.BaseRoute;
+use Runtime.Widget.Label;
+use Runtime.Widget.TextArea;
+use Runtime.Widget.Crud.CrudApiStorage;
+use Runtime.Widget.Crud.Form.FormModel;
+
+
+class MailLogFormModel extends FormModel
+{
+	/**
+	 * Create data storage
+	 */
+	CrudApiStorage createDataStorage() => new CrudApiStorage{
+		"layout": this.layout,
+		"class_name": "admin.wordpress.mail.log",
+		"primary_keys": ["id"],
+	};
+	
+	
+	/**
+	 * Init widget settings
+	 */
+	void initWidget()
+	{
+		parent();
+		
+		/* Add fields */
+		this.addFields([
+			{
+				"name": "gmtime_send",
+				"label": "Send time",
+				"component": classof Label,
+			},
+			{
+				"name": "status",
+				"label": "Status",
+				"component": classof Label,
+			},
+			{
+				"name": "send_email_error",
+				"label": "Error",
+				"component": classof Label,
+			},
+			{
+				"name": "dest",
+				"label": "Dest",
+				"component": classof Label,
+			},
+			{
+				"name": "title",
+				"label": "Title",
+				"component": classof Label,
+			},
+			{
+				"name": "message",
+				"label": "Message",
+				"component": classof TextArea,
+				"props": {
+					"readonly": true,
+				}
+			},
+			{
+				"name": "worker",
+				"label": "Worker",
+				"component": classof Label,
+			},
+			{
+				"name": "plan",
+				"label": "Plan",
+				"component": classof Label,
+			},
+		]);
+	}
+	
+	
+	/**
+	 * Returns item value
+	 */
+	var getItemValue(Map item, string field_name)
+	{
+		if (field_name == "gmtime_send")
+		{
+			DateTime gmtime_send = item.get("gmtime_send");
+			return gmtime_send ? gmtime_send.toString() : "";
+		}
+		return parent(item, field_name);
+	}
+	
+	
+	/**
+	 * Get page title
+	 */
+	string getPageTitle(string action = "")
+	{
+		if (action == "add")
+		{
+			return "Add";
+		}
+		if (action == "edit")
+		{
+			return "View " ~ this.storage.item.get("id");
+		}
+		if (action == "delete")
+		{
+			return "Delete " ~ this.storage.item.get("id");
+		}
+		return "";
+	}
+}

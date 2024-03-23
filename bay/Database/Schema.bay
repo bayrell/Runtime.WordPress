@@ -84,4 +84,56 @@ class Schema extends DatabaseSchema
 		new AutoIncrement{"name": "id"},
 		new Primary{"keys": ["id"]},
 	];
+	
+	
+	/**
+	 * Mail settings
+	 */
+	@Table{ "name": "mail_settings" }
+	pure memorize Collection<BaseStruct> mail_settings() =>
+	[
+		/* Fields */
+		new BigIntType{"name": "id"},
+		new TinyIntType{"name": "enable"},
+		new StringType{"name": "plan"},
+		new StringType{"name": "host"},
+		new StringType{"name": "port"},
+		new StringType{"name": "login"},
+		new StringType{"name": "password"},
+		new TinyIntType{"name": "ssl_enable"},
+		new BooleanType{"name": "is_deleted"},
+		
+		/* Index */
+		new AutoIncrement{"name": "id"},
+		new Primary{"keys": ["id"]},
+	];
+	
+	
+	/**
+	 * Mail log
+	 */
+	@Table{ "name": "mail_delivery" }
+	pure memorize Collection<BaseStruct> mail_delivery() =>
+	[
+		/* Fields */
+		new BigIntType{"name": "id"},
+		new StringType{"name": "worker"},
+		new StringType{"name": "plan"},
+		new TinyIntType{"name": "status"},
+		new StringType{"name": "dest"},
+		new StringType{"name": "uuid"},
+		new StringType{"name": "title"},
+		new StringType{"name": "message"},
+		new DateTimeType{"name": "gmtime_plan"},
+		new DateTimeType{"name": "gmtime_send"},
+		new StringType{"name": "send_email_error"},
+		new BigIntType{"name": "send_email_code"},
+		new DateTimeType{"name": "gmtime_add"},
+		new BooleanType{"name": "is_delete"},
+		
+		/* Index */
+		new AutoIncrement{"name": "id"},
+		new Primary{"keys": ["id"]},
+		new Unique{"keys": ["uuid"]},
+	];
 }

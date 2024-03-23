@@ -19,6 +19,7 @@
 namespace Runtime.WordPress;
 
 use Runtime.Entity.Hook;
+use Runtime.Entity.Provider;
 use Runtime.ORM.Annotations.Database;
 use Runtime.WordPress.ORM.WP_Factory;
 
@@ -60,6 +61,12 @@ class ModuleDescription
 	 */
 	pure Collection<Dict> entities() => 
 	[
+		/*
+		new Provider("Runtime.Web.RenderProvider", {
+			"enable_ssr": false,
+		}),
+		*/
+		
 		#ifdef BACKEND then
 		new Database("Runtime.WordPress.Database.Schema"),
 		new WP_Factory(),

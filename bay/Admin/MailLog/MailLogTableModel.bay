@@ -16,21 +16,21 @@
  *  limitations under the License.
  */
 
-namespace Runtime.WordPress.Admin.FormData;
+namespace Runtime.WordPress.Admin.MailLog;
 
 use Runtime.Callback;
 use Runtime.Web.BaseRoute;
 use Runtime.Widget.ButtonModel;
 use Runtime.Widget.Label;
 use Runtime.Widget.RowButtonsModel;
-use Runtime.Widget.TextArea;
+use Runtime.Widget.SelectLabel;
 use Runtime.Widget.Crud.CrudApiStorage;
 use Runtime.Widget.Crud.Table.SaveDialogModel;
 use Runtime.Widget.Crud.Table.TableDialogModel;
-use Runtime.WordPress.Admin.FormData.FormDataFormModel;
+use Runtime.WordPress.Admin.MailLog.MailLogFormModel;
 
 
-class FormDataTableModel extends TableDialogModel
+class MailLogTableModel extends TableDialogModel
 {
 	string pagination_name = "p";
 	
@@ -40,7 +40,7 @@ class FormDataTableModel extends TableDialogModel
 	 */
 	CrudApiStorage createDataStorage() => new CrudApiStorage{
 		"layout": this.layout,
-		"class_name": "admin.wordpress.forms.data",
+		"class_name": "admin.wordpress.mail.log",
 		"primary_keys": ["id"],
 	};
 	
@@ -51,7 +51,7 @@ class FormDataTableModel extends TableDialogModel
 	void initWidget()
 	{
 		/* Create form */
-		this.addWidget(classof FormDataFormModel);
+		this.addWidget(classof MailLogFormModel);
 		
 		parent();
 		
@@ -61,18 +61,38 @@ class FormDataTableModel extends TableDialogModel
 				"name": "row_number",
 			},
 			{
-				"name": "form_title",
+				"name": "worker",
+				"label": "Worker",
+				"component": classof Label,
+			},
+			{
+				"name": "plan",
+				"label": "Plan",
+				"component": classof Label,
+			},
+			{
+				"name": "status",
+				"label": "Status",
+				"component": classof Label,
+			},
+			{
+				"name": "dest",
+				"label": "Dest",
+				"component": classof Label,
+			},
+			{
+				"name": "title",
 				"label": "Title",
 				"component": classof Label,
 			},
 			{
-				"name": "data",
-				"label": "Data",
+				"name": "send_email_error",
+				"label": "Error",
 				"component": classof Label,
 			},
 			{
-				"name": "gmtime_add",
-				"label": "Date",
+				"name": "gmtime_send",
+				"label": "Send time",
 				"component": classof Label,
 			},
 			{
@@ -98,6 +118,9 @@ class FormDataTableModel extends TableDialogModel
 		/* Change view button name */
 		ButtonModel edit_button = this.row_buttons.findItemByName("edit_button");
 		edit_button.content = "View";
+		
+		/* Set page */
+		this.storage.setPage(this.layout.request_query.get("p", 1));
 	}
 	
 	
@@ -106,26 +129,10 @@ class FormDataTableModel extends TableDialogModel
 	 */
 	var getItemValue(Map item, string field_name)
 	{
-		if (field_name == "data")
+		if (field_name == "gmtime_send")
 		{
-			Dict data = item.get("data");
-			if (data == null) return "";
-			
-			Collection items = data
-				.transition(
-					string (string value, string key)
-					{
-						return key ~ ": " ~ value;
-					}
-				)
-			;
-			
-			return items;
-		}
-		if (field_name == "gmtime_add")
-		{
-			DateTime gmtime_add = item.get("gmtime_add");
-			return gmtime_add ? gmtime_add.toString() : "";
+			DateTime gmtime_send = item.get("gmtime_send");
+			return gmtime_send ? gmtime_send.toString() : "";
 		}
 		return parent(item, field_name);
 	}

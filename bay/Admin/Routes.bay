@@ -39,16 +39,34 @@ class Routes extends BaseRoute
 		[
 			new RouteInfo
 			{
-				"uri": "admin.php?page=elberos-forms",
+				"uri": "admin.php?page=bay-lang-forms",
 				"name": "admin:forms:data:index",
 				"model": "Runtime.WordPress.Admin.FormData.FormDataPageModel",
 			},
 			new RouteInfo
 			{
-				"uri": "admin.php?page=elberos-forms-settings",
+				"uri": "admin.php?page=bay-lang-forms-settings",
 				"name": "admin:forms:settings:index",
 				"model": "Runtime.WordPress.Admin.FormSettings.FormSettingsPageModel",
-			}
+			},
+			new RouteInfo
+			{
+				"uri": "options-general.php?page=bay-lang-mail-log",
+				"name": "admin:mail:log:index",
+				"model": "Runtime.WordPress.Admin.MailLog.MailLogPageModel",
+			},
+			new RouteInfo
+			{
+				"uri": "options-general.php?page=bay-lang-mail-settings",
+				"name": "admin:mail:settings:index",
+				"model": "Runtime.WordPress.Admin.MailSettings.MailSettingsPageModel",
+			},
+			new RouteInfo
+			{
+				"uri": "options-general.php?page=bay-lang-robots-txt",
+				"name": "admin:robots:txt",
+				"model": "Runtime.WordPress.Admin.Robots.RobotsPageModel",
+			},
 		];
 	}
 }

@@ -20,6 +20,13 @@
 	extends="Runtime.Widget.Crud.CrudPage"
 >
 
+<style>
+.wp-heading-inline{
+	padding: 0;
+	margin-bottom: 14px;
+}
+</style>
+
 
 <template name="renderPageTitle">
 	<h1 class="wp-heading-inline">{{ this.layout.title }}</h1>
@@ -27,7 +34,7 @@
 
 
 <template>
-	<div class="crud_page">
+	<div class="crud_page wrap">
 		%render this.renderPageTitle();
 		%render this.renderWidget(this.model.render_list);
 	</div>
