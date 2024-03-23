@@ -20,11 +20,15 @@ namespace Runtime.WordPress.Admin.FormSettings;
 
 use Runtime.Web.BaseRoute;
 use Runtime.Widget.Crud.CrudPageModel;
+use Runtime.WordPress.Admin.WP_CrudPage;
 use Runtime.WordPress.Admin.FormSettings.FormSettingsTableModel;
 
 
-struct FormSettingsPageModel extends CrudPageModel
+class FormSettingsPageModel extends CrudPageModel
 {
+	string component = classof WP_CrudPage;
+	
+	
 	/**
 	 * Init widget settings
 	 */
@@ -39,9 +43,7 @@ struct FormSettingsPageModel extends CrudPageModel
 			
 			/* Create table widget */
 			FormSettingsTableModel table = this.addWidget(classof FormSettingsTableModel);
-			
-			/* Set page */
-			table.storage.setPage(this.layout.request_query.get("page", 1));
+			this.render_list.addItem(table);
 		}
 	}
 	
@@ -54,7 +56,7 @@ struct FormSettingsPageModel extends CrudPageModel
 		if (this.action == "index")
 		{
 			/* Set title */
-			this.layout.setPageTitle("Forms");
+			this.layout.setPageTitle("Forms settings");
 		}
 	}
 }

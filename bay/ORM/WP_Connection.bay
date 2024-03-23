@@ -18,8 +18,10 @@
 
 namespace Runtime.WordPress.ORM;
 
+use Runtime.ORM.Query;
 use Runtime.ORM.MySQL.ConnectionMySQL;
 use Runtime.WordPress.ORM.WP_Cursor;
+use Runtime.WordPress.ORM.WP_SQLBuilder;
 
 
 class WP_Connection extends ConnectionMySQL
@@ -45,6 +47,12 @@ class WP_Connection extends ConnectionMySQL
 	 * Create new cursor
 	 */
 	WP_Cursor createCursor() => new WP_Cursor(this);
+	
+	
+	/**
+	 * Create SQLBuilder
+	 */
+	WP_SQLBuilder createBuilder(Query q) => new WP_SQLBuilder(this, q);
 	
 	
 	/**

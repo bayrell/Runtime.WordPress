@@ -30,7 +30,7 @@ use Runtime.Widget.Crud.Table.TableDialogModel;
 use Runtime.WordPress.Admin.FormData.FormDataFormModel;
 
 
-struct FormDataTableModel extends TableDialogModel
+class FormDataTableModel extends TableDialogModel
 {
 	/**
 	 * Create data storage
@@ -98,6 +98,9 @@ struct FormDataTableModel extends TableDialogModel
 		/* Change view button name */
 		ButtonModel edit_button = this.row_buttons.findItemByName("edit_button");
 		edit_button.content = "View";
+		
+		/* Set page */
+		this.storage.setPage(this.layout.request_query.get("page", 1));
 	}
 	
 	

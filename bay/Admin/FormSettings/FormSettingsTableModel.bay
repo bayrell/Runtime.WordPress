@@ -28,7 +28,7 @@ use Runtime.Widget.Crud.Table.TableDialogModel;
 use Runtime.WordPress.Admin.FormSettings.FormSettingsFormModel;
 
 
-struct FormSettingsTableModel extends TableDialogModel
+class FormSettingsTableModel extends TableDialogModel
 {
 	/**
 	 * Create data storage
@@ -78,5 +78,8 @@ struct FormSettingsTableModel extends TableDialogModel
 		
 		/* Dialog width */
 		this.getWidget("save_dialog").setWidth("600px");
+		
+		/* Set page */
+		this.storage.setPage(this.layout.request_query.get("page", 1));
 	}
 }

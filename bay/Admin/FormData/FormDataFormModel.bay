@@ -25,7 +25,7 @@ use Runtime.Widget.Crud.CrudApiStorage;
 use Runtime.Widget.Crud.Form.FormModel;
 
 
-struct FormDataFormModel extends FormModel
+class FormDataFormModel extends FormModel
 {
 	/**
 	 * Create data storage

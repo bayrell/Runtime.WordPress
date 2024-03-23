@@ -19,6 +19,7 @@
 namespace Runtime.WordPress.ORM;
 
 use Runtime.ORM.MySQL.CursorMySQL;
+use Runtime.ORM.MySQL.SQLBuilder;
 
 
 class WP_Cursor extends CursorMySQL
@@ -34,16 +35,17 @@ class WP_Cursor extends CursorMySQL
 	/**
 	 * Execute sql query
 	 */
-	async WP_Cursor executeSQL(string sql, Dict data = null)
+	async WP_Cursor executeSQL(SQLBuilder builder)
 	{
+		/* Get sql */
+		string sql = builder.getSQL();
+		Dict data = builder.getData();
+		
 		#ifcode PHP then
 		
 		global $wpdb;
 		
 		/* Build sql */
-		$builder = new \Runtime\ORM\MySQL\SQLBuilder($this->conn, null);
-		$builder->sql = $sql;
-		$builder->data = $data;
 		$sql = $builder->formatSQL();
 		
 		/* Execute query */

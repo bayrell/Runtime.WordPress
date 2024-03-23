@@ -10,6 +10,7 @@
 		"FormSettings/FormSettingsTableModel.bay",
 		"AppHook.bay",
 		"CSS.bay",
+		"WP_CrudPage.bay",
 		"ModuleDescription.bay"
 	],
 	"src": "./",
