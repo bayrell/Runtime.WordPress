@@ -60,7 +60,7 @@ class RobotsFormModel extends FormModel
 			classof SaveButtonModel,
 			{
 				"form": this,
-				"styles": ["large"],
+				"styles": ["large", "primary"],
 			}
 		);
 	}
