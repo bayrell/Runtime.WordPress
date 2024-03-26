@@ -16,7 +16,7 @@
  *  limitations under the License.
  */
 
-namespace Runtime.WordPress.Components;
+namespace Runtime.WordPress.Admin;
 
 use Runtime.lib;
 use Runtime.BaseStruct;
@@ -26,14 +26,14 @@ use Runtime.ORM.Cursor;
 use Runtime.ORM.Query;
 use Runtime.Web.ApiResult;
 use Runtime.Web.RenderContainer;
-use Runtime.Web.Crud.Rules.CrudRule;
-use Runtime.Web.Crud.CrudPageApi;
+use Runtime.Widget.Crud.Rules.CrudRule;
+use Runtime.Widget.Crud.CrudPageApi;
 
 
-struct ImageField extends CrudRule
+struct ImageRule extends CrudRule
 {
-	string field_name = "";
-	string foreign_key = "";
+	string name = "";
+	string key = "";
 	
 	
 	/**
@@ -41,11 +41,8 @@ struct ImageField extends CrudRule
 	 */
 	void onSearchAfter(CrudPageApi api)
 	{
-		ImageField rule = this;
-		ApiResult api_result = api.container.response;
-		Collection<Dict> items = [];
-		
 		string action = api.action;
+		Collection<Dict> items = [];
 		
 		/* Check action */
 		if (action != "actionSearch" and
@@ -55,28 +52,25 @@ struct ImageField extends CrudRule
 		{
 			return;
 		}
-		if (action == "actionSearch") items = api_result.data["items"];
-		if (action == "actionItem" or action == "actionSearchOne" or action == "actionSave")
+		if (action == "actionSearch" or action == "actionSearchOne") items = api.items;
+		if (action == "actionItem" or action == "actionSave")
 		{
-			Dict item = api_result.data["item"];
-			if (item == null)
-			{
-				return;
-			}
-			items = [ item ];
+			items = [api.item];
 		}
 		
 		/* Get primary keys */
 		Collection<int> pk_ids = items
-			.map( lib::attr(rule.foreign_key) )
-			.filter( lib::equalNot(null) )
+			.map(lib::attr(this.key))
+			.filter(lib::equalNot(null))
 		;
 		
-		Connection conn = api.getDatabaseConnection();
+		/* Get connection */
+		Connection conn = Connection::get("prefix");
 		
 		/* Get images metadata */
 		Query q = new Query()
 			.select("postmeta")
+			.addRawField("*")
 			.where("meta_key", "=", ["_wp_attachment_metadata", "_wp_attached_file"])
 			.where("post_id", "=", pk_ids)
 		;
@@ -85,6 +79,7 @@ struct ImageField extends CrudRule
 		/* Get post */
 		Query q = new Query()
 			.select("posts")
+			.addRawField("*")
 			.where("ID", "=", pk_ids)
 		;
 		Dict posts = await conn.fetchAll(q);
@@ -92,21 +87,15 @@ struct ImageField extends CrudRule
 		/* Upload dir */
 		string upload_url = "/wp-content/uploads";
 		
-		#ifcode PHP then
-		/*$upload_url = wp_upload_dir(null, false);
-		$upload_url = $upload_url["baseurl"];
-		var_dump($upload_url);*/
-		#endif
-		
 		/* Map items */
 		items = items.map(
-			Dict (Dict item) use (rule, images_metadata, posts, upload_url)
+			Dict (Dict item) use (images_metadata, posts, upload_url)
 			{
-				int image_id = item.get(rule.foreign_key);
+				int image_id = item.get(this.key);
 				
 				/* Get post */
 				string post_time = "";
-				Dict post = posts.findItem( lib::equalAttr("ID", image_id) );
+				Dict post = posts.findItem(lib::equalAttr("ID", image_id));
 				if (post)
 				{
 					DateTime d = DateTime::from(post["post_modified_gmt"]);
@@ -164,20 +153,26 @@ struct ImageField extends CrudRule
 					#endif
 				}
 				
-				item <= { rule.field_name } <= res;
+				item.set(this.name, res);
 				
 				return item;
 			}
 		);
 		
-		if (action == "actionSearch") api_result <= data <= items <= items;
-		if (action == "actionItem" or action == "actionSearchOne" or action == "actionSave")
-			api_result <= data <= item <= items[0];
-		
-		api.container.response = api_result;
+		if (action == "actionSearch" or action == "actionSearchOne")
+		{
+			api.items = items;
+		}
+		if (action == "actionItem" or action == "actionSave")
+		{
+			api.item = items[0];
+		}
 	}
 	
 	
+	/**
+	 * Save after
+	 */
 	void onSaveAfter(RenderContainer container)
 	{
 		static::onSearchAfter(container);

@@ -16,108 +16,93 @@
  *  limitations under the License.
 -->
 
-<class name="Runtime.WordPress.Components.CKEditor">
-
-<use name="Runtime.Core.Message" />
-<use name="Runtime.Web.Crud.Helper" />
-<use name="Runtime.Web.Events.ChangeEvent" />
-<use name="Runtime.Web.RenderProvider" />
+<class name="Runtime.WordPress.Admin.CKEditor">
 
 
 <style>
-.textarea{
-	width: 100%;
-	max-width: 100%;
-	min-height: 400px;
-	padding: 6px 12px;
-	background-color: var(--widget-color-default);
-	border: var(--widget-border-width) var(--widget-color-border) solid;
-	outline: transparent;
+.widget_ckeditor{
+	min-height: 430px;
+}
+.widget_ckeditor *{
+	box-sizing: content-box !important;
 }
 </style>
 
 
 <template>
-
-	%set string value = Helper::getValue(layout, model_path, render_params);
-	%set string name = (render_params != null) ? render_params.get("name", "") : "";
-	%set string type = (render_params != null) ? render_params.get("type", "input") : "";
-	%set primitive tag = (render_params != null) ? render_params.get("@tag", "") : "";
-	<textarea class='textarea' @tag={ tag } @event:ChangeEvent="onChange" @ref="textarea"
-		name={ name } type={ type } value={ value } />
-	
+	<div class="widget_ckeditor">
+		<textarea style='display: none;' @ref="textarea" name={{ this.name }} />
+	</div>
 </template>
 
 
 <script>
 
-var textarea;
-var instance;
-var change_timer;
+props string name = "";
+props string value = "";
+var change_timer = null;
+var old_value = null;
+var instance = null;
+bool is_instance_created = false;
 
 
 /**
- * If component needs render
+ * Component mounted
  */
-bool isRender()
+void onMounted()
 {
-	if (this.vdom.is_new_element) return true;
-	return false;
-}
-
-
-/**
- * On change
- */
-public void onChange(Message<ChangeEvent> msg)
-{
-	if (this.model_path != "")
-	{
-		this.provider.commitComponent( this, msg.event.value );
-	}
-	
-	ChangeEvent event = msg.event.clone({ "field_name": this.params["name"] });
-	this.sendEvent(event);
-}
-
-
-/**
- * onRepaint
- */
-public void onRepaint()
-{
-	if (this.vdom.is_new_element)
-	{
-		#ifcode JAVASCRIPT then
+	#ifcode JAVASCRIPT then
+	this.nextTick(() => {
+		
 		var conf = JSON.parse(JSON.stringify( ckeditorSettings.configuration ));
 		conf["customConfig"] = "/wp-content/plugins/ckeditor-for-wordpress/ckeditor.config.small.js";
-		this.instance = CKEDITOR.replace(this.textarea.elem, conf);
 		
+		this.instance = CKEDITOR.replace(this.getRef("textarea"), conf);
 		this.instance.on('change', ()=>{ 
 			if (this.change_timer == null)
 			{
-				this.change_timer = setTimeout(this.onCodeChanged.bind(this), 100);
+				this.change_timer = setTimeout(this.onContentChange.bind(this), 200);
 			}
 		});
 		
-		#endif
-	}
+		/* Set data */
+		this.instance.setData(this.value);
+		this.old_value = this.value;
+		
+		/* Set created */
+		this.is_instance_created = true;
+	});
+	#endif
 }
 
 
 /**
  * On code changed
  */
-public void onCodeChanged()
+public void onContentChange()
 {
 	this.change_timer = null;
-	string content = this.instance.getData();
-	if (this.model_path != "")
-	{
-		this.provider.commitComponent( this, content );
-	}
+	string value = this.instance.getData();
+	this.old_value = value;
+	
+	/* Send value change */
+	if (this.model) this.model.onValueChange(value, this.data);
+	this.emit("valueChange", value, this.data);
 }
 
+
+/**
+ * On updated
+ */
+void onUpdated()
+{
+	if (this.is_instance_created and this.old_value != this.value)
+	{
+		#ifcode JAVASCRIPT then
+		this.instance.setData(this.value);
+		#endif
+	}
+}
 
 </script>
 

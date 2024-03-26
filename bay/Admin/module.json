@@ -17,7 +17,9 @@
 		"Robots/RobotsFormModel.bay",
 		"Robots/RobotsPageModel.bay",
 		"AppHook.bay",
+		"CKEditor.bay",
 		"CSS.bay",
+		"Image.bay",
 		"WP_CrudPage.bay",
 		"ModuleDescription.bay"
 	],
