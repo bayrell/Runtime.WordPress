@@ -36,8 +36,8 @@ class RobotsPageModel extends CrudPageModel
 	{
 		parent();
 		
-		RobotsFormModel table = this.addWidget(classof RobotsFormModel);
-		this.render_list.addItem(table);
+		RobotsFormModel form = this.addWidget(classof RobotsFormModel);
+		this.render_list.addItem(form);
 	}
 	
 	
