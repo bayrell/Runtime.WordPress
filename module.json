@@ -5,6 +5,13 @@
 		"WP_App.bay",
 		"ModuleDescription.bay"
 	],
+	"modules":
+	[
+		{
+			"src": "bay/Admin",
+			"type": "module"
+		}
+	],
 	"src": "./bay",
 	"dest":
 	{

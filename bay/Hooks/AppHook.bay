@@ -1,5 +1,5 @@
-<!--
- *  BayLang Technology
+/*!
+ *  Bayrell Runtime Library
  *
  *  (c) Copyright 2016-2024 "Ildar Bikmamatov" <support@bayrell.org>
  *
@@ -14,14 +14,41 @@
  *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
--->
+ */
 
-<class name="Runtime.WordPress.App.WP_Footer">
+namespace Runtime.WordPress.Hooks;
 
-<use name="Runtime.WordPress.WP_Helper" />
+use Runtime.Web.RenderContainer;
+use Runtime.Web.RouteInfo;
+use Runtime.Web.Hooks.AppHook as BaseAppHook;
 
-<template>
-	@raw{ WP_Helper::wp_call('wp_footer') }
-</template>
 
-</class>
+class AppHook extends BaseAppHook
+{
+	/**
+	 * Register hooks
+	 */
+	void register_hooks()
+	{
+		this.register(static::RENDER_HEAD);
+		this.register(static::RENDER_FOOTER);
+	}
+	
+	
+	/**
+	 * Render head
+	 */
+	void render_head(Map params)
+	{
+		params.get("components").push("Runtime.WordPress.App.WP_Head");
+	}
+	
+	
+	/**
+	 * Render footer
+	 */
+	void render_footer(Map params)
+	{
+		params.get("components").push("Runtime.WordPress.App.WP_Footer");
+	}
+}

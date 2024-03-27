@@ -61,14 +61,9 @@ class ModuleDescription
 	 */
 	pure Collection<Dict> entities() => 
 	[
-		/*
-		new Provider("Runtime.Web.RenderProvider", {
-			"enable_ssr": false,
-		}),
-		*/
-		
 		#ifdef BACKEND then
 		new Database("Runtime.WordPress.Database.Schema"),
+		new Hook("Runtime.WordPress.Hooks.AppHook"),
 		new WP_Factory(),
 		#endif
 	];
