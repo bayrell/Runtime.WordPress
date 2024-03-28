@@ -98,7 +98,7 @@ struct ImageRule extends CrudRule
 				Dict post = posts.findItem(lib::equalAttr("ID", image_id));
 				if (post)
 				{
-					DateTime d = DateTime::from(post["post_modified_gmt"]);
+					DateTime d = DateTime::fromString(post["post_modified_gmt"]);
 					post_time = d.timestamp();
 				}
 				

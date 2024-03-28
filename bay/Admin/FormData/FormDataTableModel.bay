@@ -125,7 +125,7 @@ class FormDataTableModel extends TableDialogModel
 		if (field_name == "gmtime_add")
 		{
 			DateTime gmtime_add = item.get("gmtime_add");
-			return gmtime_add ? gmtime_add.toString() : "";
+			return gmtime_add ? gmtime_add.normalize().getDateTimeString() : "";
 		}
 		return parent(item, field_name);
 	}
