@@ -2,6 +2,7 @@
 	"name": "Runtime.WordPress",
 	"assets":
 	[
+		"App/WP_PageModel.bay",
 		"WP_App.bay",
 		"ModuleDescription.bay"
 	],

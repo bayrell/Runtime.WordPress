@@ -16,41 +16,37 @@
  *  limitations under the License.
  */
 
-namespace Runtime.WordPress.ORM;
+namespace Runtime.WordPress.App;
 
+use Runtime.Serializer;
+use Runtime.Web.BasePageModel;
+use Runtime.Web.RenderContainer;
+use Runtime.ORM.Connection;
+use Runtime.ORM.Cursor;
 use Runtime.ORM.Query;
-use Runtime.ORM.MySQL.ConnectionMySQL;
-use Runtime.WordPress.ORM.WP_Cursor;
-use Runtime.WordPress.ORM.WP_SQLBuilder;
+use Runtime.ORM.QueryResult;
 
 
-class WP_Connection extends ConnectionMySQL
+class WP_PageModel extends BasePageModel
 {
-    /**
-	 * Connect
+	#ifdef BACKEND then
+	
+	
+	/**
+	 * Load articles
 	 */
-	WP_Connection connect()
+	async void loadArticles()
 	{
-    }
-    
-    
-    /**
-	 * Connect
-	 */
-	bool isConnected()
-	{
-		return true;
+		
 	}
-    
-	
-	/**
-	 * Create new cursor
-	 */
-	WP_Cursor createCursor() => new WP_Cursor(this);
 	
 	
 	/**
-	 * Create SQLBuilder
+	 * Process frontend data
 	 */
-	WP_SQLBuilder createBuilder(Query q) => new WP_SQLBuilder(this, q);
+	void processFrontendData(Serializer serializer, Map data)
+	{
+	}
+	
+	#endif
 }

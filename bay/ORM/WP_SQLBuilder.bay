@@ -27,4 +27,50 @@ class WP_SQLBuilder extends SQLBuilder
 	 * Format key
 	 */
 	string formatKey(string key) => ":" ~ key ~ ":";
+	
+	
+	/**
+	 * Escape value
+	 */
+	string prepare_value(var value, string op)
+	{
+		#ifcode PHP then
+		
+		global $wpdb;
+		$op = strtolower($op);
+		
+		if ($op == "like") $value = $wpdb->esc_like( $value );
+		else if ($op == "%like%")
+		{
+			$value = "%" . $wpdb->esc_like( $value ) . "%";
+			$op = "like";
+		}
+		else if ($op == "%like")
+		{
+			$value = "%" . $wpdb->esc_like( $value );
+			$op = "like";
+		}
+		else if ($op == "like%")
+		{
+			$value = $wpdb->esc_like( $value ) . "%";
+			$op = "like";
+		}
+		
+		#endif
+		
+		return [value, op];
+	}
+	
+	
+	/**
+	 * Quote
+	 */
+	string quote(string value)
+	{
+		#ifcode PHP then
+		$value = "'" . esc_sql($value) . "'";
+		/*$value = "'" . json_encode($value) . "'";*/
+		#endif
+		return value;
+	}
 }

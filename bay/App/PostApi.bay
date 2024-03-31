@@ -1,0 +1,130 @@
+/*!
+ *  BayLang Technology
+ *
+ *  (c) Copyright 2016-2024 "Ildar Bikmamatov" <support@bayrell.org>
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
+ *
+ *      https://www.apache.org/licenses/LICENSE-2.0
+ *
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
+ */
+
+namespace Runtime.WordPress.App;
+
+use Runtime.re;
+use Runtime.DateTime;
+use Runtime.ORM.Connection;
+use Runtime.ORM.Cursor;
+use Runtime.ORM.Query;
+use Runtime.ORM.QueryField;
+use Runtime.ORM.QueryResult;
+use Runtime.ORM.Relation;
+use Runtime.Web.BaseApi;
+use Runtime.Web.Annotations.ApiMethod;
+
+
+class PostApi extends BaseApi
+{
+	/**
+	 * Returns api name
+	 */
+	pure string getApiName() => "runtime.wordpress.post";
+	
+	
+	/**
+	 * Returns allowed fields
+	 */
+	Collection getAllowedFields(Collection fields)
+	{
+		Collection post_fields = [
+			"ID",
+			"post_title",
+			"post_name",
+			"post_content",
+			"post_status",
+			"post_type",
+			"post_modified",
+			"post_modified_gmt",
+		];
+		Dict post_fields_map = post_fields.transition(
+			int (string name, int pos) => [pos, name]
+		);
+		return fields.filter(
+			bool (string name) use (post_fields_map) => post_fields_map.has(name)
+		);
+	}
+	
+	
+	/**
+	 * Action search
+	 */
+	@ApiMethod
+	async void actionSearch()
+	{
+		Connection conn = Connection::get("prefix");
+		
+		string post_type = this.post_data.get("post_type");
+		int page = this.post_data.get("page");
+		int pages = 0;
+		int limit = this.post_data.get("limit");
+		if (limit < 0) limit = 1;
+		if (limit > 100) limit = 100;
+		
+		/* Get fields */
+		Collection fields = this.post_data.get("fields");
+		fields = this.getAllowedFields(fields);
+		
+		/* Get items */
+		Query q = new Query()
+			.select("posts")
+			.calcFoundRows(true)
+			.where("posts.post_type", "=", post_type)
+			.where("posts.post_status", "=", "publish")
+			.orderBy("posts.post_modified_gmt", "desc")
+			.page(page - 1).limit(limit)
+		;
+		
+		/* Set post id */
+		if (this.post_data.has("post_id"))
+		{
+			int post_id = (int)this.post_data.get("post_id");
+			q.where("posts.ID", "=", post_id);
+		}
+		
+		/* Add fields */
+		for (int i=0; i<fields.count(); i++)
+		{
+			string field_name = fields.get(i);
+			q.addField(new QueryField("posts", field_name));
+		}
+		
+		Cursor c = await conn.execute(q);
+		QueryResult res = await conn.fetchAll(q);
+		
+		page = c.getPage() + 1;
+		pages = c.getPages();
+		
+		await c.close();
+		
+		/* Transform items */
+		Collection items = res.toCollection();
+		items = items.map(
+			Dict (Relation item) use (fields) => item.intersect(fields)
+		);
+		
+		this.result.success({
+			"data": {
+				"items": items,
+				"page": page,
+				"pages": pages,
+			}
+		});
+	}
+}
