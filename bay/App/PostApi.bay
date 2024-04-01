@@ -70,8 +70,10 @@ class PostApi extends BaseApi
 	{
 		Connection conn = Connection::get("prefix");
 		
+		bool found_rows = this.post_data.get("found_rows", true);
+		int post_id = (int)this.post_data.get("post_id");
 		string post_type = this.post_data.get("post_type");
-		int page = this.post_data.get("page");
+		int page = this.post_data.get("page", 1);
 		int pages = 0;
 		int limit = this.post_data.get("limit");
 		if (limit < 0) limit = 1;
@@ -79,23 +81,32 @@ class PostApi extends BaseApi
 		
 		/* Get fields */
 		Collection fields = this.post_data.get("fields");
+		if (fields == null) fields = [
+			"ID",
+			"post_title",
+			"post_name",
+			"post_content",
+		];
 		fields = this.getAllowedFields(fields);
 		
-		/* Get items */
+		/* Build query */
 		Query q = new Query()
 			.select("posts")
-			.calcFoundRows(true)
 			.where("posts.post_type", "=", post_type)
 			.where("posts.post_status", "=", "publish")
 			.orderBy("posts.post_modified_gmt", "desc")
 			.page(page - 1).limit(limit)
 		;
 		
+		/* Found rows */
+		if (found_rows) q.calcFoundRows(true);
+		
 		/* Set post id */
-		if (this.post_data.has("post_id"))
+		if (post_id > 0)
 		{
 			int post_id = (int)this.post_data.get("post_id");
 			q.where("posts.ID", "=", post_id);
+			q.calcFoundRows(false);
 		}
 		
 		/* Add fields */
@@ -106,7 +117,7 @@ class PostApi extends BaseApi
 		}
 		
 		Cursor c = await conn.execute(q);
-		QueryResult res = await conn.fetchAll(q);
+		QueryResult res = await c.fetchAll(q);
 		
 		page = c.getPage() + 1;
 		pages = c.getPages();
@@ -119,11 +130,103 @@ class PostApi extends BaseApi
 			Dict (Relation item) use (fields) => item.intersect(fields)
 		);
 		
+		/* Set result */
 		this.result.success({
 			"data": {
 				"items": items,
 				"page": page,
 				"pages": pages,
+			}
+		});
+	}
+	
+	
+	/**
+	 * Returns archive
+	 */
+	@ApiMethod
+	async void getArchive()
+	{
+		Connection conn = Connection::get("prefix");
+		Collection items = [];
+		
+		/* Build query */
+		Query q = new Query()
+			.select("posts")
+			.distinct(true)
+			.addRawField("DATE_FORMAT(`posts`.`post_date_gmt`, '%Y-%m') as `post_date`")
+			.where("post_type", "=", "post")
+			.where("post_status", "=", "publish")
+			.orderBy("post_date", "desc")
+		;
+		
+		items = await conn.fetchAll(q);
+		
+		/* Transform items */
+		items = items.map( string (Dict item) => item.get("post_date") );
+		
+		/* Set result */
+		this.result.success({
+			"data": {
+				"items": items,
+			}
+		});
+	}
+	
+	
+	/**
+	 * Action categories
+	 */
+	@ApiMethod
+	async void getCategories()
+	{
+		Connection conn = Connection::get("prefix");
+		Collection items = [];
+		
+		string taxonomy_name = this.post_data.get("taxonomy", "");
+		
+		Query q = new Query()
+			.select("terms")
+			.addFields([
+				"terms.term_id as term_id",
+				"terms.name as name",
+				"terms.slug as slug",
+				"term_taxonomy.taxonomy as taxonomy",
+				"term_taxonomy.parent as parent_id",
+				"term_taxonomy.count as count",
+			])
+			.where("term_taxonomy.taxonomy", "=", taxonomy_name)
+			.innerJoin("term_taxonomy", ["term_taxonomy.term_id = terms.term_id"])
+			.orderBy("terms.name", "asc")
+		;
+		
+		QueryResult res = await conn.fetchAll(q);
+		
+		/* Transform items */
+		Collection fields = [
+			"term_id",
+			"name",
+			"slug",
+			"taxonomy",
+			"parent_id",
+			"count",
+		];
+		Collection items = res.toCollection();
+		items = items.map(
+			Dict (Relation item) use (fields)
+			{
+				item = item.intersect(fields);
+				item.set("count", (int)item.get("count"));
+				item.set("parent_id", (int)item.get("parent_id"));
+				item.set("term_id", (int)item.get("term_id"));
+				return item;
+			}
+		);
+		
+		/* Set result */
+		this.result.success({
+			"data": {
+				"items": items,
 			}
 		});
 	}
