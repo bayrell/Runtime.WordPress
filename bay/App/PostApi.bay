@@ -117,23 +117,60 @@ class PostApi extends BaseApi
 		}
 		
 		Cursor c = await conn.execute(q);
-		QueryResult res = await c.fetchAll(q);
+		QueryResult posts_res = await c.fetchAll(q);
 		
 		page = c.getPage() + 1;
 		pages = c.getPages();
 		
 		await c.close();
 		
-		/* Transform items */
-		Collection items = res.toCollection();
-		items = items.map(
+		/* Transform posts */
+		Collection posts = posts_res.toCollection();
+		posts = posts.map(
 			Dict (Relation item) use (fields) => item.intersect(fields)
+		);
+		
+		/* Build posts index */
+		Dict posts_index = posts_res.transition(
+			list (Dict item, int index) => [index, item.get("ID")]
+		);
+		
+		/* Get post ids */
+		Collection<int> pk_ids = posts_res.map(
+			int (Dict item) => item.get("ID")
+		);
+		
+		/* Build postmeta query */
+		Query q = new Query()
+			.select("postmeta")
+			.addRawField("`postmeta`.*")
+			.where("post_id", "=", pk_ids)
+			.where("meta_key", "=", "rank_math_primary_category")
+		;
+		QueryResult primary_categories = await conn.fetchAll(q);
+		
+		/* Get primary category */
+		primary_categories = primary_categories.toCollection();
+		primary_categories.each(
+			var (Dict postmeta) use (posts, posts_index)
+			{
+				int post_id = (int)postmeta.get("post_id");
+				int meta_value = (int)postmeta.get("meta_value");
+				string meta_key = postmeta.get("meta_key");
+				
+				if (not posts_index.has(post_id)) return;
+				if (meta_key != "rank_math_primary_category") return;
+				
+				int pos = posts_index.get(post_id)
+				Map post = posts.get(pos);
+				post.set("primary_category", meta_value);
+			}
 		);
 		
 		/* Set result */
 		this.result.success({
 			"data": {
-				"items": items,
+				"items": posts,
 				"page": page,
 				"pages": pages,
 			}
