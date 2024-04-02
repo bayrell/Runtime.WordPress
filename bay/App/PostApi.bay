@@ -24,6 +24,7 @@ use Runtime.ORM.Connection;
 use Runtime.ORM.Cursor;
 use Runtime.ORM.Query;
 use Runtime.ORM.QueryField;
+use Runtime.ORM.QueryFilter;
 use Runtime.ORM.QueryResult;
 use Runtime.ORM.Relation;
 use Runtime.Web.BaseApi;
@@ -70,12 +71,15 @@ class PostApi extends BaseApi
 	{
 		Connection conn = Connection::get("prefix");
 		
-		bool found_rows = this.post_data.get("found_rows", true);
-		int post_id = (int)this.post_data.get("post_id");
 		string post_type = this.post_data.get("post_type");
-		int page = this.post_data.get("page", 1);
+		
+		/* Get page */
+		int page = (int)this.post_data.get("page", 1);
 		int pages = 0;
-		int limit = this.post_data.get("limit");
+		if (page < 1) page = 1;
+		
+		/* Get page limit */
+		int limit = (int)this.post_data.get("limit", 100);
 		if (limit < 0) limit = 1;
 		if (limit > 100) limit = 100;
 		
@@ -95,18 +99,78 @@ class PostApi extends BaseApi
 			.where("posts.post_type", "=", post_type)
 			.where("posts.post_status", "=", "publish")
 			.orderBy("posts.post_modified_gmt", "desc")
-			.page(page - 1).limit(limit)
+			.limit(limit).page(page - 1)
 		;
 		
 		/* Found rows */
+		bool found_rows = this.post_data.get("found_rows", true);
 		if (found_rows) q.calcFoundRows(true);
 		
+		/* Set search */
+		if (this.post_data.has("search"))
+		{
+			string search = this.post_data.get("search");
+			QueryFilter f = new QueryFilter
+			(
+				"posts.post_title, posts.post_content",
+				"match",
+				search,
+				"full_text_search"
+			);
+			q.addField(f);
+			q.addFilter(f);
+			q.clearOrder();
+			q.orderBy("full_text_search", "desc");
+		}
+		
 		/* Set post id */
+		int post_id = (int)this.post_data.get("post_id");
 		if (post_id > 0)
 		{
 			int post_id = (int)this.post_data.get("post_id");
 			q.where("posts.ID", "=", post_id);
 			q.calcFoundRows(false);
+		}
+		
+		/* Set term id */
+		int term_id = (int)this.post_data.get("term_id");
+		if (term_id > 0)
+		{
+			int term_id = (int)this.post_data.get("term_id");
+			q.innerJoin(
+				"term_relationships",
+				["posts.ID = term_relationships.object_id"]
+			);
+			q.innerJoin(
+				"term_taxonomy",
+				["term_relationships.term_taxonomy_id = term_taxonomy.term_taxonomy_id"]
+			);
+			q.where("term_taxonomy.term_id", "=", term_id);
+		}
+		
+		/* Set archive */
+		if (this.post_data.has("date"))
+		{
+			string date = this.post_data.get("date");
+			string year = (int)rs::substr(date, 0, 4);
+			string month = (int)rs::substr(date, 5, 7);
+			
+			if (year > 0 and month > 0 and month <= 12)
+			{
+				DateTime date_begin = new DateTime{
+					"y": year,
+					"m": month,
+					"d": 1,
+				};
+				DateTime date_end = new DateTime{
+					"y": month < 12 ? year : year + 1,
+					"m": month < 12 ? month + 1 : 1,
+					"d": 1,
+				};
+				date_end = date_end.shift(-1);
+				q.where("post_date_gmt", ">=", date_begin.getDateTimeString());
+				q.where("post_date_gmt", "<=", date_end.getDateTimeString());
+			}
 		}
 		
 		/* Add fields */
@@ -212,15 +276,15 @@ class PostApi extends BaseApi
 	
 	
 	/**
-	 * Action categories
+	 * Action getTerms
 	 */
 	@ApiMethod
-	async void getCategories()
+	async void getTerms()
 	{
 		Connection conn = Connection::get("prefix");
 		Collection items = [];
 		
-		string taxonomy_name = this.post_data.get("taxonomy", "");
+		string taxonomy_name = this.post_data.get("taxonomy", "category");
 		
 		Query q = new Query()
 			.select("terms")
@@ -236,6 +300,20 @@ class PostApi extends BaseApi
 			.innerJoin("term_taxonomy", ["term_taxonomy.term_id = terms.term_id"])
 			.orderBy("terms.name", "asc")
 		;
+		
+		/* Set limit */
+		if (this.post_data.has("limit"))
+		{
+			int limit = this.post_data.get("limit");
+			q.limit(limit);
+		}
+		
+		/* Set slug */
+		if (this.post_data.has("slug"))
+		{
+			string slug = this.post_data.get("slug");
+			q.where("terms.slug", "=", slug);
+		}
 		
 		QueryResult res = await conn.fetchAll(q);
 		
