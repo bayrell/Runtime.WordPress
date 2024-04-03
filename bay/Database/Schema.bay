@@ -87,6 +87,22 @@ class Schema extends DatabaseSchema
 	
 	
 	/**
+	 * Forms ip
+	 */
+	@Table{ "name": "forms_ip" }
+	pure memorize Collection<BaseStruct> forms_ip() =>
+	[
+		/* Fields */
+		new StringType{"name": "ip"},
+		new BigIntType{"name": "count"},
+		new BigIntType{"name": "last"},
+		
+		/* Index */
+		new Primary{"keys": ["ip"]},
+	];
+	
+	
+	/**
 	 * Mail settings
 	 */
 	@Table{ "name": "mail_settings" }

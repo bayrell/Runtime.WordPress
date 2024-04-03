@@ -132,6 +132,14 @@ class PostApi extends BaseApi
 			q.calcFoundRows(false);
 		}
 		
+		/* Set post name */
+		if (this.post_data.has("post_name"))
+		{
+			string post_name = this.post_data.get("post_name");
+			q.where("posts.post_name", "=", post_name);
+			q.calcFoundRows(false);
+		}
+		
 		/* Set term id */
 		int term_id = (int)this.post_data.get("term_id");
 		if (term_id > 0)
