@@ -40,7 +40,7 @@ class AppHook extends BaseAppHook
 	 */
 	void render_head(Map params)
 	{
-		params.get("components").push("Runtime.WordPress.App.WP_Head");
+		params.get("components").push("Runtime.WordPress.Components.WP_Head");
 	}
 	
 	
@@ -49,6 +49,6 @@ class AppHook extends BaseAppHook
 	 */
 	void render_footer(Map params)
 	{
-		params.get("components").push("Runtime.WordPress.App.WP_Footer");
+		params.get("components").push("Runtime.WordPress.Components.WP_Footer");
 	}
 }

@@ -16,7 +16,7 @@
  *  limitations under the License.
  */
 
-namespace Runtime.WordPress.Admin;
+namespace Runtime.WordPress.Components;
 
 use Runtime.lib;
 use Runtime.BaseStruct;
@@ -34,6 +34,8 @@ struct ImageRule extends CrudRule
 {
 	string name = "";
 	string key = "";
+	string db_prefix = "prefix";
+	string table_prefix = "";
 	
 	
 	/**
@@ -65,11 +67,11 @@ struct ImageRule extends CrudRule
 		;
 		
 		/* Get connection */
-		Connection conn = Connection::get("prefix");
+		Connection conn = Connection::get(this.db_prefix);
 		
 		/* Get images metadata */
 		Query q = new Query()
-			.select("postmeta")
+			.select(this.table_prefix ~ "postmeta")
 			.addRawField("*")
 			.where("meta_key", "=", ["_wp_attachment_metadata", "_wp_attached_file"])
 			.where("post_id", "=", pk_ids)
@@ -78,7 +80,7 @@ struct ImageRule extends CrudRule
 		
 		/* Get post */
 		Query q = new Query()
-			.select("posts")
+			.select(this.table_prefix ~ "posts")
 			.addRawField("*")
 			.where("ID", "=", pk_ids)
 		;

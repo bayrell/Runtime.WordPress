@@ -16,12 +16,12 @@
  *  limitations under the License.
 -->
 
-<class name="Runtime.WordPress.App.WP_Footer">
+<class name="Runtime.WordPress.Components.WP_Head">
 
 <use name="Runtime.WordPress.WP_Helper" />
 
 <template>
-	@raw{ WP_Helper::wp_call('wp_footer') }
+	@raw{ WP_Helper::wp_call('wp_head') }
 </template>
 
 </class>

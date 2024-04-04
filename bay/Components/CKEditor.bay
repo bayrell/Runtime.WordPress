@@ -16,7 +16,7 @@
  *  limitations under the License.
 -->
 
-<class name="Runtime.WordPress.Admin.CKEditor">
+<class name="Runtime.WordPress.Components.CKEditor">
 
 
 <style>
