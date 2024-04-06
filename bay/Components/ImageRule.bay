@@ -44,21 +44,7 @@ struct ImageRule extends CrudRule
 	void onSearchAfter(CrudPageApi api)
 	{
 		string action = api.action;
-		Collection<Dict> items = [];
-		
-		/* Check action */
-		if (action != "actionSearch" and
-			action != "actionSave" and
-			action != "actionItem" and
-			action != "actionSearchOne")
-		{
-			return;
-		}
-		if (action == "actionSearch" or action == "actionSearchOne") items = api.items;
-		if (action == "actionItem" or action == "actionSave")
-		{
-			items = [api.item];
-		}
+		Collection<Dict> items = api.items;
 		
 		/* Get primary keys */
 		Collection<int> pk_ids = items
@@ -161,14 +147,8 @@ struct ImageRule extends CrudRule
 			}
 		);
 		
-		if (action == "actionSearch" or action == "actionSearchOne")
-		{
-			api.items = items;
-		}
-		if (action == "actionItem" or action == "actionSave")
-		{
-			api.item = items[0];
-		}
+		/* Set api items */
+		api.items = items;
 	}
 	
 	

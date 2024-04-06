@@ -65,6 +65,7 @@ class ModuleDescription
 		#ifdef BACKEND then
 		new Api("Runtime.WordPress.Api.FormsApi"),
 		new Api("Runtime.WordPress.Api.PostApi"),
+		new Api("Runtime.WordPress.Api.TermApi"),
 		new Database("Runtime.WordPress.Database.Schema"),
 		new Hook("Runtime.WordPress.Hooks.AppHook"),
 		new WP_Factory(),

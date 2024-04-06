@@ -29,9 +29,11 @@ use Runtime.ORM.QueryResult;
 use Runtime.ORM.Relation;
 use Runtime.Web.BaseApi;
 use Runtime.Web.Annotations.ApiMethod;
+use Runtime.Widget.Crud.CrudApi;
+use Runtime.Widget.Crud.CrudRule;
 
 
-class PostApi extends BaseApi
+class PostApi extends CrudApi
 {
 	/**
 	 * Returns api name
@@ -40,71 +42,55 @@ class PostApi extends BaseApi
 	
 	
 	/**
-	 * Returns allowed fields
+	 * Returns table name
 	 */
-	Collection getAllowedFields(Collection fields)
+	pure string getTableName() => "posts";
+	
+	
+	/**
+	 * Returns item fields
+	 */
+	Collection getItemFields() => [
+		"ID",
+		"post_title",
+		"post_name",
+		"post_content",
+		"primary_category",
+	];
+	
+	
+	/**
+	 * Returns query field
+	 */
+	bool getQueryField(string table_name, string field_name)
 	{
-		Collection post_fields = [
-			"ID",
-			"post_title",
-			"post_name",
-			"post_content",
-			"post_status",
-			"post_type",
-			"post_modified",
-			"post_modified_gmt",
-		];
-		Dict post_fields_map = post_fields.transition(
-			int (string name, int pos) => [pos, name]
-		);
-		return fields.filter(
-			bool (string name) use (post_fields_map) => post_fields_map.has(name)
-		);
+		if (field_name == "primary_category")
+		{
+			return null;
+		}
+		return parent(table_name, field_name);
 	}
 	
 	
 	/**
-	 * Action search
+	 * Returns rules
 	 */
-	@ApiMethod
-	async void actionSearch()
+	Collection<CrudRule> getRules() =>
+	[
+	];
+	
+	
+	/**
+	 * Build search query
+	 */
+	async void buildSearchQuery(Query q)
 	{
-		Connection conn = Connection::get("prefix");
+		string post_type = this.post_data.get("post_type", "post");
 		
-		string post_type = this.post_data.get("post_type");
-		
-		/* Get page */
-		int page = (int)this.post_data.get("page", 1);
-		int pages = 0;
-		if (page < 1) page = 1;
-		
-		/* Get page limit */
-		int limit = (int)this.post_data.get("limit", 100);
-		if (limit < 0) limit = 1;
-		if (limit > 100) limit = 100;
-		
-		/* Get fields */
-		Collection fields = this.post_data.get("fields");
-		if (fields == null) fields = [
-			"ID",
-			"post_title",
-			"post_name",
-			"post_content",
-		];
-		fields = this.getAllowedFields(fields);
-		
-		/* Build query */
-		Query q = new Query()
-			.select("posts")
-			.where("posts.post_type", "=", post_type)
-			.where("posts.post_status", "=", "publish")
-			.orderBy("posts.post_modified_gmt", "desc")
-			.limit(limit).page(page - 1)
-		;
-		
-		/* Found rows */
-		bool found_rows = this.post_data.get("found_rows", true);
-		if (found_rows) q.calcFoundRows(true);
+		/* Add filter */
+		q.where("posts.post_type", "=", post_type);
+		q.where("posts.post_status", "=", "publish");
+		q.orderBy("posts.post_modified_gmt", "desc");
 		
 		/* Set search */
 		if (this.post_data.has("search"))
@@ -180,35 +166,37 @@ class PostApi extends BaseApi
 				q.where("post_date_gmt", "<=", date_end.getDateTimeString());
 			}
 		}
+	}
+	
+	
+	/**
+	 * After search
+	 */
+	async void onSearchAfter()
+	{
+		await parent();
 		
-		/* Add fields */
-		for (int i=0; i<fields.count(); i++)
-		{
-			string field_name = fields.get(i);
-			q.addField(new QueryField("posts", field_name));
-		}
-		
-		Cursor c = await conn.execute(q);
-		QueryResult posts_res = await c.fetchAll(q);
-		
-		page = c.getPage() + 1;
-		pages = c.getPages();
-		
-		await c.close();
+		Connection conn = this.getConnection();
+		Collection fields = [
+			"ID",
+			"post_title",
+			"post_name",
+			"post_content",
+		];
 		
 		/* Transform posts */
-		Collection posts = posts_res.toCollection();
+		Collection posts = this.items.toCollection();
 		posts = posts.map(
 			Dict (Relation item) use (fields) => item.intersect(fields)
 		);
 		
 		/* Build posts index */
-		Dict posts_index = posts_res.transition(
+		Dict posts_index = this.items.transition(
 			list (Dict item, int index) => [index, item.get("ID")]
 		);
 		
 		/* Get post ids */
-		Collection<int> pk_ids = posts_res.map(
+		Collection<int> pk_ids = this.items.map(
 			int (Dict item) => item.get("ID")
 		);
 		
@@ -234,19 +222,30 @@ class PostApi extends BaseApi
 				if (meta_key != "rank_math_primary_category") return;
 				
 				int pos = posts_index.get(post_id)
-				Map post = posts.get(pos);
+				Map post = this.items.get(pos);
 				post.set("primary_category", meta_value);
 			}
 		);
-		
-		/* Set result */
-		this.result.success({
-			"data": {
-				"items": posts,
-				"page": page,
-				"pages": pages,
-			}
-		});
+	}
+	
+	
+	/**
+	 * Action search
+	 */
+	@ApiMethod
+	async void actionSearch()
+	{
+		await parent();
+	}
+	
+	
+	/**
+	 * Action search one
+	 */
+	@ApiMethod
+	async void actionSearchOne()
+	{
+		await parent();
 	}
 	
 	
@@ -273,78 +272,6 @@ class PostApi extends BaseApi
 		
 		/* Transform items */
 		items = items.map( string (Dict item) => item.get("post_date") );
-		
-		/* Set result */
-		this.result.success({
-			"data": {
-				"items": items,
-			}
-		});
-	}
-	
-	
-	/**
-	 * Action getTerms
-	 */
-	@ApiMethod
-	async void getTerms()
-	{
-		Connection conn = Connection::get("prefix");
-		Collection items = [];
-		
-		string taxonomy_name = this.post_data.get("taxonomy", "category");
-		
-		Query q = new Query()
-			.select("terms")
-			.addFields([
-				"terms.term_id as term_id",
-				"terms.name as name",
-				"terms.slug as slug",
-				"term_taxonomy.taxonomy as taxonomy",
-				"term_taxonomy.parent as parent_id",
-				"term_taxonomy.count as count",
-			])
-			.where("term_taxonomy.taxonomy", "=", taxonomy_name)
-			.innerJoin("term_taxonomy", ["term_taxonomy.term_id = terms.term_id"])
-			.orderBy("terms.name", "asc")
-		;
-		
-		/* Set limit */
-		if (this.post_data.has("limit"))
-		{
-			int limit = this.post_data.get("limit");
-			q.limit(limit);
-		}
-		
-		/* Set slug */
-		if (this.post_data.has("slug"))
-		{
-			string slug = this.post_data.get("slug");
-			q.where("terms.slug", "=", slug);
-		}
-		
-		QueryResult res = await conn.fetchAll(q);
-		
-		/* Transform items */
-		Collection fields = [
-			"term_id",
-			"name",
-			"slug",
-			"taxonomy",
-			"parent_id",
-			"count",
-		];
-		Collection items = res.toCollection();
-		items = items.map(
-			Dict (Relation item) use (fields)
-			{
-				item = item.intersect(fields);
-				item.set("count", (int)item.get("count"));
-				item.set("parent_id", (int)item.get("parent_id"));
-				item.set("term_id", (int)item.get("term_id"));
-				return item;
-			}
-		);
 		
 		/* Set result */
 		this.result.success({
