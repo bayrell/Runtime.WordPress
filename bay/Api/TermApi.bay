@@ -80,9 +80,9 @@ class TermApi extends CrudApi
 			field_name == "count"
 		)
 		{
-			return new QueryField("term_taxonomy", field_name, field_name);
+			return new QueryField("term_taxonomy", field_name);
 		}
-		return parent(field_name);
+		return new QueryField("terms", field_name);
 	}
 	
 	

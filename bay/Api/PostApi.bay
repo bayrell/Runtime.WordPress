@@ -76,7 +76,7 @@ class PostApi extends CrudApi
 		{
 			return null;
 		}
-		return parent(field_name);
+		return new QueryField("posts", field_name);
 	}
 	
 	

@@ -47,7 +47,7 @@ class RobotsRoute extends BaseRoute
 			{
 				"uri": "/robots.txt",
 				"name": "site:robots",
-				"method": "actionIndex",
+				"action": "actionIndex",
 				"enable_locale": false,
 			},
 		];
@@ -63,8 +63,8 @@ class RobotsRoute extends BaseRoute
 		
 		/* Create response */
 		Response response = new Response();
-		response <= content <= content;
-		response <= headers <= "Content-Type" <= "text/plain; charset=UTF-8";
+		response.content = content;
+		response.headers.set("Content-Type", "text/plain; charset=UTF-8");
         
         /* Set response */
 		this.container.setResponse(response);
