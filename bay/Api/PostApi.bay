@@ -56,6 +56,9 @@ class PostApi extends CrudApi
 		"post_name",
 		"post_content",
 		"primary_category",
+		"taxonomy",
+		"categories",
+		"tags",
 	];
 	
 	
@@ -64,7 +67,12 @@ class PostApi extends CrudApi
 	 */
 	bool getQueryField(string table_name, string field_name)
 	{
-		if (field_name == "primary_category")
+		if (
+			field_name == "tags" or
+			field_name == "taxonomy" or
+			field_name == "categories" or
+			field_name == "primary_category"
+		)
 		{
 			return null;
 		}
@@ -200,32 +208,151 @@ class PostApi extends CrudApi
 			int (Dict item) => item.get("ID")
 		);
 		
-		/* Build postmeta query */
-		Query q = new Query()
-			.select("postmeta")
-			.addRawField("`postmeta`.*")
-			.where("post_id", "=", pk_ids)
-			.where("meta_key", "=", "rank_math_primary_category")
+		/* Get categories */
+		bool categories_allowed = this.hasAllowedField("categories") or
+			this.hasAllowedField("primary_category")
 		;
-		QueryResult primary_categories = await conn.fetchAll(q);
+		bool tags_allowed = this.hasAllowedField("tags");
+		if (categories_allowed or tags_allowed)
+		{
+			Query q = new Query()
+				.select("terms")
+				.addFields([
+					"term_relationships.object_id",
+					"term_taxonomy.taxonomy",
+					"terms.term_id",
+					"terms.name",
+				])
+				.innerJoin(
+					"term_taxonomy",
+					["term_taxonomy.term_id = terms.term_id"]
+				)
+				.innerJoin(
+					"term_relationships",
+					["term_taxonomy.term_taxonomy_id = term_relationships.term_taxonomy_id"]
+				)
+				.where("term_relationships.object_id", "=", pk_ids)
+			;
+			
+			/* Get result */
+			QueryResult taxonomy = conn.fetchAll(q);
+			taxonomy.each(
+				var (Dict data) use (posts, posts_index, categories_allowed, tags_allowed)
+				{
+					int post_id = (int)data.get("object_id");
+					int term_id = (int)data.get("term_id");
+					string taxonomy = data.get("taxonomy");
+					string taxonomy_name = data.get("name");
+					
+					/* Get post */
+					if (not posts_index.has(post_id)) return;
+					int pos = posts_index.get(post_id)
+					Map post = this.items.get(pos);
+					
+					/* Add taxonomy */
+					if (not post.has("taxonomy"))
+					{
+						post.set("taxonomy", {});
+					}
+					Map post_taxonomy = post.get("taxonomy");
+					
+					/* Add categories */
+					if (categories_allowed and taxonomy == "category")
+					{
+						if (not post.has("categories"))
+						{
+							post.set("categories", []);
+						}
+						Vector categories = post.get("categories");
+						categories.push(term_id);
+						post_taxonomy.set(term_id, {
+							"term_id": term_id,
+							"taxonomy": taxonomy,
+							"name": taxonomy_name,
+						});
+					}
+					
+					/* Add tags */
+					if (tags_allowed and taxonomy == "post_tag")
+					{
+						if (not post.has("tags"))
+						{
+							post.set("tags", []);
+						}
+						Vector categories = post.get("tags");
+						categories.push(term_id);
+						post_taxonomy.set(term_id, {
+							"term_id": term_id,
+							"taxonomy": taxonomy,
+							"name": taxonomy_name,
+						});
+					}
+				}
+			);
+			
+			/* Sort taxonomy */
+			this.items.each(
+				void (Map post)
+				{
+					if (post.has("categories"))
+					{
+						post.set("categories", post.get("categories").sort());
+					}
+					if (post.has("tags"))
+					{
+						post.set("tags", post.get("tags").sort());
+					}
+				}
+			);
+		}
 		
-		/* Get primary category */
-		primary_categories = primary_categories.toCollection();
-		primary_categories.each(
-			var (Dict postmeta) use (posts, posts_index)
-			{
-				int post_id = (int)postmeta.get("post_id");
-				int meta_value = (int)postmeta.get("meta_value");
-				string meta_key = postmeta.get("meta_key");
-				
-				if (not posts_index.has(post_id)) return;
-				if (meta_key != "rank_math_primary_category") return;
-				
-				int pos = posts_index.get(post_id)
-				Map post = this.items.get(pos);
-				post.set("primary_category", meta_value);
-			}
-		);
+		/* Build postmeta query */
+		if (this.hasAllowedField("primary_category"))
+		{
+			Query q = new Query()
+				.select("postmeta")
+				.addRawField("`postmeta`.*")
+				.where("post_id", "=", pk_ids)
+				.where("meta_key", "=", "rank_math_primary_category")
+			;
+			QueryResult primary_categories = await conn.fetchAll(q);
+			
+			/* Get primary category */
+			primary_categories.each(
+				var (Dict postmeta) use (posts, posts_index)
+				{
+					int post_id = (int)postmeta.get("post_id");
+					int meta_value = (int)postmeta.get("meta_value");
+					string meta_key = postmeta.get("meta_key");
+					
+					if (not posts_index.has(post_id)) return;
+					if (meta_key != "rank_math_primary_category") return;
+					
+					int pos = posts_index.get(post_id);
+					Map post = this.items.get(pos);
+					post.set("primary_category", meta_value);
+				}
+			);
+			
+			/* Set primary category from taxonomy */
+			this.items.each(
+				void (Map post)
+				{
+					int primary_category = (int)post.get("primary_category");
+					if (primary_category > 0) return;
+					if (not post.has("taxonomy")) return;
+					if (not post.has("categories")) return;
+					
+					Dict taxonomy = post.get("taxonomy");
+					Collection categories = post.get("categories");
+					if (categories.count() == 0) return;
+					
+					/* Set primary category */
+					int first_category = categories.get(0);
+					post.set("primary_category", first_category);
+				}
+			);
+		}
 	}
 	
 	

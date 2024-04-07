@@ -30,8 +30,8 @@ class AppHook extends BaseAppHook
 	 */
 	void register_hooks()
 	{
-		this.register(static::RENDER_HEAD);
-		this.register(static::RENDER_FOOTER);
+		this.register(static::RENDER_HEAD, 1000);
+		this.register(static::RENDER_FOOTER, 1000);
 	}
 	
 	
