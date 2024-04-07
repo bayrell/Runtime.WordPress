@@ -23,8 +23,8 @@ use Runtime.Widget.Input;
 use Runtime.Widget.Select;
 use Runtime.Widget.TextArea;
 use Runtime.Widget.Crud.CrudApiStorage;
-use Runtime.Widget.Crud.Form.FormModel;
-use Runtime.Widget.Crud.Form.SaveButtonModel;
+use Runtime.Widget.Form.FormModel;
+use Runtime.Widget.Form.SaveButtonModel;
 
 
 class RobotsFormModel extends FormModel

@@ -22,7 +22,7 @@ use Runtime.Web.BaseRoute;
 use Runtime.Widget.Label;
 use Runtime.Widget.TextArea;
 use Runtime.Widget.Crud.CrudApiStorage;
-use Runtime.Widget.Crud.Form.FormModel;
+use Runtime.Widget.Form.FormModel;
 
 
 class MailLogFormModel extends FormModel
@@ -101,7 +101,7 @@ class MailLogFormModel extends FormModel
 		if (field_name == "gmtime_send")
 		{
 			DateTime gmtime_send = item.get("gmtime_send");
-			return gmtime_send ? gmtime_send.toString() : "";
+			return gmtime_send ? gmtime_send.normalize().getDateTimeString() : "";
 		}
 		return parent(item, field_name);
 	}

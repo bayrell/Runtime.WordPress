@@ -22,7 +22,7 @@ use Runtime.Web.BaseRoute;
 use Runtime.Widget.Input;
 use Runtime.Widget.TextArea;
 use Runtime.Widget.Crud.CrudApiStorage;
-use Runtime.Widget.Crud.Form.FormModel;
+use Runtime.Widget.Form.FormModel;
 
 
 class FormSettingsFormModel extends FormModel

@@ -24,7 +24,7 @@ use Runtime.Widget.ButtonModel;
 use Runtime.Widget.Label;
 use Runtime.Widget.RowButtonsModel;
 use Runtime.Widget.Crud.CrudApiStorage;
-use Runtime.Widget.Crud.Table.TableDialogModel;
+use Runtime.Widget.Table.TableDialogModel;
 use Runtime.WordPress.Admin.FormSettings.FormSettingsFormModel;
 
 

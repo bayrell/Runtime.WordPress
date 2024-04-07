@@ -19,10 +19,10 @@
 namespace Runtime.WordPress.Admin.FormData;
 
 use Runtime.Web.BaseRoute;
+use Runtime.Widget.Crud.CrudApiStorage;
+use Runtime.Widget.Form.FormModel;
 use Runtime.Widget.Input;
 use Runtime.Widget.TextArea;
-use Runtime.Widget.Crud.CrudApiStorage;
-use Runtime.Widget.Crud.Form.FormModel;
 
 
 class FormDataFormModel extends FormModel
@@ -111,7 +111,7 @@ class FormDataFormModel extends FormModel
 		if (field_name == "gmtime_add")
 		{
 			DateTime gmtime_add = item.get("gmtime_add");
-			return gmtime_add ? gmtime_add.toString() : "";
+			return gmtime_add ? gmtime_add.normalize().getDateTimeString() : "";
 		}
 		return parent(item, field_name);
 	}

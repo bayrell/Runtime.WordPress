@@ -27,7 +27,6 @@ use Runtime.WordPress.ORM.WP_Factory;
 
 class ModuleDescription
 {
-	
 	/**
 	 * Returns module name
 	 */
@@ -49,7 +48,6 @@ class ModuleDescription
 		'Runtime': '>=0.12',
 		'Runtime.Web': '>=0.12',
 		'Runtime.Widget': '>=0.12',
-		'Runtime.Widget.Crud': '>=0.12',
 		
 		#ifdef BACKEND then
 		'Runtime.ORM': '>=0.12',

@@ -90,9 +90,6 @@ class MailSettingsApi extends CrudApi
 	 */
 	async Query buildSearchQuery(Query q)
 	{
-		q.addFields([
-			"mail_settings.*"
-		]);
 		q.orderBy("plan", "asc");
 		return q;
 	}

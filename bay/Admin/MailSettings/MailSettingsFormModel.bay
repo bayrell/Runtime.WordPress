@@ -23,7 +23,7 @@ use Runtime.Widget.Input;
 use Runtime.Widget.Select;
 use Runtime.Widget.TextArea;
 use Runtime.Widget.Crud.CrudApiStorage;
-use Runtime.Widget.Crud.Form.FormModel;
+use Runtime.Widget.Form.FormModel;
 
 
 class MailSettingsFormModel extends FormModel

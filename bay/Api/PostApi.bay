@@ -65,7 +65,7 @@ class PostApi extends CrudApi
 	/**
 	 * Returns query field
 	 */
-	bool getQueryField(string table_name, string field_name)
+	bool getQueryField(string field_name)
 	{
 		if (
 			field_name == "tags" or
@@ -76,7 +76,7 @@ class PostApi extends CrudApi
 		{
 			return null;
 		}
-		return parent(table_name, field_name);
+		return parent(field_name);
 	}
 	
 	

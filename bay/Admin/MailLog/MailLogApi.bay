@@ -86,9 +86,6 @@ class MailLogApi extends CrudApi
 	 */
 	async Query buildSearchQuery(Query q)
 	{
-		q.addFields([
-			"mail_delivery.*"
-		]);
 		q.orderBy("gmtime_add", "desc");
 		return q;
 	}
