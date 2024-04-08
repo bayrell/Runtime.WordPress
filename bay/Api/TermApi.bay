@@ -98,8 +98,7 @@ class TermApi extends CrudApi
 		q.orderBy("terms.name", "asc");
 		
 		/* Set term id */
-		int term_id = (int)this.post_data.get("term_id");
-		if (term_id > 0)
+		if (this.post_data.has("term_id"))
 		{
 			int term_id = (int)this.post_data.get("term_id");
 			q.where("terms.ID", "=", term_id);

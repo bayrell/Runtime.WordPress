@@ -19,6 +19,7 @@
 namespace Runtime.WordPress.Admin.FormSettings;
 
 use Runtime.Web.BaseRoute;
+use Runtime.Web.RenderContainer;
 use Runtime.Widget.Crud.CrudPageModel;
 use Runtime.WordPress.Admin.WP_CrudPage;
 use Runtime.WordPress.Admin.FormSettings.FormSettingsTableModel;
@@ -49,9 +50,9 @@ class FormSettingsPageModel extends CrudPageModel
 	
 	
 	/**
-	 * Route After
+	 * Build title
 	 */
-	async void onRouteAfter(BaseRoute route)
+	void buildTitle(RenderContainer container)
 	{
 		if (this.action == "index")
 		{

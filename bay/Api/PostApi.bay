@@ -118,8 +118,7 @@ class PostApi extends CrudApi
 		}
 		
 		/* Set post id */
-		int post_id = (int)this.post_data.get("post_id");
-		if (post_id > 0)
+		if (this.post_data.has("post_id"))
 		{
 			int post_id = (int)this.post_data.get("post_id");
 			q.where("posts.ID", "=", post_id);
@@ -135,8 +134,7 @@ class PostApi extends CrudApi
 		}
 		
 		/* Set term id */
-		int term_id = (int)this.post_data.get("term_id");
-		if (term_id > 0)
+		if (this.post_data.has("term_id"))
 		{
 			int term_id = (int)this.post_data.get("term_id");
 			q.innerJoin(

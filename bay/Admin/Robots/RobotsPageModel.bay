@@ -19,6 +19,7 @@
 namespace Runtime.WordPress.Admin.Robots;
 
 use Runtime.Web.BaseRoute;
+use Runtime.Web.RenderContainer;
 use Runtime.Widget.Crud.CrudPageModel;
 use Runtime.WordPress.Admin.WP_CrudPage;
 use Runtime.WordPress.Admin.Robots.RobotsFormModel;
@@ -42,9 +43,9 @@ class RobotsPageModel extends CrudPageModel
 	
 	
 	/**
-	 * Route After
+	 * Build title
 	 */
-	async void onRouteAfter(BaseRoute route)
+	void buildTitle(RenderContainer container)
 	{
 		this.layout.setPageTitle("Robots TXT");
 	}
