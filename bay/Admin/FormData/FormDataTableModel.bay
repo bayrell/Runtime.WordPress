@@ -71,6 +71,11 @@ class FormDataTableModel extends TableDialogModel
 				"component": classof Label,
 			},
 			{
+				"name": "send_email_error",
+				"label": "Mail error",
+				"component": classof Label,
+			},
+			{
 				"name": "gmtime_add",
 				"label": "Date",
 				"component": classof Label,

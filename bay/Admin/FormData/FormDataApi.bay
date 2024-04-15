@@ -52,6 +52,8 @@ class FormDataApi extends CrudApi
 		"id",
 		"form_title",
 		"form_position",
+		"send_email_code",
+		"send_email_error",
 		"data",
 		"gmtime_add",
 	];
