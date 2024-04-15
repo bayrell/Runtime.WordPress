@@ -27,6 +27,7 @@ use Runtime.ORM.QueryField;
 use Runtime.ORM.QueryFilter;
 use Runtime.ORM.QueryResult;
 use Runtime.ORM.Relation;
+use Runtime.ORM.SQLBuilder;
 use Runtime.Web.BaseApi;
 use Runtime.Web.Annotations.ApiMethod;
 use Runtime.Widget.Crud.CrudApi;
@@ -104,15 +105,32 @@ class PostApi extends CrudApi
 		if (this.post_data.has("search"))
 		{
 			string search = this.post_data.get("search");
-			QueryFilter f = new QueryFilter
-			(
-				"posts.post_title, posts.post_content",
-				"match",
-				search,
-				"full_text_search"
+			q.addRawField(
+				void (SQLBuilder builder) =>
+					"MATCH(`posts`.`post_title`) AGAINST (" ~
+						builder.formatKey("text_search") ~
+					") * 10 + " ~
+					"MATCH(`posts`.`post_content`) AGAINST (" ~
+						builder.formatKey("text_search") ~
+					") as `full_text_search`"
 			);
-			q.addField(f);
-			q.addFilter(f);
+			q.value("text_search", search);
+			q.addOrFilter([
+				new QueryFilter
+				(
+					"posts.post_title",
+					"match",
+					search,
+					"full_text_search"
+				),
+				new QueryFilter
+				(
+					"posts.post_content",
+					"match",
+					search,
+					"full_text_search"
+				)
+			]);
 			q.clearOrder();
 			q.orderBy("full_text_search", "desc");
 		}
