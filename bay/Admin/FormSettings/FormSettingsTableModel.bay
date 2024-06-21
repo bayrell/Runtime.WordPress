@@ -44,14 +44,22 @@ class FormSettingsTableModel extends TableDialogModel
 	
 	
 	/**
+	 * Create form
+	 */
+	FormSettingsFormModel createForm() => this.addWidget(
+		classof FormSettingsFormModel,
+		{
+			"storage": this.createDataStorage(),
+		}
+	);
+	
+	
+	/**
 	 * Init widget settings
 	 */
-	void initWidget()
+	void initWidget(Dict params)
 	{
-		/* Create form */
-		this.addWidget(classof FormSettingsFormModel);
-		
-		parent();
+		parent(params);
 		
 		/* Add fields */
 		this.addFields([

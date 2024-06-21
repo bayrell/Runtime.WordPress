@@ -141,7 +141,12 @@ class WP_Helper
 		/* Create render container */
 		BaseApp app = @.getApp();
 		RenderContainer container = app.createRenderContainer();
-		await app.initLayout(container);
+		
+		/* Create request */
+		container.request = app.createRequest();
+		
+		/* Create layout */
+		await container.createLayout();
 		
 		/* Setup route */
 		RouteList routes = @.provider(classof RouteList);
@@ -155,7 +160,7 @@ class WP_Helper
 		}
 		
 		/* Resolve route */
-		await app.resolveRoute(container);
+		await container.resolveRoute();
 		
 		/* Return container */
 		return container;
@@ -198,9 +203,9 @@ class WP_Helper
 	/**
 	 * Render page
 	 */
-	async static void wp_render_page(string route_name)
+	async static void wp_render_page(string route_name, fn route_before = null)
 	{
-		RenderContainer container = static::wp_admin_route(route_name);
+		RenderContainer container = static::wp_admin_route(route_name, route_before);
 		string content = static::wp_render(container);
 		
 		#ifcode PHP then

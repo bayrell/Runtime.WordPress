@@ -1,7 +1,7 @@
 <!--
- *  Bayrell Runtime Library
+ *  BayLang Technology
  *
- *  (c) Copyright 2016-2023 "Ildar Bikmamatov" <support@bayrell.org>
+ *  (c) Copyright 2016-2024 "Ildar Bikmamatov" <support@bayrell.org>
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -16,9 +16,7 @@
  *  limitations under the License.
 -->
 
-<class name="Runtime.WordPress.Admin.WP_CrudPage"
-	extends="Runtime.Widget.Crud.CrudPage"
->
+<class name="Runtime.WordPress.Admin.DefaultLayout" extends="Runtime.Web.DefaultLayout">
 
 <style>
 .wp-heading-inline{
@@ -27,18 +25,15 @@
 }
 </style>
 
-
-<template name="renderPageTitle">
-	<h1 class="wp-heading-inline">{{ this.layout.title }}</h1>
+<template name="renderTitle">
+    <h1 class="wp-heading-inline">{{ this.layout.title }}</h1>
 </template>
-
 
 <template>
-	<div class="crud_page wrap">
-		%render this.renderPageTitle();
-		%render this.renderWidget(this.model.render_list);
-	</div>
+    <div class="default_layout wrap">
+	    %render this.renderTitle();
+	    %render this.renderCurrentPage();
+    </div>
 </template>
-
 
 </class>

@@ -18,7 +18,7 @@
 		"Robots/RobotsPageModel.bay",
 		"AppHook.bay",
 		"CSS.bay",
-		"WP_CrudPage.bay",
+		"DefaultLayout.bay",
 		"ModuleDescription.bay"
 	],
 	"src": "./",

@@ -27,15 +27,12 @@ use Runtime.WordPress.Admin.Robots.RobotsFormModel;
 
 class RobotsPageModel extends CrudPageModel
 {
-	string component = classof WP_CrudPage;
-	
-	
 	/**
 	 * Init widget settings
 	 */
-	void initWidget()
+	void initWidget(Dict params)
 	{
-		parent();
+		parent(params);
 		
 		RobotsFormModel form = this.addWidget(classof RobotsFormModel);
 		this.render_list.addItem(form);

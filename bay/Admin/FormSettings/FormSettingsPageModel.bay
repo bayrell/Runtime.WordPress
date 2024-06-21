@@ -21,21 +21,17 @@ namespace Runtime.WordPress.Admin.FormSettings;
 use Runtime.Web.BaseRoute;
 use Runtime.Web.RenderContainer;
 use Runtime.Widget.Crud.CrudPageModel;
-use Runtime.WordPress.Admin.WP_CrudPage;
 use Runtime.WordPress.Admin.FormSettings.FormSettingsTableModel;
 
 
 class FormSettingsPageModel extends CrudPageModel
 {
-	string component = classof WP_CrudPage;
-	
-	
 	/**
 	 * Init widget settings
 	 */
-	void initWidget()
+	void initWidget(Dict params)
 	{
-		parent();
+		parent(params);
 		
 		string route_name = this.layout.route.name;
 		if (route_name == "admin:forms:settings:index")

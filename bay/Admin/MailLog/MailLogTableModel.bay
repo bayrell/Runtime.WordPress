@@ -46,14 +46,22 @@ class MailLogTableModel extends TableDialogModel
 	
 	
 	/**
+	 * Create form
+	 */
+	MailLogFormModel createForm() => this.addWidget(
+		classof MailLogFormModel,
+		{
+			"storage": this.createDataStorage(),
+		}
+	);
+	
+	
+	/**
 	 * Init widget settings
 	 */
-	void initWidget()
+	void initWidget(Dict params)
 	{
-		/* Create form */
-		this.addWidget(classof MailLogFormModel);
-		
-		parent();
+		parent(params);
 		
 		/* Add fields */
 		this.addFields([

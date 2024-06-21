@@ -40,9 +40,9 @@ class MailLogFormModel extends FormModel
 	/**
 	 * Init widget settings
 	 */
-	void initWidget()
+	void initWidget(Dict params)
 	{
-		parent();
+		parent(params);
 		
 		/* Add fields */
 		this.addFields([

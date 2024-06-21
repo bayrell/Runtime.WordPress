@@ -1,5 +1,5 @@
 /*!
- *  Bayrell Runtime Library
+ *  BayLang Technology
  *
  *  (c) Copyright 2016-2024 "Ildar Bikmamatov" <support@bayrell.org>
  *
@@ -20,6 +20,7 @@ namespace Runtime.WordPress.Admin;
 
 use Runtime.Web.Hooks.AppHook as BaseAppHook;
 use Runtime.WordPress.Admin.CSS;
+use Runtime.WordPress.Admin.DefaultLayout;
 
 
 class AppHook extends BaseAppHook
@@ -31,6 +32,7 @@ class AppHook extends BaseAppHook
 	{
 		this.register(static::CALL_API_BEFORE);
 		this.register(static::COMPONENTS);
+		this.register(static::LAYOUT_COMPONENT_NAME);
 	}
 	
 	
@@ -54,5 +56,18 @@ class AppHook extends BaseAppHook
 		params["components"].appendItems([
 			classof CSS,
 		]);
+	}
+	
+	
+	/**
+	 * Layout component name
+	 */
+	void layout_component_name(Map params)
+	{
+		string layout_name = params.get("layout_name");
+		if (layout_name == "default")
+		{
+			params.set("class_name", classof DefaultLayout);
+		}
 	}
 }
