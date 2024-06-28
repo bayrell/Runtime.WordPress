@@ -171,6 +171,13 @@ class FormsApi extends BaseApi
 		Map update_data = this.post_data["item"];
 		update_data = await this.validateItem(update_data);
 		
+		/* Get title */
+		string form_title = this.form.get("name");
+		if (this.post_data.has("title"))
+		{
+			form_title = this.post_data.get("title");
+		}
+		
 		/* Spam check */
 		bool spam_check = this.checkSpam();
 		if (spam_check)
@@ -183,7 +190,7 @@ class FormsApi extends BaseApi
 		/* Save form */
 		Relation form_data = new Relation("forms_data");
 		form_data.set("form_id", this.form.get("id"));
-		form_data.set("form_title", this.form.get("name"));
+		form_data.set("form_title", form_title);
 		form_data.set("data", update_data);
 		form_data.set("spam", spam_check);
 		form_data.set("gmtime_add", DateTime::now());
