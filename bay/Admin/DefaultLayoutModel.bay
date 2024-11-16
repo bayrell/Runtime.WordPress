@@ -16,39 +16,13 @@
  *  limitations under the License.
  */
 
-namespace Runtime.WordPress.Hooks;
+namespace Runtime.WordPress.Admin;
 
-use Runtime.Web.RenderContainer;
-use Runtime.Web.RouteInfo;
-use Runtime.Web.Hooks.AppHook as BaseAppHook;
+use Runtime.Web.BaseLayoutModel;
+use Runtime.WordPress.Admin.DefaultLayout;
 
 
-class AppHook extends BaseAppHook
+class DefaultLayoutModel extends BaseLayoutModel
 {
-	/**
-	 * Register hooks
-	 */
-	void register_hooks()
-	{
-		this.register(static::RENDER_HEAD, 1000);
-		this.register(static::RENDER_FOOTER, 1000);
-	}
-	
-	
-	/**
-	 * Render head
-	 */
-	void render_head(Map params)
-	{
-		params.get("components").push("Runtime.WordPress.Components.WP_Head");
-	}
-	
-	
-	/**
-	 * Render footer
-	 */
-	void render_footer(Map params)
-	{
-		params.get("components").push("Runtime.WordPress.Components.WP_Footer");
-	}
+    string component = classof DefaultLayout;
 }

@@ -16,13 +16,15 @@
  *  limitations under the License.
  */
 
-namespace Runtime.WordPress.Admin;
+namespace Runtime.WordPress.Theme;
 
 use Runtime.Entity.Hook;
+use Runtime.Entity.Provider;
+use Runtime.ORM.Annotations.Database;
 use Runtime.Web.Annotations.Api;
 use Runtime.Web.Annotations.Route;
 use Runtime.Web.Hooks.Components;
-use Runtime.Web.Hooks.SetupLayout;
+use Runtime.WordPress.ORM.WP_Factory;
 
 
 class ModuleDescription
@@ -30,13 +32,13 @@ class ModuleDescription
 	/**
 	 * Returns module name
 	 */
-	pure string getModuleName() => "Runtime.WordPress.Admin";	
+	pure string getModuleName() => "Runtime.WordPress.Theme";
 	
 	
 	/**
 	 * Returns module version
 	 */
-	pure string getModuleVersion() => "0.0.1";
+	pure string getModuleVersion() => "0.1.0";
 	
 	
 	/**
@@ -45,34 +47,31 @@ class ModuleDescription
 	 */
 	pure Dict<string> requiredModules() =>
 	{
-		'Runtime.WordPress': '>=0.1',
+		'Runtime': '>=0.12',
+		'Runtime.Web': '>=0.12',
+		'Runtime.Widget': '>=0.12',
+		'Runtime.WordPress': '>=0.12',
+		
+		#ifdef BACKEND then
+		'Runtime.ORM': '>=0.12',
+		#endif
 	};
 	
 	
 	/**
 	 * Returns enities
 	 */
-	pure Collection<Dict> entities() => 
+	pure Collection<Dict> entities() =>
 	[
-		new Hook("Runtime.WordPress.Admin.AppHook"),
-		
-		/* Setup layout */
-		SetupLayout::hook({
-			"default": "Runtime.WordPress.Admin.DefaultLayoutModel",
-		}),
-		
-		/* Footer components */
-		Components::footer([
-			"Runtime.WordPress.Admin.CSS",
+		/* Add hook */
+		Components::header([
+			"Runtime.WordPress.Theme.WP_Head",
 		]),
-		
+		Components::footer([
+			"Runtime.WordPress.Theme.WP_FooterS",
+		]),
 		#ifdef BACKEND then
-		new Api("Runtime.WordPress.Admin.Api.FormDataSearch"),
-		/*new Api("Runtime.WordPress.Admin.FormSettings.FormSettingsApi"),
-		new Api("Runtime.WordPress.Admin.MailLog.MailLogApi"),
-		new Api("Runtime.WordPress.Admin.MailSettings.MailSettingsApi"),
-		new Api("Runtime.WordPress.Admin.Robots.RobotsApi"),*/
-		new Route("Runtime.WordPress.Admin.Routes"),
+		new Route("Runtime.WordPress.Theme.RobotsRoute"),
 		#endif
 	];
 }

@@ -23,6 +23,7 @@ use Runtime.Entity.Provider;
 use Runtime.ORM.Annotations.Database;
 use Runtime.Web.Annotations.Api;
 use Runtime.Web.Annotations.Route;
+use Runtime.Web.Hooks.Components;
 use Runtime.WordPress.ORM.WP_Factory;
 
 
@@ -62,14 +63,8 @@ class ModuleDescription
 	pure Collection<Dict> entities() => 
 	[
 		#ifdef BACKEND then
-		new Api("Runtime.WordPress.Api.FormsApi"),
-		new Api("Runtime.WordPress.Api.PostApi"),
-		new Api("Runtime.WordPress.Api.TermApi"),
 		new Database("Runtime.WordPress.Database.Schema"),
-		new Hook("Runtime.WordPress.Hooks.AppHook"),
-		new Route("Runtime.WordPress.Components.RobotsRoute"),
 		new WP_Factory(),
 		#endif
 	];
-	
 }

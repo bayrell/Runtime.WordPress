@@ -145,13 +145,14 @@ class WP_Helper
 		/* Create request */
 		container.request = app.createRequest();
 		
-		/* Create layout */
-		await container.createLayout();
-		
 		/* Setup route */
 		RouteList routes = @.provider(classof RouteList);
 		RouteInfo route = routes.routes_list.findItem(lib::equalAttr("name", route_name));
 		container.route = route;
+		
+		/* Create layout */
+		string layout_name = container.getLayoutName();
+		await container.createLayout(layout_name);
 		
 		/* Call route before */
 		if (route_before)

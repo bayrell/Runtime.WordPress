@@ -20,6 +20,7 @@ namespace Runtime.WordPress.Admin;
 
 use Runtime.Web.BaseRoute;
 use Runtime.Web.RouteInfo;
+use Runtime.Web.RouteModel;
 
 
 class Routes extends BaseRoute
@@ -27,7 +28,7 @@ class Routes extends BaseRoute
 	/**
 	 * Returns layout name
 	 */
-	string getLayoutName() => "default";
+	static string getLayoutName() => "default";
     
     
     /**
@@ -37,31 +38,31 @@ class Routes extends BaseRoute
 	{
 		return
 		[
-			new RouteInfo
+			new RouteModel
 			{
 				"uri": "admin.php?page=baylang-forms",
 				"name": "admin:forms:data:index",
 				"model": "Runtime.WordPress.Admin.FormData.FormDataPageModel",
 			},
-			new RouteInfo
+			new RouteModel
 			{
 				"uri": "admin.php?page=baylang-forms-settings",
 				"name": "admin:forms:settings:index",
 				"model": "Runtime.WordPress.Admin.FormSettings.FormSettingsPageModel",
 			},
-			new RouteInfo
+			new RouteModel
 			{
 				"uri": "options-general.php?page=baylang-mail-log",
 				"name": "admin:mail:log:index",
 				"model": "Runtime.WordPress.Admin.MailLog.MailLogPageModel",
 			},
-			new RouteInfo
+			new RouteModel
 			{
 				"uri": "options-general.php?page=baylang-mail-settings",
 				"name": "admin:mail:settings:index",
 				"model": "Runtime.WordPress.Admin.MailSettings.MailSettingsPageModel",
 			},
-			new RouteInfo
+			new RouteModel
 			{
 				"uri": "options-general.php?page=baylang-robots-txt",
 				"name": "admin:robots:txt",

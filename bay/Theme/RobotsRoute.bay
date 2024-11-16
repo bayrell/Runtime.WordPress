@@ -30,6 +30,7 @@ use Runtime.Web.Cookie;
 use Runtime.Web.RenderContainer;
 use Runtime.Web.Request;
 use Runtime.Web.Response;
+use Runtime.Web.RouteAction;
 use Runtime.Web.RouteInfo;
 use Runtime.WordPress.WP_Helper;
 
@@ -43,7 +44,7 @@ class RobotsRoute extends BaseRoute
 	{
 		return
 		[
-			new RouteInfo
+			new RouteAction
 			{
 				"uri": "/robots.txt",
 				"name": "site:robots",

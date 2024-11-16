@@ -1,4 +1,4 @@
-/*!
+<!--
  *  BayLang Technology
  *
  *  (c) Copyright 2016-2024 "Ildar Bikmamatov" <support@bayrell.org>
@@ -14,34 +14,15 @@
  *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
- */
-
-namespace Runtime.WordPress.Admin;
-
-use Runtime.Web.Hooks.AppHook as BaseAppHook;
-use Runtime.WordPress.Admin.CSS;
-use Runtime.WordPress.Admin.DefaultLayout;
+-->
 
 
-class AppHook extends BaseAppHook
-{
-	/**
-	 * Register hooks
-	 */
-	void register_hooks()
-	{
-		this.register(static::CALL_API_BEFORE);
-	}
-	
-	
-	/**
-	 * Call api before
-	 */
-	void call_api_before(Map params)
-	{
-		string api_url = "/wp-admin/admin-ajax.php?action=admin_call_api&api_name=" ~
-			rs::url_encode(params.get("post_data").get("api_name"))
-		;
-		params.set("api_url", api_url);
-	}
-}
+<class name="Runtime.WordPress.Admin.FormData.FormDataPage">
+
+<template>
+	<div class="stack_page">
+		%render this.renderWidget(this.model.table);
+	</div>
+</template>
+
+</class>
