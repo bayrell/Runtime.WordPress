@@ -39,7 +39,6 @@ class FormDataPageModel extends BasePageModel
 	string component = classof FormDataPage;
 	FormModel form = null;
 	TableDialogModel table = null;
-	RowButtonsModel top_buttons = null;
 	
 	
 	/**
@@ -112,7 +111,6 @@ class FormDataPageModel extends BasePageModel
 				],
 			}
 		);
-		
 		
 		/* Add table */
 		this.table = this.addWidget(

@@ -4,6 +4,8 @@
 	[
 		"FormData/FormDataPage.bay",
 		"FormData/FormDataPageModel.bay",
+		"FormSettings/FormSettingsPage.bay",
+		"FormSettings/FormSettingsPageModel.bay",
 		"AppHook.bay",
 		"CSS.bay",
 		"DefaultLayout.bay",

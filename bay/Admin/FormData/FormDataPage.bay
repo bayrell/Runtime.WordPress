@@ -20,7 +20,7 @@
 <class name="Runtime.WordPress.Admin.FormData.FormDataPage">
 
 <template>
-	<div class="stack_page">
+	<div class="form_data_page">
 		%render this.renderWidget(this.model.table);
 	</div>
 </template>

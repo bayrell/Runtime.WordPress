@@ -175,7 +175,10 @@ class WP_Helper
 	{
 		string content = "";
 		
-		if (container.response instanceof RenderResponse and container.response.content == null)
+		if (
+			container.response instanceof RenderResponse and
+			container.response.content == null
+		)
 		{
 			/* Create component */
 			AdminUI component = rtl::newInstance(classof AdminUI);

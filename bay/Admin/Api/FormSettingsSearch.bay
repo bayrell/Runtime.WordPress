@@ -25,31 +25,29 @@ use Runtime.Widget.Crud.Rules.CrudRule;
 use Runtime.Widget.Crud.SearchRelationApi;
 
 
-class FormDataSearch extends SearchRelationApi
+class FormSettingsSearch extends SearchRelationApi
 {
-	/**
+    /**
 	 * Returns api name
 	 */
-	pure string getApiName() => "admin.wordpress.forms.data::search";
+	pure string getApiName() => "admin.wordpress.forms.settings::search";
 	
 	
 	/**
 	 * Returns table name
 	 */
-	string getTableName() => "forms_data";
-	
-	
-	/**
+	string getTableName() => "forms";
+    
+    
+    /**
 	 * Returns item fields
 	 */
 	Collection getItemFields() => [
 		"id",
-		"form_title",
-		"form_position",
-		"send_email_code",
-		"send_email_error",
-		"data",
-		"gmtime_add",
+		"name",
+		"api_name",
+		"settings",
+		"email_to",
 	];
 	
 	
@@ -66,7 +64,7 @@ class FormDataSearch extends SearchRelationApi
 	 */
 	async Query buildSearchQuery(Query q)
 	{
-		q.orderBy("gmtime_add", "desc");
+		q.orderBy("name", "asc");
 		return q;
 	}
 	

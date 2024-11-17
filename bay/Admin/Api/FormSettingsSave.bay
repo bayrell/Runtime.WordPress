@@ -16,36 +16,34 @@
  *  limitations under the License.
  */
 
-namespace Runtime.WordPress.Admin.FormSettings;
+namespace Runtime.WordPress.Admin.Api;
 
-use Runtime.re;
-use Runtime.DateTime;
 use Runtime.ORM.Query;
 use Runtime.ORM.Relation;
 use Runtime.Web.Annotations.ApiMethod;
-use Runtime.Widget.Crud.CrudApi;
 use Runtime.Widget.Crud.Rules.CrudRule;
 use Runtime.Widget.Crud.Rules.LowerCase;
 use Runtime.Widget.Crud.Rules.Purify;
 use Runtime.Widget.Crud.Rules.Required;
 use Runtime.Widget.Crud.Rules.Unique;
+use Runtime.Widget.Crud.SaveRelationApi;
 
 
-class FormSettingsApi extends CrudApi
+class FormSettingsSave extends SaveRelationApi
 {
-	/**
+    /**
 	 * Returns api name
 	 */
-	pure string getApiName() => "admin.wordpress.forms.settings::crud";
+	pure string getApiName() => "admin.wordpress.forms.settings::save";
 	
 	
 	/**
 	 * Returns table name
 	 */
-	pure string getTableName() => "forms";
-	
-	
-	/**
+	string getTableName() => "forms";
+    
+    
+    /**
 	 * Returns item fields
 	 */
 	Collection getItemFields() => [
@@ -56,24 +54,24 @@ class FormSettingsApi extends CrudApi
 		"email_to",
 	];
 	
-	
-	/**
+    
+    /**
 	 * Returns save fields
 	 */
 	Collection getSaveFields() => [
-		"name",
+        "name",
 		"api_name",
 		"settings",
 		"email_to",
 	];
-	
+    
 	
 	/**
 	 * Returns rules
 	 */
 	Collection<CrudRule> getRules() =>
 	[
-		new Purify{ "name": "api_name" },
+        new Purify{ "name": "api_name" },
 		new LowerCase{ "name": "api_name" },
 		new Required{ "name": "api_name" },
 		new Unique{"keys": ["api_name"]},
@@ -85,18 +83,8 @@ class FormSettingsApi extends CrudApi
 	 */
 	async Query buildSearchQuery(Query q)
 	{
-		q.orderBy("api_name", "asc");
+		q.orderBy("name", "asc");
 		return q;
-	}
-	
-	
-	/**
-	 * Action search
-	 */
-	@ApiMethod
-	async void actionSearch()
-	{
-		await parent::actionSearch();
 	}
 	
 	
@@ -108,9 +96,9 @@ class FormSettingsApi extends CrudApi
 	{
 		await parent::actionSave();
 	}
-	
-	
-	/**
+    
+    
+    /**
 	 * Action delete
 	 */
 	@ApiMethod
