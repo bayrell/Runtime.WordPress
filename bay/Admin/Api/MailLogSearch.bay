@@ -16,33 +16,27 @@
  *  limitations under the License.
  */
 
-namespace Runtime.WordPress.Admin.MailLog;
+namespace Runtime.WordPress.Admin.Api;
 
-use Runtime.re;
-use Runtime.DateTime;
 use Runtime.ORM.Query;
 use Runtime.ORM.Relation;
 use Runtime.Web.Annotations.ApiMethod;
-use Runtime.Widget.Crud.CrudApi;
 use Runtime.Widget.Crud.Rules.CrudRule;
-use Runtime.Widget.Crud.Rules.LowerCase;
-use Runtime.Widget.Crud.Rules.Purify;
-use Runtime.Widget.Crud.Rules.Required;
-use Runtime.Widget.Crud.Rules.Unique;
+use Runtime.Widget.Crud.SearchRelationApi;
 
 
-class MailLogApi extends CrudApi
+class MailLogSearch extends SearchRelationApi
 {
 	/**
 	 * Returns api name
 	 */
-	pure string getApiName() => "admin.wordpress.mail.log::crud";
+	pure string getApiName() => "admin.wordpress.mail.log::search";
 	
 	
 	/**
 	 * Returns table name
 	 */
-	pure string getTableName() => "mail_delivery";
+	string getTableName() => "mail_delivery";
 	
 	
 	/**
@@ -63,13 +57,6 @@ class MailLogApi extends CrudApi
 		"send_email_code",
 		"gmtime_add",
 		"is_deleted",
-	];
-	
-	
-	/**
-	 * Returns save fields
-	 */
-	Collection getSaveFields() => [
 	];
 	
 	

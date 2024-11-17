@@ -70,6 +70,7 @@ class ModuleDescription
 		new Api("Runtime.WordPress.Admin.Api.FormDataSearch"),
 		new Api("Runtime.WordPress.Admin.Api.FormSettingsSave"),
 		new Api("Runtime.WordPress.Admin.Api.FormSettingsSearch"),
+		new Api("Runtime.WordPress.Admin.Api.MailLogSearch"),
 		/*new Api("Runtime.WordPress.Admin.MailLog.MailLogApi"),
 		new Api("Runtime.WordPress.Admin.MailSettings.MailSettingsApi"),
 		new Api("Runtime.WordPress.Admin.Robots.RobotsApi"),*/

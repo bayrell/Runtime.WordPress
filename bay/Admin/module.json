@@ -6,6 +6,8 @@
 		"FormData/FormDataPageModel.bay",
 		"FormSettings/FormSettingsPage.bay",
 		"FormSettings/FormSettingsPageModel.bay",
+		"MailLog/MailLogPage.bay",
+		"MailLog/MailLogPageModel.bay",
 		"AppHook.bay",
 		"CSS.bay",
 		"DefaultLayout.bay",
