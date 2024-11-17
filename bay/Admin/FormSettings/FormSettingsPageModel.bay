@@ -135,6 +135,21 @@ class FormSettingsPageModel extends BasePageModel
 				"add_form": this.form,
 				"edit_form": this.form,
 				
+				/* Delete form */
+				"delete_form": new ModelFactory(
+					classof FormModel,
+					{
+						"widget_name": "delete_form",
+						"primary_key": ["id"],
+						"storage": new Factory(
+							"Runtime.Widget.Form.FormDeleteStorage",
+							{
+								"api_name": "admin.wordpress.forms.settings::save"
+							}
+						),
+					}
+				),
+				
 				/* Table fields */
 				"fields":
 				[

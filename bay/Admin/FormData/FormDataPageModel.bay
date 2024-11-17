@@ -18,6 +18,7 @@
 
 namespace Runtime.WordPress.Admin.FormData;
 
+use Runtime.lib;
 use Runtime.Entity.Factory;
 use Runtime.Web.BasePageModel;
 use Runtime.Web.ModelFactory;
@@ -65,14 +66,6 @@ class FormDataPageModel extends BasePageModel
 			return rs::join("\n", items);
 		};
 		
-		/* Calculate DateTime */
-		fn calculateDateTime = var (Dict data)
-		{
-			Dict item = data.get("item");
-			DateTime gmtime_add = item.get("gmtime_add");
-			if (not gmtime_add) return "";
-			return gmtime_add.normalize().getDateTimeString();
-		};
 		
 		/* Add form */
 		this.form = this.addWidget(
@@ -103,7 +96,10 @@ class FormDataPageModel extends BasePageModel
 						"name": "gmtime_add",
 						"label": "Data",
 						"component": classof Input,
-						"calculate": calculateDateTime,
+						"calculate": lib::pipe()
+							.add(lib::attr(["item", "gmtime_add"]))
+							.add(lib::normalizeDateTime())
+						,
 						"props": {
 							"readonly": true,
 						}
@@ -163,7 +159,10 @@ class FormDataPageModel extends BasePageModel
 					{
 						"name": "gmtime_add",
 						"label": "Date",
-						"calculate": calculateDateTime,
+						"calculate": lib::pipe()
+							.add(lib::attr(["item", "gmtime_add"]))
+							.add(lib::normalizeDateTime())
+						,
 						"component": classof Label,
 					},
 					{

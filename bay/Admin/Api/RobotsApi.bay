@@ -16,7 +16,7 @@
  *  limitations under the License.
  */
 
-namespace Runtime.WordPress.Admin.Robots;
+namespace Runtime.WordPress.Admin.Api;
 
 use Runtime.re;
 use Runtime.DateTime;
@@ -38,7 +38,7 @@ class RobotsApi extends BaseApi
 	/**
 	 * Returns api name
 	 */
-	pure string getApiName() => "admin.wordpress.robots::crud";
+	pure string getApiName() => "admin.wordpress.robots::save";
 	
 	
 	/**
@@ -77,8 +77,8 @@ class RobotsApi extends BaseApi
 			"data": {
 				"pk": true,
 				"item": {
-                    "content": content,
-                },
+					"content": content,
+				},
 			}
 		});
 	}

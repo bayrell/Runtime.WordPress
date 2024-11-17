@@ -16,33 +16,31 @@
  *  limitations under the License.
  */
 
-namespace Runtime.WordPress.Admin.MailSettings;
+namespace Runtime.WordPress.Admin.Api;
 
-use Runtime.re;
-use Runtime.DateTime;
 use Runtime.ORM.Query;
 use Runtime.ORM.Relation;
 use Runtime.Web.Annotations.ApiMethod;
-use Runtime.Widget.Crud.CrudApi;
 use Runtime.Widget.Crud.Rules.CrudRule;
 use Runtime.Widget.Crud.Rules.LowerCase;
 use Runtime.Widget.Crud.Rules.Purify;
 use Runtime.Widget.Crud.Rules.Required;
 use Runtime.Widget.Crud.Rules.Unique;
+use Runtime.Widget.Crud.SaveRelationApi;
 
 
-class MailSettingsApi extends CrudApi
+class MailSettingsSave extends SaveRelationApi
 {
 	/**
 	 * Returns api name
 	 */
-	pure string getApiName() => "admin.wordpress.mail.settings::crud";
+	pure string getApiName() => "admin.wordpress.mail.settings::save";
 	
 	
 	/**
 	 * Returns table name
 	 */
-	pure string getTableName() => "mail_settings";
+	string getTableName() => "mail_settings";
 	
 	
 	/**
@@ -92,16 +90,6 @@ class MailSettingsApi extends CrudApi
 	{
 		q.orderBy("plan", "asc");
 		return q;
-	}
-	
-	
-	/**
-	 * Action search
-	 */
-	@ApiMethod
-	async void actionSearch()
-	{
-		await parent::actionSearch();
 	}
 	
 	
