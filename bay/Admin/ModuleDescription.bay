@@ -45,6 +45,8 @@ class ModuleDescription
 	 */
 	pure Dict<string> requiredModules() =>
 	{
+		'BayLang': '>=0.12',
+		'BayLang.Constructor': '>=0.12',
 		'Runtime.WordPress': '>=0.1',
 	};
 	
@@ -67,6 +69,11 @@ class ModuleDescription
 		]),
 		
 		#ifdef BACKEND then
+		new Hook("Runtime.WordPress.Admin.ConstructorApiHook"),
+		new Api("BayLang.Constructor.Backend.Api.ModuleSearchApi"),
+		new Api("BayLang.Constructor.Backend.Api.WidgetApi"),
+		new Api("BayLang.Constructor.Backend.Api.WidgetSaveApi"),
+		new Api("BayLang.Constructor.Backend.Api.WidgetSearchApi"),
 		new Api("Runtime.WordPress.Admin.Api.FormDataSearch"),
 		new Api("Runtime.WordPress.Admin.Api.FormSettingsSave"),
 		new Api("Runtime.WordPress.Admin.Api.FormSettingsSearch"),

@@ -21,16 +21,27 @@ namespace Runtime.WordPress.Admin;
 use Runtime.Web.Hooks.AppHook as BaseAppHook;
 use Runtime.WordPress.Admin.CSS;
 use Runtime.WordPress.Admin.DefaultLayout;
+use BayLang.Constructor.Backend.ApiHook;
+use BayLang.Helper.Project;
 
 
 class AppHook extends BaseAppHook
 {
+	static const string GET_FRAME_PAGE_URL = "baylang.constructor::get_frame_page_url";
+	
+	
 	/**
 	 * Register hooks
 	 */
 	void register_hooks()
 	{
 		this.register(static::CALL_API_BEFORE);
+		this.register(static::GET_FRAME_PAGE_URL, "get_frame_page_url");
+		
+		#ifdef BACKEND then
+		this.register(ApiHook::GET_PROJECT, "get_project");
+		this.register(ApiHook::GET_PROJECT_LIST, "get_project_list");
+		#endif
 	}
 	
 	
@@ -44,4 +55,46 @@ class AppHook extends BaseAppHook
 		;
 		params.set("api_url", api_url);
 	}
+	
+	
+	/**
+	 * Returns projects list
+	 */
+	void get_frame_page_url(Dict params)
+	{
+		string page_url = "/open/widget?widget_name=" ~ params.get("current_widget");
+		params.set("page_url", page_url);
+	}
+	
+	
+	#ifdef BACKEND then
+	
+	/**
+	 * Returns projects list
+	 */
+	async void get_project_list(Dict params)
+	{
+		string project_folder = "";
+		#ifcode PHP then
+		$project_folder = ABSPATH . "/wp-content/themes";
+		#endif
+		Collection<Project> items = await Project::readProjects(project_folder);
+		params.set("items", items);
+	}
+	
+	
+	/**
+	 * Returns projects
+	 */
+	async void get_project(Dict params)
+	{
+		string project_path = "";
+		#ifcode PHP then
+		$project_path = get_template_directory();
+		#endif
+		Project project = await Project::readProject(project_path);
+		params.set("project", project);
+	}
+	
+	#endif
 }

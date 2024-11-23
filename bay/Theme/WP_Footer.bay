@@ -16,7 +16,7 @@
  *  limitations under the License.
 -->
 
-<class name="Runtime.WordPress.Components.WP_Footer">
+<class name="Runtime.WordPress.Theme.WP_Footer">
 
 <use name="Runtime.WordPress.WP_Helper" />
 

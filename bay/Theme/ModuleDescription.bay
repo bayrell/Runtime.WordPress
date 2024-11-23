@@ -63,14 +63,13 @@ class ModuleDescription
 	 */
 	pure Collection<Dict> entities() =>
 	[
-		/* Add hook */
+		#ifdef BACKEND then
 		Components::header([
 			"Runtime.WordPress.Theme.WP_Head",
 		]),
 		Components::footer([
-			"Runtime.WordPress.Theme.WP_FooterS",
+			"Runtime.WordPress.Theme.WP_Footer",
 		]),
-		#ifdef BACKEND then
 		new Route("Runtime.WordPress.Theme.RobotsRoute"),
 		#endif
 	];
