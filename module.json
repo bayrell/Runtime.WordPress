@@ -12,6 +12,10 @@
 		{
 			"src": "bay/Admin",
 			"type": "module"
+		},
+		{
+			"src": "bay/Settings",
+			"type": "module"
 		}
 	],
 	"src": "./bay",

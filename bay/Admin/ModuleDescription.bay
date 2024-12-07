@@ -64,7 +64,7 @@ class ModuleDescription
 		}),
 		
 		/* Footer components */
-		Components::footer([
+		Components::hook([
 			"Runtime.WordPress.Admin.CSS",
 		]),
 		
