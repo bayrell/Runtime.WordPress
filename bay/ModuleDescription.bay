@@ -63,6 +63,7 @@ class ModuleDescription
 	pure Collection<Dict> entities() => 
 	[
 		#ifdef BACKEND then
+		new Api("Runtime.WordPress.Api.FormSubmitApi"),
 		new Database("Runtime.WordPress.Database.Schema"),
 		new WP_Factory(),
 		#endif

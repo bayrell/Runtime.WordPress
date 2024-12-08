@@ -18,6 +18,8 @@
 
 <class name="Runtime.WordPress.Components.CKEditor">
 
+<use name="Runtime.Web.Messages.ValueChangeMessage" />
+
 
 <style>
 .widget_ckeditor{
@@ -84,10 +86,14 @@ public void onContentChange()
 	this.change_timer = null;
 	string value = this.instance.getData();
 	this.old_value = value;
+	this.value = value;
 	
 	/* Send value change */
-	if (this.model) this.model.onValueChange(value, this.data);
-	this.emit("valueChange", value, this.data);
+	this.emit("valueChange", new ValueChangeMessage{
+		"value": value,
+		"old_value": this.value,
+		"data": this.data,
+	});
 }
 
 

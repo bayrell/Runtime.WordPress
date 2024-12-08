@@ -3,6 +3,8 @@
 	"assets":
 	[
 		"Components/CKEditor.bay",
+		"Components/Form.bay",
+		"Components/FormModel.bay",
 		"Components/Image.bay",
 		"WP_App.bay",
 		"ModuleDescription.bay"

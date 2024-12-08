@@ -36,7 +36,7 @@ use Runtime.Widget.Crud.FieldException;
 use Runtime.Widget.Crud.FieldResult;
 
 
-class FormsApi extends BaseApi
+class FormSubmitApi extends BaseApi
 {
 	Relation form = null;
 	
@@ -44,7 +44,44 @@ class FormsApi extends BaseApi
 	/**
 	 * Returns api name
 	 */
-	pure string getApiName() => "runtime.wordpress.forms::crud";
+	pure string getApiName() => "runtime.wordpress.form.submit";
+	
+	
+	/**
+	 * Returns form settings
+	 */
+	@ApiMethod
+	async void actionItem()
+	{
+		Connection conn = Connection::get();
+		
+		/* Find form */
+		string form_name = this.post_data["form_name"];
+		this.form = await conn.findRelationByObject("forms", {
+			"api_name": form_name,
+		});
+		if (not this.form)
+		{
+			throw new ApiError(new ItemNotFound(form_name, "Form"));
+		}
+		
+		/* Get form settings */
+		string settings = this.form.get("settings");
+		Dict form_settings = rtl::json_decode(settings);
+		if (not form_settings)
+		{
+			throw new ApiError(new ItemNotFound(form_name, "Form settings"));
+		}
+		
+		/* Set result */
+		this.result.success({
+			"message": "Ok",
+			"data": {
+				"name": form_name,
+				"settings": form_settings,
+			}
+		});
+	}
 	
 	
 	/**
