@@ -63,6 +63,8 @@ class ModuleDescription
 	 */
 	pure Collection<Dict> entities() =>
 	[
+		new Hook("Runtime.WordPress.Theme.AssetHook"),
+		
 		#ifdef BACKEND then
 		Components::header([
 			"Runtime.WordPress.Theme.WP_Head",

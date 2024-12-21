@@ -39,6 +39,8 @@ class AppHook extends BaseAppHook
 		this.register(static::GET_FRAME_PAGE_URL, "get_frame_page_url");
 		
 		#ifdef BACKEND then
+		this.register(ApiHook::GET_ASSETS_PATH, "get_assets_path");
+		this.register(ApiHook::GET_ASSETS_URL_PATH, "get_assets_url_path");
 		this.register(ApiHook::GET_PROJECT, "get_project");
 		this.register(ApiHook::GET_PROJECT_LIST, "get_project_list");
 		#endif
@@ -68,6 +70,29 @@ class AppHook extends BaseAppHook
 	
 	
 	#ifdef BACKEND then
+	
+	
+	/**
+	 * Returns assets path
+	 */
+	async void get_assets_path(Dict params)
+	{
+		params.set("path", rs::join_path([params.get("project").getPath(), "assets"]));
+	}
+	
+	
+	/**
+	 * Returns assets url path
+	 */
+	async void get_assets_url_path(Dict params)
+	{
+		string wp_theme_url = "";
+		#ifcode PHP then
+		$wp_theme_url = parse_url(get_template_directory_uri(), PHP_URL_PATH);
+		#endif
+		params.set("path", rs::join_path([wp_theme_url, "assets"]));
+	}
+	
 	
 	/**
 	 * Returns projects list

@@ -63,13 +63,14 @@ class ModuleDescription
 			"default": "Runtime.WordPress.Admin.DefaultLayoutModel",
 		}),
 		
-		/* Footer components */
+		/* Components */
 		Components::hook([
 			"Runtime.WordPress.Admin.CSS",
 		]),
 		
 		#ifdef BACKEND then
 		new Hook("Runtime.WordPress.Admin.ConstructorApiHook"),
+		new Api("BayLang.Constructor.Backend.Api.AssetsApi"),
 		new Api("BayLang.Constructor.Backend.Api.ModuleSearchApi"),
 		new Api("BayLang.Constructor.Backend.Api.WidgetApi"),
 		new Api("BayLang.Constructor.Backend.Api.WidgetSaveApi"),

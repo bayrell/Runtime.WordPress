@@ -6,8 +6,9 @@
 		"Components/Form.bay",
 		"Components/FormModel.bay",
 		"Components/Image.bay",
-		"WP_App.bay",
-		"ModuleDescription.bay"
+		"Theme/AssetHook.bay",
+		"Theme/ModuleDescription.bay",
+		"WP_App.bay"
 	],
 	"modules":
 	[
