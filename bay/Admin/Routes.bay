@@ -76,6 +76,16 @@ class Routes extends BaseRoute
 			},
 			new RouteModel
 			{
+				"uri": "admin.php?page=baylang-code-editor",
+				"name": "baylang:project:code:editor",
+				"model": "BayLang.Constructor.Frontend.Code.CodeEditorModel",
+				"data":
+				{
+					"back_url": "admin.php?page=baylang"
+				},
+			},
+			new RouteModel
+			{
 				"uri": "admin.php?page=baylang-robots-txt",
 				"name": "admin:robots:txt",
 				"model": "Runtime.WordPress.Admin.Robots.RobotsPageModel",
