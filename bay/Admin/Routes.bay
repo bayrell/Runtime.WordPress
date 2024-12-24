@@ -52,18 +52,6 @@ class Routes extends BaseRoute
 			},
 			new RouteModel
 			{
-				"uri": "admin.php?page=baylang-widgets",
-				"name": "baylang:project:widgets",
-				"model": "BayLang.Constructor.Frontend.Widget.WidgetListModel",
-			},
-			new RouteModel
-			{
-				"uri": "admin.php?page=baylang-widgets&action=open",
-				"name": "baylang:project:widget:edit",
-				"model": "BayLang.Constructor.Frontend.Editor.WidgetEditPageModel",
-			},
-			new RouteModel
-			{
 				"uri": "admin.php?page=baylang-mail-log",
 				"name": "admin:mail:log:index",
 				"model": "Runtime.WordPress.Admin.MailLog.MailLogPageModel",
@@ -73,6 +61,24 @@ class Routes extends BaseRoute
 				"uri": "admin.php?page=baylang-mail-settings",
 				"name": "admin:mail:settings:index",
 				"model": "Runtime.WordPress.Admin.MailSettings.MailSettingsPageModel",
+			},
+			new RouteModel
+			{
+				"uri": "admin.php?page=baylang-settings",
+				"name": "baylang:project:settings",
+				"model": "BayLang.Constructor.Frontend.Settings.SettingsModel",
+			},
+			new RouteModel
+			{
+				"uri": "admin.php?page=baylang-widgets",
+				"name": "baylang:project:widgets",
+				"model": "BayLang.Constructor.Frontend.Widget.WidgetListModel",
+			},
+			new RouteModel
+			{
+				"uri": "admin.php?page=baylang-widgets&action=open",
+				"name": "baylang:project:widget:edit",
+				"model": "BayLang.Constructor.Frontend.Editor.WidgetEditPageModel",
 			},
 			new RouteModel
 			{

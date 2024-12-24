@@ -72,7 +72,6 @@ class ModuleDescription
 		Components::footer([
 			"Runtime.WordPress.Theme.WP_Footer",
 		]),
-		new Route("Runtime.WordPress.Theme.RobotsRoute"),
 		#endif
 	];
 }

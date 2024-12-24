@@ -18,7 +18,9 @@
 
 namespace Runtime.WordPress.Admin;
 
+use Runtime.DateTime;
 use Runtime.Web.Hooks.AppHook as BaseAppHook;
+use Runtime.WordPress.WP_Helper;
 use Runtime.WordPress.Admin.CSS;
 use Runtime.WordPress.Admin.DefaultLayout;
 use BayLang.Constructor.Backend.ApiHook;
@@ -43,6 +45,7 @@ class AppHook extends BaseAppHook
 		this.register(ApiHook::GET_ASSETS_URL_PATH, "get_assets_url_path");
 		this.register(ApiHook::GET_PROJECT, "get_project");
 		this.register(ApiHook::GET_PROJECT_LIST, "get_project_list");
+		this.register(ApiHook::UPDATE_ASSETS, "update_assets");
 		#endif
 	}
 	
@@ -119,6 +122,15 @@ class AppHook extends BaseAppHook
 		#endif
 		Project project = await Project::readProject(project_path);
 		params.set("project", project);
+	}
+	
+	
+	/**
+	 * Update assets
+	 */
+	async void update_assets(Dict params)
+	{
+		WP_Helper::update_option("app_js_vesion", DateTime::now().getTimestamp());
 	}
 	
 	#endif
