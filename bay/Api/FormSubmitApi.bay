@@ -146,9 +146,14 @@ class FormSubmitApi extends BaseApi
 			throw new ApiError(new RuntimeException("Settings error"));
 		}
 		
+		/* Default update data */
+		if (update_data == null) update_data = {};
+		
+		/* Creat new data */
 		Map new_data = new Map();
 		FieldResult fields_result = this.result.data.get("fields");
-
+		
+		/* Check fields */
 		Collection<Dict> fields = settings["fields"];
 		if (fields)
 		{
