@@ -38,7 +38,7 @@ class ModuleDescription
 	/**
 	 * Returns module version
 	 */
-	pure string getModuleVersion() => "0.1.0";
+	pure string getModuleVersion() => "0.12.0";
 	
 	
 	/**
