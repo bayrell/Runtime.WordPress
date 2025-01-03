@@ -71,6 +71,8 @@ class ModuleDescription
 		#ifdef BACKEND then
 		new Api("BayLang.Constructor.Backend.Api.AssetsApi"),
 		new Api("BayLang.Constructor.Backend.Api.CodeApi"),
+		new Api("BayLang.Constructor.Backend.Api.FontSaveApi"),
+		new Api("BayLang.Constructor.Backend.Api.FontSearchApi"),
 		new Api("BayLang.Constructor.Backend.Api.ModuleSearchApi"),
 		new Api("BayLang.Constructor.Backend.Api.ProjectSaveApi"),
 		new Api("BayLang.Constructor.Backend.Api.WidgetApi"),
