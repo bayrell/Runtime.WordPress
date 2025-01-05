@@ -66,13 +66,13 @@ class Routes extends BaseRoute
 			{
 				"uri": "admin.php?page=baylang-fonts",
 				"name": "baylang:project:fonts:index",
-				"model": "BayLang.Constructor.Frontend.Fonts.FontsPageModel",
+				"model": "BayLang.Constructor.Frontend.Fonts.FontPageModel",
 			},
 			new RouteModel
 			{
 				"uri": "admin.php?page=baylang-fonts&action=edit",
 				"name": "baylang:project:fonts:edit",
-				"model": "BayLang.Constructor.Frontend.Fonts.FontsPageModel",
+				"model": "BayLang.Constructor.Frontend.Fonts.FontSaveModel",
 			},
 			new RouteModel
 			{
