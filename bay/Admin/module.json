@@ -2,6 +2,8 @@
 	"name": "Runtime.WordPress.Admin",
 	"assets":
 	[
+		"Database/MigrationPage.bay",
+		"Database/MigrationPageModel.bay",
 		"FormData/FormDataPage.bay",
 		"FormData/FormDataPageModel.bay",
 		"FormSettings/FormSettingsPage.bay",

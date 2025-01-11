@@ -40,6 +40,12 @@ class Routes extends BaseRoute
 		[
 			new RouteModel
 			{
+				"uri": "admin.php?page=baylang-database-migrations",
+				"name": "admin:database:migrations",
+				"model": "Runtime.WordPress.Admin.Database.MigrationPageModel",
+			},
+			new RouteModel
+			{
 				"uri": "admin.php?page=baylang-forms",
 				"name": "admin:forms:data:index",
 				"model": "Runtime.WordPress.Admin.FormData.FormDataPageModel",
