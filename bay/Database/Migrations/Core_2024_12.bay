@@ -25,6 +25,12 @@ use Runtime.ORM.Query;
 class Core_2024_12 extends BaseMigration
 {
 	/**
+	 * Returns branch
+	 */
+	string getBranch() => "core";
+	
+	
+	/**
 	 * Returns name
 	 */
 	string getName() => "core_2024_12";
@@ -41,8 +47,6 @@ class Core_2024_12 extends BaseMigration
 	 */
 	async void up()
 	{
-		Query q;
-		
 		/* Create wp_forms */
 		string table_name = this.connection.prefix ~ "forms";
 		this.comment("Create " ~ table_name ~ " table");
@@ -87,8 +91,67 @@ class Core_2024_12 extends BaseMigration
 			"  `ip` varchar(64) COLLATE utf8mb4_unicode_ci NOT NULL,",
 			"  `count` int(11) NOT NULL,",
 			"  `last` int(11) NOT NULL,",
-			"  PRIMARY KEY (`ip`),",
+			"  PRIMARY KEY (`ip`)",
 			") ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci"
+		]);
+		
+		/* Create wp_mail_delivery */
+		string table_name = this.connection.prefix ~ "mail_delivery";
+		this.comment("Create " ~ table_name ~ " table");
+		this.executeSQL([
+			"CREATE TABLE `" ~ table_name ~ "` (",
+			"  `id` bigint(20) NOT NULL AUTO_INCREMENT COMMENT 'Notify ID',",
+			"  `worker` varchar(150) COLLATE utf8mb4_unicode_ci NOT NULL " ~
+				"COMMENT 'Worker for delivery message email, etc ..',",
+			"  `plan` varchar(150) CHARACTER SET utf8mb4 NOT NULL DEFAULT 'default' " ~
+				"COMMENT 'Delivery plan zakaz, billing, etc ...',",
+			"  `status` smallint(6) NOT NULL DEFAULT 0 " ~
+				"COMMENT 'Delivery status. 0 - Planned, 1 - Delivered, 2 - Process, -1 - Error',",
+			"  `dest` longtext COLLATE utf8mb4_unicode_ci NOT NULL " ~
+				"COMMENT 'Destination',",
+			"  `uuid` varchar(150) COLLATE utf8mb4_unicode_ci DEFAULT NULL " ~
+				"COMMENT 'Delivery uuid',",
+			"  `title` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL " ~
+				"COMMENT 'Title of the message',",
+			"  `message` longtext COLLATE utf8mb4_unicode_ci NOT NULL " ~
+				"COMMENT 'Message',",
+			"  `gmtime_plan` datetime DEFAULT NULL " ~
+				"COMMENT 'Time by UTC when delivery task will be started. " ~
+				"If null message must be send immediately',",
+			"  `gmtime_send` datetime DEFAULT NULL " ~
+				"COMMENT 'Time by UTC when message have been sended',",
+			"  `send_email_error` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL " ~
+				"COMMENT 'Delivery error message',",
+			"  `send_email_code` int(11) NOT NULL DEFAULT 0 COMMENT 'Delivery error code',",
+			"  `gmtime_add` datetime NOT NULL COMMENT 'Time of create record by UTC',",
+			"  `is_delete` tinyint(1) NOT NULL DEFAULT 0 COMMENT 'Delete message after delivery',",
+			"  PRIMARY KEY (`id`),",
+			"  UNIQUE KEY `uuid` (`uuid`),",
+			"  KEY `worker_plan` (`worker`,`plan`),",
+			"  KEY `status` (`status`),",
+			"  KEY `gmtime_add` (`gmtime_add`),",
+			"  KEY `gmtime_send` (`gmtime_send`),",
+			"  KEY `plan` (`plan`)",
+			") ENGINE=InnoDB AUTO_INCREMENT=60 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='Log of delivered messages'",
+		]);
+		
+		/* Create wp_mail_settings */
+		string table_name = this.connection.prefix ~ "mail_settings";
+		this.comment("Create " ~ table_name ~ " table");
+		this.executeSQL([
+			"CREATE TABLE `wp1_mail_settings` (",
+			"  `id` bigint(20) NOT NULL AUTO_INCREMENT,",
+			"  `enable` tinyint(4) NOT NULL,",
+			"  `plan` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,",
+			"  `host` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,",
+			"  `port` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,",
+			"  `login` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,",
+			"  `password` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,",
+			"  `ssl_enable` tinyint(4) NOT NULL,",
+			"  `is_deleted` tinyint(4) NOT NULL,",
+			"  PRIMARY KEY (`id`),",
+			"  UNIQUE KEY `plan` (`plan`)",
+			") ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci",
 		]);
 	}
 	
@@ -102,12 +165,17 @@ class Core_2024_12 extends BaseMigration
 		string table_name_forms = this.connection.prefix ~ "forms";
 		string table_name_forms_data = this.connection.prefix ~ "forms_data";
 		string table_name_forms_ip = this.connection.prefix ~ "forms_ip";
+		string table_name_mail_delivery = this.connection.prefix ~ "mail_delivery";
+		string table_name_mail_settings = this.connection.prefix ~ "mail_settings";
 		this.comment("Drop tables");
+		this.executeSQL("SET foreign_key_checks = 0;");
 		this.executeSQL([
 			"DROP TABLES",
-			"`" ~ table_name_forms ~ "`",
-			"`" ~ table_name_forms_data ~ "`",
-			"`" ~ table_name_forms_ip ~ "`"
+			"`" ~ table_name_forms ~ "`,",
+			"`" ~ table_name_forms_data ~ "`,",
+			"`" ~ table_name_forms_ip ~ "`,",
+			"`" ~ table_name_mail_delivery ~ "`,",
+			"`" ~ table_name_mail_settings ~ "`"
 		]);
 	}
 }

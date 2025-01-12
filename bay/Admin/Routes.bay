@@ -42,7 +42,7 @@ class Routes extends BaseRoute
 			{
 				"uri": "admin.php?page=baylang-database-migrations",
 				"name": "admin:database:migrations",
-				"model": "Runtime.WordPress.Admin.Database.MigrationPageModel",
+				"model": "Runtime.WordPress.Admin.Settings.MigrationPageModel",
 			},
 			new RouteModel
 			{

@@ -32,7 +32,7 @@ class WP_SQLBuilder extends SQLBuilder
 	/**
 	 * Escape value
 	 */
-	string prepare_value(var value, string op)
+	string prepareValue(var value, string op)
 	{
 		#ifcode PHP then
 		

@@ -84,6 +84,7 @@ class ModuleDescription
 		new Api("Runtime.WordPress.Admin.Api.MailLogSearch"),
 		new Api("Runtime.WordPress.Admin.Api.MailSettingsSave"),
 		new Api("Runtime.WordPress.Admin.Api.MailSettingsSearch"),
+		new Api("Runtime.WordPress.Admin.Api.MigrationApi"),
 		new Api("Runtime.WordPress.Admin.Api.RobotsApi"),
 		new Route("Runtime.WordPress.Admin.Routes"),
 		#endif

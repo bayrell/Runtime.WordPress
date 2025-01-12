@@ -38,7 +38,7 @@ class WP_Helper
 	static string get_option(string name, string value = "")
 	{
 		#ifcode PHP then
-		if ( ! is_multisite() )
+		if (!is_multisite())
 		{
 			return \get_option($name, $value);
 		}
@@ -53,7 +53,7 @@ class WP_Helper
 	static string update_option(string name, string value)
 	{
 		#ifcode PHP then
-		if ( ! is_multisite() )
+		if (!is_multisite())
 		{
 			if (!add_option($name, $value, "", "no"))
 			{

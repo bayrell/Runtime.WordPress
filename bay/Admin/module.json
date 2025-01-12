@@ -2,8 +2,6 @@
 	"name": "Runtime.WordPress.Admin",
 	"assets":
 	[
-		"Database/MigrationPage.bay",
-		"Database/MigrationPageModel.bay",
 		"FormData/FormDataPage.bay",
 		"FormData/FormDataPageModel.bay",
 		"FormSettings/FormSettingsPage.bay",
@@ -14,6 +12,8 @@
 		"MailSettings/MailSettingsPageModel.bay",
 		"Robots/RobotsPage.bay",
 		"Robots/RobotsPageModel.bay",
+		"Settings/MigrationPage.bay",
+		"Settings/MigrationPageModel.bay",
 		"AppHook.bay",
 		"CSS.bay",
 		"DefaultLayout.bay",
