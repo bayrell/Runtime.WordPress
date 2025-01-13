@@ -41,22 +41,11 @@ class MigrationApi extends BaseApi
 		MigrationBuilder builder = new MigrationBuilder();
 		builder.execute = execute;
 		
-		/* Set current version */
-		Dict version = WP_Helper::get_option("database_version");
-		if (version) version = rtl::json_decode(version);
-		builder.setVersion(version);
-		
 		/* Init builder */
-		builder.init();
+		await builder.init();
 		
 		/* Up migrations */
 		await builder.up();
-		
-		/* Update version */
-		if (execute)
-		{
-			WP_Helper::update_option("database_version", rtl::json_encode(builder.version));
-		}
 		
 		/* Returns builder */
 		return builder;

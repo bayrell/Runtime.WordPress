@@ -48,7 +48,7 @@ class Core_2024_12 extends BaseMigration
 	async void up()
 	{
 		/* Create wp_forms */
-		string table_name = this.connection.prefix ~ "forms";
+		string table_name = this.connection.getTableName("forms");
 		this.comment("Create " ~ table_name ~ " table");
 		this.executeSQL([
 			"CREATE TABLE `" ~ table_name ~ "` (",
@@ -59,11 +59,11 @@ class Core_2024_12 extends BaseMigration
 			"  `email_to` varchar(255) NOT NULL,",
 			"  `is_deleted` tinyint(4) NOT NULL DEFAULT 0,",
 			"  PRIMARY KEY (`id`)",
-			") ENGINE=InnoDB DEFAULT CHARSET=utf8mb3"
+			") ENGINE=InnoDB"
 		]);
 		
 		/* Create wp_forms_data */
-		string table_name = this.connection.prefix ~ "forms_data";
+		string table_name = this.connection.getTableName("forms_data");
 		this.comment("Create " ~ table_name ~ " table");
 		this.executeSQL([
 			"CREATE TABLE `" ~ table_name ~ "` (",
@@ -80,11 +80,11 @@ class Core_2024_12 extends BaseMigration
 			"  `gmtime_add` datetime NOT NULL,",
 			"  PRIMARY KEY (`id`),",
 			"  KEY `form_id` (`form_id`)",
-			") ENGINE=InnoDB DEFAULT CHARSET=utf8mb3"
+			") ENGINE=InnoDB"
 		]);
 		
 		/* Create forms_ip */
-		string table_name = this.connection.prefix ~ "forms_ip";
+		string table_name = this.connection.getTableName("forms_ip");
 		this.comment("Create " ~ table_name ~ " table");
 		this.executeSQL([
 			"CREATE TABLE `" ~ table_name ~ "` (",
@@ -92,11 +92,11 @@ class Core_2024_12 extends BaseMigration
 			"  `count` int(11) NOT NULL,",
 			"  `last` int(11) NOT NULL,",
 			"  PRIMARY KEY (`ip`)",
-			") ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci"
+			") ENGINE=InnoDB"
 		]);
 		
 		/* Create wp_mail_delivery */
-		string table_name = this.connection.prefix ~ "mail_delivery";
+		string table_name = this.connection.getTableName("mail_delivery");
 		this.comment("Create " ~ table_name ~ " table");
 		this.executeSQL([
 			"CREATE TABLE `" ~ table_name ~ "` (",
@@ -132,11 +132,11 @@ class Core_2024_12 extends BaseMigration
 			"  KEY `gmtime_add` (`gmtime_add`),",
 			"  KEY `gmtime_send` (`gmtime_send`),",
 			"  KEY `plan` (`plan`)",
-			") ENGINE=InnoDB AUTO_INCREMENT=60 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='Log of delivered messages'",
+			") ENGINE=InnoDB COMMENT='Log of delivered messages'",
 		]);
 		
 		/* Create wp_mail_settings */
-		string table_name = this.connection.prefix ~ "mail_settings";
+		string table_name = this.connection.getTableName("mail_settings");
 		this.comment("Create " ~ table_name ~ " table");
 		this.executeSQL([
 			"CREATE TABLE `wp1_mail_settings` (",
@@ -151,7 +151,7 @@ class Core_2024_12 extends BaseMigration
 			"  `is_deleted` tinyint(4) NOT NULL,",
 			"  PRIMARY KEY (`id`),",
 			"  UNIQUE KEY `plan` (`plan`)",
-			") ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci",
+			") ENGINE=InnoDB",
 		]);
 	}
 	
@@ -162,11 +162,11 @@ class Core_2024_12 extends BaseMigration
 	async void down()
 	{
 		/* Drop tables */
-		string table_name_forms = this.connection.prefix ~ "forms";
-		string table_name_forms_data = this.connection.prefix ~ "forms_data";
-		string table_name_forms_ip = this.connection.prefix ~ "forms_ip";
-		string table_name_mail_delivery = this.connection.prefix ~ "mail_delivery";
-		string table_name_mail_settings = this.connection.prefix ~ "mail_settings";
+		string table_name_forms = this.connection.getTableName("forms");
+		string table_name_forms_data = this.connection.getTableName("forms_data");
+		string table_name_forms_ip = this.connection.getTableName("forms_ip");
+		string table_name_mail_delivery = this.connection.getTableName("mail_delivery");
+		string table_name_mail_settings = this.connection.getTableName("mail_settings");
 		this.comment("Drop tables");
 		this.executeSQL("SET foreign_key_checks = 0;");
 		this.executeSQL([

@@ -46,17 +46,23 @@ struct WP_Factory extends ConnectionFactory
 		global $wpdb;
 		
 		/* Add default connection */
-		$conn = new \Runtime\WordPress\ORM\WP_Connection("prefix");
-		$conn->prefix = $wpdb->prefix;
-		$provider->addConnection($conn);
-		
-		/* Add base connection */
 		$conn = new \Runtime\WordPress\ORM\WP_Connection("default");
+		$conn->host = DB_HOST;
+		$conn->login = DB_USER;
+		$conn->password = DB_PASSWORD;
+		$conn->database = DB_NAME;
 		$conn->prefix = $wpdb->base_prefix;
 		$provider->addConnection($conn);
 		
+		/* Add prefix connection */
+		$conn = $conn->fork();
+		$conn->name = "prefix";
+		$conn->prefix = $wpdb->prefix;
+		$provider->addConnection($conn);
+		
 		/* Add no prefix connection */
-		$conn = new \Runtime\WordPress\ORM\WP_Connection("no_prefix");
+		$conn = $conn->fork();
+		$conn->name = "no_prefix";
 		$provider->addConnection($conn);
 		
 		#endif
