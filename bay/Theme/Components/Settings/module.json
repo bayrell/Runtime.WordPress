@@ -1,5 +1,5 @@
 {
-	"name": "Runtime.WordPress.Settings",
+	"name": "Runtime.WordPress.Theme.Components.Settings",
 	"assets":
 	[
 		"FormModelSettings.bay",
@@ -15,8 +15,8 @@
 	"src": "./",
 	"dest":
 	{
-		"php": "./../../php/Settings",
-		"es6": "./../../es6/Settings"
+		"php": "./../../../../php/Theme/Components/Settings",
+		"es6": "./../../../../es6/Theme/Components/Settings"
 	},
 	"allow":
 	[

@@ -40,7 +40,19 @@ class Routes extends BaseRoute
 		[
 			new RouteModel
 			{
-				"uri": "admin.php?page=baylang-database-migrations",
+				"uri": "admin.php?page=baylang-settings",
+				"name": "admin:project:save",
+				"model": "Runtime.WordPress.Admin.Settings.ProjectSaveModel",
+			},
+			new RouteModel
+			{
+				"uri": "admin.php?page=baylang-settings&action=create",
+				"name": "admin:project:create",
+				"model": "Runtime.WordPress.Admin.Settings.ProjectCreateModel",
+			},
+			new RouteModel
+			{
+				"uri": "admin.php?page=baylang-settings&action=migrations",
 				"name": "admin:database:migrations",
 				"model": "Runtime.WordPress.Admin.Settings.MigrationPageModel",
 			},
@@ -79,12 +91,6 @@ class Routes extends BaseRoute
 				"uri": "admin.php?page=baylang-fonts&action=edit",
 				"name": "baylang:project:fonts:edit",
 				"model": "BayLang.Constructor.Frontend.Fonts.FontSaveModel",
-			},
-			new RouteModel
-			{
-				"uri": "admin.php?page=baylang-settings",
-				"name": "baylang:project:settings",
-				"model": "BayLang.Constructor.Frontend.Settings.SettingsModel",
 			},
 			new RouteModel
 			{

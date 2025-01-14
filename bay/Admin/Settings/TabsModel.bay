@@ -16,49 +16,42 @@
  *  limitations under the License.
  */
 
-namespace Runtime.WordPress.Settings;
+namespace Runtime.WordPress.Admin.Settings;
 
-use Runtime.Entity.Hook;
-use Runtime.WordPress.Settings.WidgetManager;
-use BayLang.Constructor.WidgetPage.WidgetManagerAnnotation;
+use Runtime.Widget.Tab.TabsModel as BaseTabsModel;
 
 
-static class ModuleDescription
+class TabsModel extends BaseTabsModel
 {
+	string widget_name = "tabs";
+	Vector<Map> items = [];
+	
+	
 	/**
-	 * Returns module name
-	 * @return string
+	 * Init widget settings
 	 */
-	public static string getModuleName()
+	void initWidget(Dict params)
 	{
-		return "Runtime.WordPress.Settings";
+		parent(params);
+		
+		/* Setup items */
+		this.items =
+		[
+			{
+				"key": "settings",
+				"label": "Save project",
+				"href": this.layout.url("admin:project:save"),
+			},
+			{
+				"key": "create-project",
+				"label": "Create project",
+				"href": this.layout.url("admin:project:create"),
+			},
+			{
+				"key": "database-migrations",
+				"label": "Database migrations",
+				"href": this.layout.url("admin:database:migrations"),
+			},
+		];
 	}
-	
-	
-	/**
-	 * Returns module name
-	 * @return string
-	 */
-	public static string getModuleVersion()
-	{
-		return "0.12.1";
-	}
-	
-	
-	/**
-	 * Returns required modules
-	 * @return Map<string>
-	 */
-	pure Map<string> requiredModules() =>
-	{
-	};
-	
-	
-	/**
-	 * Returns enities
-	 */
-	pure Collection<Dict> entities() =>
-	[
-		new WidgetManagerAnnotation(classof WidgetManager),
-	];
 }

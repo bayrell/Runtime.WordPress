@@ -16,43 +16,41 @@
  *  limitations under the License.
  */
 
-namespace Runtime.WordPress.Theme;
+namespace Runtime.WordPress.Components.Settings;
 
 use Runtime.Entity.Hook;
-use Runtime.Entity.Provider;
-use Runtime.Web.Annotations.Api;
-use Runtime.Web.Hooks.Components;
-use Runtime.WordPress.ORM.WP_Factory;
+use Runtime.WordPress.Components.Settings.WidgetManager;
+use BayLang.Constructor.WidgetPage.WidgetManagerAnnotation;
 
 
-class ModuleDescription
+static class ModuleDescription
 {
 	/**
 	 * Returns module name
+	 * @return string
 	 */
-	pure string getModuleName() => "Runtime.WordPress.Theme";
+	public static string getModuleName()
+	{
+		return "Runtime.WordPress.Settings";
+	}
 	
 	
 	/**
-	 * Returns module version
+	 * Returns module name
+	 * @return string
 	 */
-	pure string getModuleVersion() => "0.1.0";
+	public static string getModuleVersion()
+	{
+		return "0.12.1";
+	}
 	
 	
 	/**
 	 * Returns required modules
 	 * @return Map<string>
 	 */
-	pure Dict<string> requiredModules() =>
+	pure Map<string> requiredModules() =>
 	{
-		'Runtime': '>=0.12',
-		'Runtime.Web': '>=0.12',
-		'Runtime.Widget': '>=0.12',
-		'Runtime.WordPress': '>=0.12',
-		
-		#ifdef BACKEND then
-		'Runtime.ORM': '>=0.12',
-		#endif
 	};
 	
 	
@@ -61,16 +59,6 @@ class ModuleDescription
 	 */
 	pure Collection<Dict> entities() =>
 	[
-		new Hook("Runtime.WordPress.Theme.AssetHook"),
-		
-		#ifdef BACKEND then
-		new Api("Runtime.WordPress.Api.FormSubmitApi"),
-		Components::header([
-			"Runtime.WordPress.Theme.WP_Head",
-		]),
-		Components::footer([
-			"Runtime.WordPress.Theme.WP_Footer",
-		]),
-		#endif
+		new WidgetManagerAnnotation(classof WidgetManager),
 	];
 }

@@ -74,7 +74,6 @@ class ModuleDescription
 		new Api("BayLang.Constructor.Backend.Api.FontSaveApi"),
 		new Api("BayLang.Constructor.Backend.Api.FontSearchApi"),
 		new Api("BayLang.Constructor.Backend.Api.ModuleSearchApi"),
-		new Api("BayLang.Constructor.Backend.Api.ProjectSaveApi"),
 		new Api("BayLang.Constructor.Backend.Api.WidgetApi"),
 		new Api("BayLang.Constructor.Backend.Api.WidgetSaveApi"),
 		new Api("BayLang.Constructor.Backend.Api.WidgetSearchApi"),
@@ -85,6 +84,7 @@ class ModuleDescription
 		new Api("Runtime.WordPress.Admin.Api.MailSettingsSave"),
 		new Api("Runtime.WordPress.Admin.Api.MailSettingsSearch"),
 		new Api("Runtime.WordPress.Admin.Api.MigrationApi"),
+		new Api("Runtime.WordPress.Admin.Api.ProjectSaveApi"),
 		new Api("Runtime.WordPress.Admin.Api.RobotsApi"),
 		new Route("Runtime.WordPress.Admin.Routes"),
 		#endif

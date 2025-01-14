@@ -16,12 +16,12 @@
  *  limitations under the License.
  */
 
-namespace Runtime.WordPress.Settings;
+namespace Runtime.WordPress.Widget.Components.Settings;
 
 use Runtime.BaseObject;
 use Runtime.Web.BaseLayoutModel;
-use Runtime.WordPress.Settings.FormModelSettings;
-use Runtime.WordPress.Settings.FormSettings;
+use Runtime.WordPress.Components.Settings.FormModelSettings;
+use Runtime.WordPress.Components.Settings.FormSettings;
 use BayLang.Constructor.WidgetPage.EditorProvider;
 use BayLang.Constructor.WidgetPage.WidgetManagerInterface;
 use BayLang.Constructor.WidgetPage.WidgetSettingsInterface;

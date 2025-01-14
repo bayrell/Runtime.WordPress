@@ -32,6 +32,7 @@
 
 <template>
 	<div class="database_migration_page">
+		%render this.renderWidget(this.model.tabs);
 		%if (this.model.items.count() > 0)
 		{
 			<TextEditable value={{ rs::join("\n", this.model.items) }}></TextEditable>

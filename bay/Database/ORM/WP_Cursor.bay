@@ -16,7 +16,7 @@
  *  limitations under the License.
  */
 
-namespace Runtime.WordPress.ORM;
+namespace Runtime.WordPress.Database.ORM;
 
 use Runtime.ORM.MySQL.CursorMySQL;
 use Runtime.ORM.MySQL.SQLBuilder;

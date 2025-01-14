@@ -25,11 +25,13 @@ use Runtime.Web.BasePageModel;
 use Runtime.Web.RenderContainer;
 use Runtime.Widget.WidgetResultModel;
 use Runtime.WordPress.Admin.Settings.MigrationPage;
+use Runtime.WordPress.Admin.Settings.TabsModel;
 
 
 class MigrationPageModel extends BasePageModel
 {
 	string component = classof MigrationPage;
+	TabsModel tabs = null;
 	Collection<string> items = [];
 	WidgetResultModel result = null;
 	
@@ -40,6 +42,13 @@ class MigrationPageModel extends BasePageModel
 	void initWidget(Dict params)
 	{
 		parent(params);
+		
+		/* Add tabs */
+		this.tabs = this.addWidget(classof TabsModel, {
+			"active": "database-migrations"
+		});
+		
+		/* Add result */
 		this.result = this.addWidget(classof WidgetResultModel, {
 			"styles": ["margin_top"],
 		});
