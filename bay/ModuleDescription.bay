@@ -64,7 +64,7 @@ class ModuleDescription
 	[
 		#ifdef BACKEND then
 		new Database("Runtime.WordPress.Database.Schema"),
-		new Migration("Runtime.WordPress.Database.Migrations.Core_2024_12"),
+		new Migration("Runtime.WordPress.Database.Migrations.Core_2025_01"),
 		new WP_Factory(),
 		#endif
 	];
