@@ -21,6 +21,7 @@ namespace Runtime.WordPress.Theme;
 use Runtime.Entity.Hook;
 use Runtime.Entity.Provider;
 use Runtime.Web.Annotations.Api;
+use Runtime.Web.Annotations.Route;
 use Runtime.Web.Hooks.Components;
 use Runtime.WordPress.ORM.WP_Factory;
 
@@ -64,7 +65,8 @@ class ModuleDescription
 		new Hook("Runtime.WordPress.Theme.AssetHook"),
 		
 		#ifdef BACKEND then
-		new Api("Runtime.WordPress.Api.FormSubmitApi"),
+		new Api("Runtime.WordPress.Theme.Api.FormSubmitApi"),
+		new Route("Runtime.WordPress.Theme.Robots"),
 		Components::header([
 			"Runtime.WordPress.Theme.WP_Head",
 		]),

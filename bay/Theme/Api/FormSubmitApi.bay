@@ -16,7 +16,7 @@
  *  limitations under the License.
  */
 
-namespace Runtime.WordPress.Api;
+namespace Runtime.WordPress.Theme.Api;
 
 use Runtime.re;
 use Runtime.DateTime;
