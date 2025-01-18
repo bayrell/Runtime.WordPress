@@ -16,7 +16,7 @@
  *  limitations under the License.
  */
 
-namespace Runtime.WordPress.Components;
+namespace Runtime.WordPress.Theme.Components;
 
 use Runtime.Serializer;
 use Runtime.Web.ApiResult;

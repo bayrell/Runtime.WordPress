@@ -16,10 +16,10 @@
  *  limitations under the License.
  */
 
-namespace Runtime.WordPress.Components.Settings;
+namespace Runtime.WordPress.Theme.WidgetSettings;
 
 use Runtime.Entity.Hook;
-use Runtime.WordPress.Components.Settings.WidgetManager;
+use Runtime.WordPress.Theme.WidgetSettings.WidgetManager;
 use BayLang.Constructor.WidgetPage.WidgetManagerAnnotation;
 
 
