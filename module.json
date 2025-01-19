@@ -2,10 +2,10 @@
 	"name": "Runtime.WordPress",
 	"assets":
 	[
-		"Theme/Components/CKEditor.bay",
 		"Theme/Components/Form.bay",
+		"Theme/Components/FormDialog.bay",
+		"Theme/Components/FormDialogModel.bay",
 		"Theme/Components/FormModel.bay",
-		"Theme/Components/Image.bay",
 		"Theme/AssetHook.bay",
 		"Theme/ModuleDescription.bay",
 		"WP_App.bay"

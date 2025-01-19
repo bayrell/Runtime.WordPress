@@ -27,6 +27,7 @@ use Runtime.Widget.Form.FormSubmitStorage;
 class FormModel extends FormSubmitModel
 {
 	string form_name = "";
+	string redirect_url = "";
 	
 	
 	/**
@@ -37,6 +38,18 @@ class FormModel extends FormSubmitModel
 		serializer.process(this, "fields", data);
 		serializer.process(this, "form_name", data);
 		parent(serializer, data);
+	}
+	
+	
+	/**
+	 * Init widget params
+	 */
+	void initParams(Dict params)
+	{
+		parent(params);
+		
+		if (params == null) return;
+		if (params.has("redirect_url")) this.redirect_url = params.get("redirect_url");
 	}
 	
 	
@@ -113,9 +126,26 @@ class FormModel extends FormSubmitModel
 						"name": field.get("name"),
 						"label": field.get("title"),
 						"component": this.getFieldComponent(field.get("type")),
+						"props": {
+							"placeholder": field.get("placeholder"),
+						},
 					});
 				}
 			}
 		}
+	}
+	
+	
+	/**
+	 * Submit form
+	 */
+	async ApiResult submit()
+	{
+		ApiResult res = await parent();
+		if (res.isSuccess() and this.redirect_url != "")
+		{
+			document.location = this.redirect_url;
+		}
+		return res;
 	}
 }
