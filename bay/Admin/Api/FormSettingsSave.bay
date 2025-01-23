@@ -27,6 +27,7 @@ use Runtime.Widget.Crud.Rules.Purify;
 use Runtime.Widget.Crud.Rules.Required;
 use Runtime.Widget.Crud.Rules.Unique;
 use Runtime.Widget.Crud.SaveRelationApi;
+use Runtime.WordPress.Database.Form;
 
 
 class FormSettingsSave extends SaveRelationApi
@@ -38,9 +39,9 @@ class FormSettingsSave extends SaveRelationApi
 	
 	
 	/**
-	 * Returns table name
+	 * Returns relation name
 	 */
-	string getTableName() => "forms";
+	string getRelationName() => classof Form;
     
     
     /**

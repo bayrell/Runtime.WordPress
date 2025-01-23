@@ -23,6 +23,7 @@ use Runtime.ORM.Relation;
 use Runtime.Web.Annotations.ApiMethod;
 use Runtime.Widget.Crud.Rules.CrudRule;
 use Runtime.Widget.Crud.SearchRelationApi;
+use Runtime.WordPress.Database.FormData;
 
 
 class FormDataSearch extends SearchRelationApi
@@ -34,9 +35,9 @@ class FormDataSearch extends SearchRelationApi
 	
 	
 	/**
-	 * Returns table name
+	 * Returns relation name
 	 */
-	string getTableName() => "forms_data";
+	string getRelationName() => classof FormData;
 	
 	
 	/**

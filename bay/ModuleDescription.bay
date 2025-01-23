@@ -20,7 +20,7 @@ namespace Runtime.WordPress;
 
 use Runtime.Entity.Hook;
 use Runtime.Entity.Provider;
-use Runtime.ORM.Annotations.Database;
+use Runtime.ORM.Annotations.Table;
 use Runtime.ORM.Annotations.Migration;
 use Runtime.Web.Annotations.Route;
 use Runtime.Web.Hooks.Components;
@@ -63,7 +63,11 @@ class ModuleDescription
 	pure Collection<Dict> entities() => 
 	[
 		#ifdef BACKEND then
-		new Database("Runtime.WordPress.Database.Schema"),
+		new Table("Runtime.WordPress.Database.Form"),
+		new Table("Runtime.WordPress.Database.FormData"),
+		new Table("Runtime.WordPress.Database.FormIP"),
+		new Table("Runtime.WordPress.Database.MailDelivery"),
+		new Table("Runtime.WordPress.Database.MailSettings"),
 		new Migration("Runtime.WordPress.Database.Migrations.Core_2025_01"),
 		new WP_Factory(),
 		#endif

@@ -37,139 +37,190 @@ class Core_2025_01 extends BaseMigration
 	
 	
 	/**
-	 * Migration up
+	 * Returns migrations
 	 */
-	async void up()
-	{
-		/* Create wp_forms */
-		string table_name = this.connection.getTableName("forms");
-		this.comment("Create " ~ table_name ~ " table");
-		this.executeSQL([
-			"CREATE TABLE `" ~ table_name ~ "` (",
-			"  `id` bigint(20) NOT NULL AUTO_INCREMENT,",
-			"  `name` varchar(255) NOT NULL,",
-			"  `api_name` varchar(255) NOT NULL,",
-			"  `settings` text NOT NULL,",
-			"  `email_to` varchar(255) NOT NULL,",
-			"  `is_deleted` tinyint(4) NOT NULL DEFAULT 0,",
-			"  PRIMARY KEY (`id`)",
-			") ENGINE=InnoDB"
-		]);
-		
-		/* Create wp_forms_data */
-		string table_name = this.connection.getTableName("forms_data");
-		this.comment("Create " ~ table_name ~ " table");
-		this.executeSQL([
-			"CREATE TABLE `" ~ table_name ~ "` (",
-			"  `id` bigint(20) NOT NULL AUTO_INCREMENT,",
-			"  `form_id` bigint(20) DEFAULT NULL,",
-			"  `form_title` varchar(255) NOT NULL,",
-			"  `form_position` varchar(255) NOT NULL,",
-			"  `data` text NOT NULL,",
-			"  `utm` text NOT NULL,",
-			"  `send_email_uuid` varchar(255) NOT NULL,",
-			"  `send_email_code` tinyint(4) NOT NULL DEFAULT 0,",
-			"  `send_email_error` varchar(255) NOT NULL,",
-			"  `spam` tinyint(4) NOT NULL DEFAULT 0,",
-			"  `gmtime_add` datetime NOT NULL,",
-			"  PRIMARY KEY (`id`),",
-			"  KEY `form_id` (`form_id`)",
-			") ENGINE=InnoDB"
-		]);
-		
-		/* Create forms_ip */
-		string table_name = this.connection.getTableName("forms_ip");
-		this.comment("Create " ~ table_name ~ " table");
-		this.executeSQL([
-			"CREATE TABLE `" ~ table_name ~ "` (",
-			"  `ip` varchar(64) COLLATE utf8mb4_unicode_ci NOT NULL,",
-			"  `count` int(11) NOT NULL,",
-			"  `last` int(11) NOT NULL,",
-			"  PRIMARY KEY (`ip`)",
-			") ENGINE=InnoDB"
-		]);
-		
-		/* Create wp_mail_delivery */
-		string table_name = this.connection.getTableName("mail_delivery");
-		this.comment("Create " ~ table_name ~ " table");
-		this.executeSQL([
-			"CREATE TABLE `" ~ table_name ~ "` (",
-			"  `id` bigint(20) NOT NULL AUTO_INCREMENT COMMENT 'Notify ID',",
-			"  `worker` varchar(150) COLLATE utf8mb4_unicode_ci NOT NULL " ~
-				"COMMENT 'Worker for delivery message email, etc ..',",
-			"  `plan` varchar(150) CHARACTER SET utf8mb4 NOT NULL DEFAULT 'default' " ~
-				"COMMENT 'Delivery plan zakaz, billing, etc ...',",
-			"  `status` smallint(6) NOT NULL DEFAULT 0 " ~
-				"COMMENT 'Delivery status. 0 - Planned, 1 - Delivered, 2 - Process, -1 - Error',",
-			"  `dest` longtext COLLATE utf8mb4_unicode_ci NOT NULL " ~
-				"COMMENT 'Destination',",
-			"  `uuid` varchar(150) COLLATE utf8mb4_unicode_ci DEFAULT NULL " ~
-				"COMMENT 'Delivery uuid',",
-			"  `title` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL " ~
-				"COMMENT 'Title of the message',",
-			"  `message` longtext COLLATE utf8mb4_unicode_ci NOT NULL " ~
-				"COMMENT 'Message',",
-			"  `gmtime_plan` datetime DEFAULT NULL " ~
-				"COMMENT 'Time by UTC when delivery task will be started. " ~
-				"If null message must be send immediately',",
-			"  `gmtime_send` datetime DEFAULT NULL " ~
-				"COMMENT 'Time by UTC when message have been sended',",
-			"  `send_email_error` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL " ~
-				"COMMENT 'Delivery error message',",
-			"  `send_email_code` int(11) NOT NULL DEFAULT 0 COMMENT 'Delivery error code',",
-			"  `gmtime_add` datetime NOT NULL COMMENT 'Time of create record by UTC',",
-			"  `is_delete` tinyint(1) NOT NULL DEFAULT 0 COMMENT 'Delete message after delivery',",
-			"  PRIMARY KEY (`id`),",
-			"  UNIQUE KEY `uuid` (`uuid`),",
-			"  KEY `worker_plan` (`worker`,`plan`),",
-			"  KEY `status` (`status`),",
-			"  KEY `gmtime_add` (`gmtime_add`),",
-			"  KEY `gmtime_send` (`gmtime_send`),",
-			"  KEY `plan` (`plan`)",
-			") ENGINE=InnoDB COMMENT='Log of delivered messages'",
-		]);
-		
-		/* Create wp_mail_settings */
-		string table_name = this.connection.getTableName("mail_settings");
-		this.comment("Create " ~ table_name ~ " table");
-		this.executeSQL([
-			"CREATE TABLE `wp1_mail_settings` (",
-			"  `id` bigint(20) NOT NULL AUTO_INCREMENT,",
-			"  `enable` tinyint(4) NOT NULL,",
-			"  `plan` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,",
-			"  `host` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,",
-			"  `port` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,",
-			"  `login` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,",
-			"  `password` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,",
-			"  `ssl_enable` tinyint(4) NOT NULL,",
-			"  `is_deleted` tinyint(4) NOT NULL,",
-			"  PRIMARY KEY (`id`),",
-			"  UNIQUE KEY `plan` (`plan`)",
-			") ENGINE=InnoDB",
-		]);
-	}
+	Collection<string> migrations() => [
+		"wp_forms",
+		"wp_forms_data",
+		"wp_forms_ip",
+		"wp_mail_delivery",
+		"wp_mail_settings",
+	];
 	
 	
 	/**
-	 * Migration down
+	 * Create forms
 	 */
-	async void down()
+	BaseMigration wp_forms() => new BaseMigration
 	{
-		/* Drop tables */
-		string table_name_forms = this.connection.getTableName("forms");
-		string table_name_forms_data = this.connection.getTableName("forms_data");
-		string table_name_forms_ip = this.connection.getTableName("forms_ip");
-		string table_name_mail_delivery = this.connection.getTableName("mail_delivery");
-		string table_name_mail_settings = this.connection.getTableName("mail_settings");
-		this.comment("Drop tables");
-		this.executeSQL("SET foreign_key_checks = 0;");
-		this.executeSQL([
-			"DROP TABLES",
-			"`" ~ table_name_forms ~ "`,",
-			"`" ~ table_name_forms_data ~ "`,",
-			"`" ~ table_name_forms_ip ~ "`,",
-			"`" ~ table_name_mail_delivery ~ "`,",
-			"`" ~ table_name_mail_settings ~ "`"
-		]);
-	}
+		"up": async void ()
+		{
+			string table_name = this.connection.getTableName("forms");
+			this.comment("Create " ~ table_name ~ " table");
+			await this.executeSQL([
+				"CREATE TABLE `" ~ table_name ~ "` (",
+				"  `id` bigint(20) NOT NULL AUTO_INCREMENT,",
+				"  `name` varchar(255) NOT NULL,",
+				"  `api_name` varchar(255) NOT NULL,",
+				"  `settings` text NOT NULL,",
+				"  `email_to` varchar(255) NOT NULL,",
+				"  `is_deleted` tinyint(4) NOT NULL DEFAULT 0,",
+				"  PRIMARY KEY (`id`)",
+				") ENGINE=InnoDB"
+			]);
+		},
+		"down": async void ()
+		{
+			string table_name = this.connection.getTableName("forms");
+			this.executeSQL(["DROP TABLES `" ~ table_name ~ "`"]);
+		},
+	};
+	
+	
+	/**
+	 * Create forms
+	 */
+	BaseMigration wp_forms_data() => new BaseMigration
+	{
+		"up": async void ()
+		{
+			string table_name = this.connection.getTableName("forms_data");
+			this.comment("Create " ~ table_name ~ " table");
+			this.executeSQL([
+				"CREATE TABLE `" ~ table_name ~ "` (",
+				"  `id` bigint(20) NOT NULL AUTO_INCREMENT,",
+				"  `form_id` bigint(20) DEFAULT NULL,",
+				"  `form_title` varchar(255) NOT NULL,",
+				"  `form_position` varchar(255) NOT NULL,",
+				"  `data` text NOT NULL,",
+				"  `utm` text NOT NULL,",
+				"  `send_email_uuid` varchar(255) NOT NULL,",
+				"  `send_email_code` tinyint(4) NOT NULL DEFAULT 0,",
+				"  `send_email_error` varchar(255) NOT NULL,",
+				"  `spam` tinyint(4) NOT NULL DEFAULT 0,",
+				"  `gmtime_add` datetime NOT NULL,",
+				"  PRIMARY KEY (`id`),",
+				"  KEY `form_id` (`form_id`)",
+				") ENGINE=InnoDB"
+			]);
+		},
+		"down": async void ()
+		{
+			string table_name = this.connection.getTableName("forms_data");
+			this.executeSQL(["DROP TABLES `" ~ table_name ~ "`"]);
+		}
+	};
+	
+	
+	/**
+	 * Create forms_ip
+	 */
+	BaseMigration wp_forms_ip() => new BaseMigration
+	{
+		"up": async void ()
+		{
+			string table_name = this.connection.getTableName("forms_ip");
+			this.comment("Create " ~ table_name ~ " table");
+			this.executeSQL([
+				"CREATE TABLE `" ~ table_name ~ "` (",
+				"  `ip` varchar(64) COLLATE utf8mb4_unicode_ci NOT NULL,",
+				"  `count` int(11) NOT NULL,",
+				"  `last` int(11) NOT NULL,",
+				"  PRIMARY KEY (`ip`)",
+				") ENGINE=InnoDB"
+			]);
+		},
+		"down": async void ()
+		{
+			string table_name = this.connection.getTableName("forms_ip");
+			this.executeSQL(["DROP TABLES `" ~ table_name ~ "`"]);
+		}
+	};
+	
+	
+	/**
+	 * Create mail_delivery
+	 */
+	BaseMigration wp_mail_delivery() => new BaseMigration
+	{
+		"up": async void ()
+		{
+			string table_name = this.connection.getTableName("mail_delivery");
+			this.comment("Create " ~ table_name ~ " table");
+			this.executeSQL([
+				"CREATE TABLE `" ~ table_name ~ "` (",
+				"  `id` bigint(20) NOT NULL AUTO_INCREMENT COMMENT 'Notify ID',",
+				"  `worker` varchar(150) COLLATE utf8mb4_unicode_ci NOT NULL " ~
+					"COMMENT 'Worker for delivery message email, etc ..',",
+				"  `plan` varchar(150) CHARACTER SET utf8mb4 NOT NULL DEFAULT 'default' " ~
+					"COMMENT 'Delivery plan zakaz, billing, etc ...',",
+				"  `status` smallint(6) NOT NULL DEFAULT 0 " ~
+					"COMMENT 'Delivery status. 0 - Planned, 1 - Delivered, 2 - Process, -1 - Error',",
+				"  `dest` longtext COLLATE utf8mb4_unicode_ci NOT NULL " ~
+					"COMMENT 'Destination',",
+				"  `uuid` varchar(150) COLLATE utf8mb4_unicode_ci DEFAULT NULL " ~
+					"COMMENT 'Delivery uuid',",
+				"  `title` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL " ~
+					"COMMENT 'Title of the message',",
+				"  `message` longtext COLLATE utf8mb4_unicode_ci NOT NULL " ~
+					"COMMENT 'Message',",
+				"  `gmtime_plan` datetime DEFAULT NULL " ~
+					"COMMENT 'Time by UTC when delivery task will be started. " ~
+					"If null message must be send immediately',",
+				"  `gmtime_send` datetime DEFAULT NULL " ~
+					"COMMENT 'Time by UTC when message have been sended',",
+				"  `send_email_error` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL " ~
+					"COMMENT 'Delivery error message',",
+				"  `send_email_code` int(11) NOT NULL DEFAULT 0 COMMENT 'Delivery error code',",
+				"  `gmtime_add` datetime NOT NULL COMMENT 'Time of create record by UTC',",
+				"  `is_delete` tinyint(1) NOT NULL DEFAULT 0 COMMENT 'Delete message after delivery',",
+				"  PRIMARY KEY (`id`),",
+				"  UNIQUE KEY `uuid` (`uuid`),",
+				"  KEY `worker_plan` (`worker`,`plan`),",
+				"  KEY `status` (`status`),",
+				"  KEY `gmtime_add` (`gmtime_add`),",
+				"  KEY `gmtime_send` (`gmtime_send`),",
+				"  KEY `plan` (`plan`)",
+				") ENGINE=InnoDB COMMENT='Log of delivered messages'",
+			]);
+		},
+		"down": async void ()
+		{
+			string table_name = this.connection.getTableName("mail_delivery");
+			this.executeSQL(["DROP TABLES `" ~ table_name ~ "`"]);
+		}
+	};
+	
+	
+	/**
+	 * Create mail_settings
+	 */
+	BaseMigration wp_mail_settings() => new BaseMigration
+	{
+		"up": async void ()
+		{
+			string table_name = this.connection.getTableName("mail_settings");
+			this.comment("Create " ~ table_name ~ " table");
+			this.executeSQL([
+				"CREATE TABLE `wp1_mail_settings` (",
+				"  `id` bigint(20) NOT NULL AUTO_INCREMENT,",
+				"  `enable` tinyint(4) NOT NULL,",
+				"  `plan` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,",
+				"  `host` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,",
+				"  `port` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,",
+				"  `login` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,",
+				"  `password` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,",
+				"  `ssl_enable` tinyint(4) NOT NULL,",
+				"  `is_deleted` tinyint(4) NOT NULL,",
+				"  PRIMARY KEY (`id`),",
+				"  UNIQUE KEY `plan` (`plan`)",
+				") ENGINE=InnoDB",
+			]);
+		},
+		"down": async void ()
+		{
+			string table_name = this.connection.getTableName("mail_settings");
+			this.executeSQL(["DROP TABLES `" ~ table_name ~ "`"]);
+		}
+	};
 }
