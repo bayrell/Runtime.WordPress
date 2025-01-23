@@ -16,7 +16,7 @@
  *  limitations under the License.
  */
 
-namespace Runtime.WordPress.Components.Settings;
+namespace Runtime.WordPress.Theme.WidgetSettings;
 
 use Runtime.BaseObject;
 use Runtime.Web.BaseModel;
@@ -44,13 +44,13 @@ class FormSettings extends BaseObject implements WidgetSettingsInterface
 	/**
 	 * Returns component name
 	 */
-	string getComponentName() => "Runtime.WordPress.Components.Form";
+	string getComponentName() => "Runtime.WordPress.Theme.Components.Form";
 	
 	
 	/**
 	 * Returns model name
 	 */
-	string getModelName() => "Runtime.WordPress.Components.FormModel";
+	string getModelName() => "Runtime.WordPress.Theme.Components.FormModel";
 	
 	
 	/**

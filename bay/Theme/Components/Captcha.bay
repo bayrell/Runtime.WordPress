@@ -16,7 +16,7 @@
  *  limitations under the License.
 -->
 
-<class name="Runtime.WordPress.Components.Captcha">
+<class name="Runtime.WordPress.Theme.Components.Captcha">
 
 <use name="Runtime.DateTime" />
 <use name="Runtime.Core.Message" />

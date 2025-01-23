@@ -16,12 +16,12 @@
  *  limitations under the License.
  */
 
-namespace Runtime.WordPress.Widget.Components.Settings;
+namespace Runtime.WordPress.Theme.WidgetSettings;
 
 use Runtime.BaseObject;
 use Runtime.Web.BaseLayoutModel;
-use Runtime.WordPress.Components.Settings.FormModelSettings;
-use Runtime.WordPress.Components.Settings.FormSettings;
+use Runtime.WordPress.Theme.WidgetSettings.FormModelSettings;
+use Runtime.WordPress.Theme.WidgetSettings.FormSettings;
 use BayLang.Constructor.WidgetPage.EditorProvider;
 use BayLang.Constructor.WidgetPage.WidgetManagerInterface;
 use BayLang.Constructor.WidgetPage.WidgetSettingsInterface;
@@ -34,6 +34,8 @@ class WidgetManager extends BaseObject implements WidgetManagerInterface
 	 */
 	void init(EditorProvider provider)
 	{
+		provider.remove("Runtime.Widget.WidgetSettings.Settings.FormSubmitSettings");
+		provider.remove("Runtime.Widget.WidgetSettings.Settings.FormSubmitModelSettings");
 	}
 	
 	
