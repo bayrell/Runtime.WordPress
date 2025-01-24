@@ -16,24 +16,15 @@
  *  limitations under the License.
  */
 
-namespace Runtime.WordPress.Admin.Api;
+namespace Runtime.WordPress.Admin.FormData;
 
 use Runtime.ORM.Query;
-use Runtime.ORM.Relation;
-use Runtime.Web.Annotations.ApiMethod;
-use Runtime.Widget.Crud.Rules.CrudRule;
-use Runtime.Widget.Crud.SearchRelationApi;
+use Runtime.Web.Crud.RelationService;
 use Runtime.WordPress.Database.FormData;
 
 
-class FormDataSearch extends SearchRelationApi
+class FormDataCrudService extends RelationService
 {
-	/**
-	 * Returns api name
-	 */
-	pure string getApiName() => "admin.wordpress.forms.data::search";
-	
-	
 	/**
 	 * Returns relation name
 	 */
@@ -41,23 +32,17 @@ class FormDataSearch extends SearchRelationApi
 	
 	
 	/**
-	 * Returns item fields
+	 * Init rules
 	 */
-	Collection getItemFields() => [
-		"id",
-		"form_title",
-		"form_position",
-		"send_email_code",
-		"send_email_error",
-		"data",
-		"gmtime_add",
-	];
+	void initRules()
+	{
+	}
 	
 	
 	/**
-	 * Returns rules
+	 * Returns save fields
 	 */
-	Collection<CrudRule> getRules() =>
+	Collection getSaveFields() =>
 	[
 	];
 	
@@ -65,19 +50,11 @@ class FormDataSearch extends SearchRelationApi
 	/**
 	 * Build search query
 	 */
-	async Query buildSearchQuery(Query q)
+	async void buildSearchQuery(Query q)
 	{
-		q.orderBy("gmtime_add", "desc");
-		return q;
-	}
-	
-	
-	/**
-	 * Action search
-	 */
-	@ApiMethod
-	async void actionSearch()
-	{
-		await parent::actionSearch();
+		if (this.action == "search")
+		{
+			q.orderBy("gmtime_add", "desc");
+		}
 	}
 }

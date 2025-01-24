@@ -68,7 +68,7 @@ class ProjectCreateModel extends BasePageModel
 				"fields":
 				[
 					{
-						"name": "api_name",
+						"name": "id",
 						"label": "Api name",
 						"component": "Runtime.Widget.Input",
 					},

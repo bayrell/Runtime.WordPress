@@ -59,7 +59,7 @@ class FormSettingsPageModel extends BasePageModel
 				(
 					"Runtime.Widget.Form.FormSaveStorage",
 					{
-						"api_name": "admin.wordpress.forms.settings::save",
+						"api_name": "admin.wordpress.forms.settings.save",
 					}
 				),
 				"fields":
@@ -120,7 +120,7 @@ class FormSettingsPageModel extends BasePageModel
 				(
 					"Runtime.Widget.Table.TableStorage",
 					{
-						"api_name": "admin.wordpress.forms.settings::search",
+						"api_name": "admin.wordpress.forms.settings.search",
 					}
 				),
 				
@@ -144,7 +144,7 @@ class FormSettingsPageModel extends BasePageModel
 						"storage": new Factory(
 							"Runtime.Widget.Form.FormDeleteStorage",
 							{
-								"api_name": "admin.wordpress.forms.settings::save"
+								"api_name": "admin.wordpress.forms.settings.save"
 							}
 						),
 					}

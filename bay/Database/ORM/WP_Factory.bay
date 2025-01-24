@@ -46,7 +46,7 @@ struct WP_Factory extends ConnectionFactory
 		global $wpdb;
 		
 		/* Add default connection */
-		$conn = new \Runtime\WordPress\ORM\WP_Connection("default");
+		$conn = new \Runtime\WordPress\Database\ORM\WP_Connection("default");
 		$conn->host = DB_HOST;
 		$conn->login = DB_USER;
 		$conn->password = DB_PASSWORD;

@@ -120,7 +120,7 @@ class FormDataPageModel extends BasePageModel
 				(
 					"Runtime.Widget.Table.TableStorage",
 					{
-						"api_name": "admin.wordpress.forms.data::search",
+						"api_name": "admin.wordpress.forms.data.search",
 					}
 				),
 				

@@ -16,46 +16,55 @@
  *  limitations under the License.
  */
 
-namespace Runtime.WordPress.Database.ORM;
+namespace Runtime.WordPress.Admin.MailSettings;
 
 use Runtime.ORM.Query;
-use Runtime.ORM.Factory.CursorFactory;
-use Runtime.ORM.MySQL.ConnectionMySQL;
-use Runtime.WordPress.Database.ORM.WP_Cursor;
-use Runtime.WordPress.Database.ORM.WP_SQLBuilder;
+use Runtime.Web.Crud.RelationService;
+use Runtime.Web.Crud.Rules.Required;
+use Runtime.Web.Crud.Rules.Unique;
+use Runtime.WordPress.Database.MailSettings;
 
 
-class WP_Connection extends ConnectionMySQL
+class MailCrudService extends RelationService
 {
-	/**
-	 * Constructor
+    /**
+	 * Returns relation name
 	 */
-	public void constructor(string name = "")
+	string getRelationName() => classof MailSettings;
+	
+	
+	/**
+	 * Init rules
+	 */
+	void initRules()
 	{
-		parent(name);
-		this.cursor = new CursorFactory(classof WP_Cursor);
+		this.rules.addRules([
+			new Required{ "name": "plan" },
+		    new Unique{"keys": ["plan"]},
+		]);
 	}
 	
 	
 	/**
-	 * Connect
+	 * Returns save fields
 	 */
-	WP_Connection connect()
-	{
-	}
+	Collection getSaveFields() =>
+	[
+		"enable",
+		"plan",
+		"host",
+		"port",
+		"login",
+		"password",
+		"ssl_enable",
+	];
 	
 	
 	/**
-	 * Connect
+	 * Build search query
 	 */
-	bool isConnected()
+	async void buildSearchQuery(Query q)
 	{
-		return true;
+		q.orderBy("plan", "asc");
 	}
-	
-	
-	/**
-	 * Create SQLBuilder
-	 */
-	WP_SQLBuilder createBuilder(Query q) => new WP_SQLBuilder(this, q);
 }

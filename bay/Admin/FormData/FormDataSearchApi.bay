@@ -16,61 +16,41 @@
  *  limitations under the License.
  */
 
-namespace Runtime.WordPress.Admin.Api;
+namespace Runtime.WordPress.Admin.FormData;
 
-use Runtime.ORM.Query;
-use Runtime.ORM.Relation;
 use Runtime.Web.Annotations.ApiMethod;
-use Runtime.Widget.Crud.Rules.CrudRule;
-use Runtime.Widget.Crud.SearchRelationApi;
+use Runtime.Web.Crud.CrudService;
+use Runtime.Web.Crud.SearchApi;
+use Runtime.WordPress.Admin.FormData.FormDataCrudService;
 
 
-class MailSettingsSearch extends SearchRelationApi
+class FormDataSearchApi extends SearchApi
 {
 	/**
 	 * Returns api name
 	 */
-	pure string getApiName() => "admin.wordpress.mail.settings::search";
+	pure string getApiName() => "admin.wordpress.forms.data.search";
 	
 	
 	/**
-	 * Returns table name
+	 * Returns service
 	 */
-	string getTableName() => "mail_settings";
+	CrudService createService() => new FormDataCrudService();
 	
 	
 	/**
 	 * Returns item fields
 	 */
-	Collection getItemFields() => [
-		"id",
-		"enable",
-		"plan",
-		"host",
-		"port",
-		"login",
-		"password",
-		"ssl_enable",
-		"is_deleted",
-	];
-	
-	
-	/**
-	 * Returns rules
-	 */
-	Collection<CrudRule> getRules() =>
+	Collection getItemFields() =>
 	[
+		"id",
+		"form_title",
+		"form_position",
+		"send_email_code",
+		"send_email_error",
+		"data",
+		"gmtime_add",
 	];
-	
-	
-	/**
-	 * Build search query
-	 */
-	async Query buildSearchQuery(Query q)
-	{
-		q.orderBy("plan", "asc");
-		return q;
-	}
 	
 	
 	/**
@@ -79,6 +59,6 @@ class MailSettingsSearch extends SearchRelationApi
 	@ApiMethod
 	async void actionSearch()
 	{
-		await parent::actionSearch();
+		await parent();
 	}
 }

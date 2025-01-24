@@ -16,46 +16,51 @@
  *  limitations under the License.
  */
 
-namespace Runtime.WordPress.Database.ORM;
+namespace Runtime.WordPress.Admin.MailSettings;
 
-use Runtime.ORM.Query;
-use Runtime.ORM.Factory.CursorFactory;
-use Runtime.ORM.MySQL.ConnectionMySQL;
-use Runtime.WordPress.Database.ORM.WP_Cursor;
-use Runtime.WordPress.Database.ORM.WP_SQLBuilder;
+use Runtime.Web.Annotations.ApiMethod;
+use Runtime.Web.Crud.CrudService;
+use Runtime.Web.Crud.SearchApi;
+use Runtime.WordPress.Admin.MailSettings.MailCrudService;
 
 
-class WP_Connection extends ConnectionMySQL
+class MailSearchApi extends SearchApi
 {
 	/**
-	 * Constructor
+	 * Returns api name
 	 */
-	public void constructor(string name = "")
-	{
-		parent(name);
-		this.cursor = new CursorFactory(classof WP_Cursor);
-	}
+	pure string getApiName() => "admin.wordpress.mail.settings.search";
 	
 	
 	/**
-	 * Connect
+	 * Returns service
 	 */
-	WP_Connection connect()
-	{
-	}
+	CrudService createService() => new MailCrudService();
 	
 	
 	/**
-	 * Connect
+	 * Returns item fields
 	 */
-	bool isConnected()
-	{
-		return true;
-	}
+	Collection getItemFields() =>
+	[
+		"id",
+		"enable",
+		"plan",
+		"host",
+		"port",
+		"login",
+		"password",
+		"ssl_enable",
+		"is_deleted",
+	];
 	
 	
 	/**
-	 * Create SQLBuilder
+	 * Action search
 	 */
-	WP_SQLBuilder createBuilder(Query q) => new WP_SQLBuilder(this, q);
+	@ApiMethod
+	async void actionSearch()
+	{
+		await parent();
+	}
 }

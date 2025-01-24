@@ -142,7 +142,7 @@ class MailLogPageModel extends BasePageModel
 				(
 					"Runtime.Widget.Table.TableStorage",
 					{
-						"api_name": "admin.wordpress.mail.log::search",
+						"api_name": "admin.wordpress.mail.log.search",
 					}
 				),
 				

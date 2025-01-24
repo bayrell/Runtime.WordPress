@@ -16,40 +16,19 @@
  *  limitations under the License.
  */
 
-namespace Runtime.WordPress.Admin.Api;
+namespace Runtime.WordPress.Admin.Robots;
 
-use Runtime.ORM.MigrationBuilder;
-use Runtime.Web.Annotations.ApiMethod;
 use Runtime.Web.BaseApi;
+use Runtime.Web.Annotations.ApiMethod;
 use Runtime.WordPress.WP_Helper;
 
 
-class MigrationApi extends BaseApi
+class RobotsApi extends BaseApi
 {
 	/**
 	 * Returns api name
 	 */
-	pure string getApiName() => "admin.wordpress.migration";
-	
-	
-	/**
-	 * Execute
-	 */
-	async MigrationBuilder up(bool execute = false)
-	{
-		/* Get migrations */
-		MigrationBuilder builder = new MigrationBuilder();
-		builder.execute = execute;
-		
-		/* Init builder */
-		await builder.init();
-		
-		/* Up migrations */
-		await builder.up();
-		
-		/* Returns builder */
-		return builder;
-	}
+	pure string getApiName() => "admin.wordpress.robots.save";
 	
 	
 	/**
@@ -58,26 +37,39 @@ class MigrationApi extends BaseApi
 	@ApiMethod
 	async void actionItem()
 	{
-		MigrationBuilder builder = await this.up();
-		this.success({
+		string content = WP_Helper::get_option("robots.txt");
+		this.result.success({
 			"data": {
-				"items": builder.getSQL(),
+				"pk": true,
+				"item": {
+					"content": content,
+				},
 			}
-		})
+		});
 	}
 	
 	
 	/**
-	 * Update database
+	 * Action save
 	 */
 	@ApiMethod
-	async void actionUpdate()
+	async void actionSave()
 	{
-		MigrationBuilder builder = await this.up(true);
-		this.success({
+		string content = this.post_data
+			|> attr "item"
+			|> attr "content"
+			|> default string ""
+		;
+		
+		WP_Helper::update_option("robots.txt", content);
+		
+		this.result.success({
 			"data": {
-				"items": builder.getSQL(),
+				"pk": true,
+				"item": {
+					"content": content,
+				},
 			}
-		})
+		});
 	}
 }

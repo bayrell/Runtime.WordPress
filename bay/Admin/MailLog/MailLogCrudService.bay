@@ -16,46 +16,38 @@
  *  limitations under the License.
  */
 
-namespace Runtime.WordPress.Database.ORM;
+namespace Runtime.WordPress.Admin.MailLog;
 
 use Runtime.ORM.Query;
-use Runtime.ORM.Factory.CursorFactory;
-use Runtime.ORM.MySQL.ConnectionMySQL;
-use Runtime.WordPress.Database.ORM.WP_Cursor;
-use Runtime.WordPress.Database.ORM.WP_SQLBuilder;
+use Runtime.Web.Crud.RelationService;
+use Runtime.Web.Crud.Rules.LowerCase;
+use Runtime.Web.Crud.Rules.Purify;
+use Runtime.Web.Crud.Rules.Required;
+use Runtime.Web.Crud.Rules.Unique;
+use Runtime.WordPress.Database.MailDelivery;
 
 
-class WP_Connection extends ConnectionMySQL
+class MailLogCrudService extends RelationService
 {
-	/**
-	 * Constructor
+    /**
+	 * Returns relation name
 	 */
-	public void constructor(string name = "")
+	string getRelationName() => classof MailDelivery;
+	
+	
+	/**
+	 * Returns save fields
+	 */
+	Collection getSaveFields() =>
+	[
+	];
+	
+	
+	/**
+	 * Build search query
+	 */
+	async void buildSearchQuery(Query q)
 	{
-		parent(name);
-		this.cursor = new CursorFactory(classof WP_Cursor);
+		q.orderBy("gmtime_add", "desc");
 	}
-	
-	
-	/**
-	 * Connect
-	 */
-	WP_Connection connect()
-	{
-	}
-	
-	
-	/**
-	 * Connect
-	 */
-	bool isConnected()
-	{
-		return true;
-	}
-	
-	
-	/**
-	 * Create SQLBuilder
-	 */
-	WP_SQLBuilder createBuilder(Query q) => new WP_SQLBuilder(this, q);
 }

@@ -16,74 +16,61 @@
  *  limitations under the License.
  */
 
-namespace Runtime.WordPress.Admin.Api;
+namespace Runtime.WordPress.Admin.MailSettings;
 
-use Runtime.ORM.Query;
-use Runtime.ORM.Relation;
 use Runtime.Web.Annotations.ApiMethod;
-use Runtime.Widget.Crud.Rules.CrudRule;
-use Runtime.Widget.Crud.SearchRelationApi;
+use Runtime.Web.Crud.CrudService;
+use Runtime.Web.Crud.SaveApi;
+use Runtime.WordPress.Admin.MailSettings.MailCrudService;
 
 
-class MailLogSearch extends SearchRelationApi
+class MailSaveApi extends SaveApi
 {
 	/**
 	 * Returns api name
 	 */
-	pure string getApiName() => "admin.wordpress.mail.log::search";
+	pure string getApiName() => "admin.wordpress.mail.settings.save";
 	
 	
 	/**
-	 * Returns table name
+	 * Returns service
 	 */
-	string getTableName() => "mail_delivery";
+	CrudService createService() => new MailCrudService();
 	
 	
 	/**
 	 * Returns item fields
 	 */
-	Collection getItemFields() => [
+	Collection getItemFields() =>
+	[
 		"id",
-		"worker",
+		"enable",
 		"plan",
-		"status",
-		"dest",
-		"uuid",
-		"title",
-		"message",
-		"gmtime_plan",
-		"gmtime_send",
-		"send_email_error",
-		"send_email_code",
-		"gmtime_add",
+		"host",
+		"port",
+		"login",
+		"password",
+		"ssl_enable",
 		"is_deleted",
 	];
 	
 	
 	/**
-	 * Returns rules
-	 */
-	Collection<CrudRule> getRules() =>
-	[
-	];
-	
-	
-	/**
-	 * Build search query
-	 */
-	async Query buildSearchQuery(Query q)
-	{
-		q.orderBy("gmtime_add", "desc");
-		return q;
-	}
-	
-	
-	/**
-	 * Action search
+	 * Action save
 	 */
 	@ApiMethod
-	async void actionSearch()
+	async void actionSave()
 	{
-		await parent::actionSearch();
+		await parent();
+	}
+    
+    
+    /**
+	 * Action delete
+	 */
+	@ApiMethod
+	async void actionDelete()
+	{
+		await parent();
 	}
 }

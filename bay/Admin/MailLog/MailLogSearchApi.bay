@@ -16,57 +16,48 @@
  *  limitations under the License.
  */
 
-namespace Runtime.WordPress.Admin.Api;
+namespace Runtime.WordPress.Admin.MailLog;
 
-use Runtime.ORM.Query;
-use Runtime.ORM.Relation;
 use Runtime.Web.Annotations.ApiMethod;
-use Runtime.Widget.Crud.Rules.CrudRule;
-use Runtime.Widget.Crud.SearchRelationApi;
+use Runtime.Web.Crud.CrudService;
+use Runtime.Web.Crud.SearchApi;
+use Runtime.WordPress.Admin.MailLog.MailLogCrudService;
 
 
-class FormSettingsSearch extends SearchRelationApi
+class MailLogSearchApi extends SearchApi
 {
-    /**
+	/**
 	 * Returns api name
 	 */
-	pure string getApiName() => "admin.wordpress.forms.settings::search";
+	pure string getApiName() => "admin.wordpress.mail.log.search";
 	
 	
 	/**
-	 * Returns table name
+	 * Returns service
 	 */
-	string getTableName() => "forms";
-    
-    
-    /**
+	CrudService createService() => new MailLogCrudService();
+	
+	
+	/**
 	 * Returns item fields
 	 */
-	Collection getItemFields() => [
-		"id",
-		"name",
-		"api_name",
-		"settings",
-		"email_to",
-	];
-	
-	
-	/**
-	 * Returns rules
-	 */
-	Collection<CrudRule> getRules() =>
+	Collection getItemFields() =>
 	[
+		"id",
+		"worker",
+		"plan",
+		"status",
+		"dest",
+		"uuid",
+		"title",
+		"message",
+		"gmtime_plan",
+		"gmtime_send",
+		"send_email_error",
+		"send_email_code",
+		"gmtime_add",
+		"is_deleted",
 	];
-	
-	
-	/**
-	 * Build search query
-	 */
-	async Query buildSearchQuery(Query q)
-	{
-		q.orderBy("name", "asc");
-		return q;
-	}
 	
 	
 	/**
@@ -75,6 +66,6 @@ class FormSettingsSearch extends SearchRelationApi
 	@ApiMethod
 	async void actionSearch()
 	{
-		await parent::actionSearch();
+		await parent();
 	}
 }
