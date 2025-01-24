@@ -52,7 +52,7 @@ class FormDataCrudService extends RelationService
 	 */
 	async void buildSearchQuery(Query q)
 	{
-		if (this.action == "search")
+		if (this.isSearch())
 		{
 			q.orderBy("gmtime_add", "desc");
 		}

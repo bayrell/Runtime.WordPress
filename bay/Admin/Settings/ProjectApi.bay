@@ -58,8 +58,11 @@ class ProjectApi extends SaveApi
 		/* Create service */
 		CrudService service = this.createService();
 		
+		/* Load item */
+		await service.loadItem(this.post_data.get("pk"));
+		
 		/* Save */
-		await service.reload(this.post_data);
+		await service.reload();
 		
 		/* Build result */
 		this.buildResult(service);
