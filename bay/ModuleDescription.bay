@@ -66,6 +66,8 @@ class ModuleDescription
 		new Table("Runtime.WordPress.Database.Form"),
 		new Table("Runtime.WordPress.Database.FormData"),
 		new Table("Runtime.WordPress.Database.FormIP"),
+		new Table("Runtime.WordPress.Database.Gallery"),
+		new Table("Runtime.WordPress.Database.GalleryItem"),
 		new Table("Runtime.WordPress.Database.MailDelivery"),
 		new Table("Runtime.WordPress.Database.MailSettings"),
 		new Migration("Runtime.WordPress.Database.Migrations.Core_2025_01"),

@@ -16,26 +16,26 @@
  *  limitations under the License.
  */
 
-namespace Runtime.WordPress.Admin.MailSettings;
+namespace Runtime.WordPress.Admin.GalleryItem;
 
 use Runtime.Web.Annotations.ApiMethod;
 use Runtime.Widget.Crud.CrudService;
 use Runtime.Widget.Crud.SaveApi;
-use Runtime.WordPress.Admin.MailSettings.MailCrudService;
+use Runtime.WordPress.Admin.GalleryItem.GalleryItemService;
 
 
-class MailSaveApi extends SaveApi
+class GalleryItemSaveApi extends SaveApi
 {
 	/**
 	 * Returns api name
 	 */
-	pure string getApiName() => "admin.wordpress.mail.settings.save";
+	pure string getApiName() => "admin.wordpress.gallery.item.save";
 	
 	
 	/**
 	 * Returns service
 	 */
-	CrudService createService() => new MailCrudService();
+	CrudService createService() => new GalleryItemService();
 	
 	
 	/**
@@ -44,14 +44,10 @@ class MailSaveApi extends SaveApi
 	Collection getItemFields() =>
 	[
 		"id",
-		"enable",
-		"plan",
-		"host",
-		"port",
-		"login",
-		"password",
-		"ssl_enable",
-		"is_deleted",
+		"name",
+		"image",
+		"image_id",
+		"pos",
 	];
 	
 	
@@ -61,16 +57,42 @@ class MailSaveApi extends SaveApi
 	@ApiMethod
 	async void actionSave()
 	{
-		await parent();
+		/* Create service */
+		CrudService service = this.createService();
+		
+		/* Foreign key */
+		await service.loadGallery(this.post_data["foreign_key", "gallery_id"]);
+		
+		/* Load item */
+		await service.loadItem(this.post_data.get("pk"), true);
+		
+		/* Save item */
+		await service.save(this.post_data.get("item"));
+		
+		/* Build result */
+		this.buildResult(service);
 	}
-    
-    
-    /**
+	
+	
+	/**
 	 * Action delete
 	 */
 	@ApiMethod
 	async void actionDelete()
 	{
-		await parent();
+		/* Create service */
+		CrudService service = this.createService();
+		
+		/* Foreign key */
+		await service.loadGallery(this.post_data["foreign_key", "gallery_id"]);
+		
+		/* Load item */
+		await service.loadItem(this.post_data.get("pk"));
+		
+		/* Delete item */
+		await service.delete();
+		
+		/* Build result */
+		this.buildResult(service);
 	}
 }

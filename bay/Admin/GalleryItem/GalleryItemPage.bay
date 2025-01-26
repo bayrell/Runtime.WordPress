@@ -1,4 +1,4 @@
-/*!
+<!--
  *  BayLang Technology
  *
  *  (c) Copyright 2016-2024 "Ildar Bikmamatov" <support@bayrell.org>
@@ -14,40 +14,16 @@
  *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
- */
-
-namespace Runtime.WordPress.Admin.MailLog;
-
-use Runtime.ORM.Query;
-use Runtime.Widget.Crud.RelationService;
-use Runtime.Widget.Crud.Rules.LowerCase;
-use Runtime.Widget.Crud.Rules.Purify;
-use Runtime.Widget.Crud.Rules.Required;
-use Runtime.Widget.Crud.Rules.Unique;
-use Runtime.WordPress.Database.MailDelivery;
+-->
 
 
-class MailLogCrudService extends RelationService
-{
-    /**
-	 * Returns relation name
-	 */
-	string getRelationName() => classof MailDelivery;
-	
-	
-	/**
-	 * Returns save fields
-	 */
-	Collection getSaveFields() =>
-	[
-	];
-	
-	
-	/**
-	 * Build search query
-	 */
-	async void buildSearchQuery(Query q)
-	{
-		q.orderBy("gmtime_add", "desc");
-	}
-}
+<class name="Runtime.WordPress.Admin.GalleryItem.GalleryItemPage">
+
+<template>
+	<div class="form_settings_page">
+		%render this.renderWidget(this.model.top_buttons);
+		%render this.renderWidget(this.model.table);
+	</div>
+</template>
+
+</class>

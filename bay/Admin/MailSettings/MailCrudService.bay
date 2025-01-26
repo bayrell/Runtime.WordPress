@@ -19,9 +19,9 @@
 namespace Runtime.WordPress.Admin.MailSettings;
 
 use Runtime.ORM.Query;
-use Runtime.Web.Crud.RelationService;
-use Runtime.Web.Crud.Rules.Required;
-use Runtime.Web.Crud.Rules.Unique;
+use Runtime.Widget.Crud.RelationService;
+use Runtime.Widget.Crud.Rules.Required;
+use Runtime.Widget.Crud.Rules.Unique;
 use Runtime.WordPress.Database.MailSettings;
 
 

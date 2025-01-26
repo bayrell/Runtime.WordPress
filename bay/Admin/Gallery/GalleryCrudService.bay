@@ -16,38 +16,53 @@
  *  limitations under the License.
  */
 
-namespace Runtime.WordPress.Admin.MailLog;
+namespace Runtime.WordPress.Admin.Gallery;
 
 use Runtime.ORM.Query;
 use Runtime.Widget.Crud.RelationService;
 use Runtime.Widget.Crud.Rules.LowerCase;
-use Runtime.Widget.Crud.Rules.Purify;
+use Runtime.Widget.Crud.Rules.MatchRule;
 use Runtime.Widget.Crud.Rules.Required;
 use Runtime.Widget.Crud.Rules.Unique;
-use Runtime.WordPress.Database.MailDelivery;
+use Runtime.WordPress.Database.Gallery;
 
 
-class MailLogCrudService extends RelationService
+class GalleryCrudService extends RelationService
 {
     /**
 	 * Returns relation name
 	 */
-	string getRelationName() => classof MailDelivery;
-	
-	
+	string getRelationName() => classof Gallery;
+
+
+	/**
+	 * Init rules
+	 */
+	void initRules()
+	{
+		this.rules.addRules([
+			new LowerCase{ "name": "api_name" },
+			new Required{ "name": "api_name" },
+			new MatchRule{ "name": "api_name", "regular": MatchRule::ALPHA_NUMERIC_DASH },
+			new Unique{"keys": ["api_name"]},
+		]);
+	}
+
+
 	/**
 	 * Returns save fields
 	 */
 	Collection getSaveFields() =>
 	[
+		"api_name",
 	];
-	
-	
+
+
 	/**
 	 * Build search query
 	 */
 	async void buildSearchQuery(Query q)
 	{
-		q.orderBy("gmtime_add", "desc");
+		q.orderBy("api_name", "asc");
 	}
 }

@@ -16,51 +16,37 @@
  *  limitations under the License.
  */
 
-namespace Runtime.WordPress.Admin.MailSettings;
+namespace Runtime.WordPress.Database;
 
-use Runtime.Web.Annotations.ApiMethod;
-use Runtime.Widget.Crud.CrudService;
-use Runtime.Widget.Crud.SearchApi;
-use Runtime.WordPress.Admin.MailSettings.MailCrudService;
+use Runtime.BaseStruct;
+use Runtime.ORM.Relation;
+use Runtime.ORM.Annotations.AutoIncrement;
+use Runtime.ORM.Annotations.BigIntType;
+use Runtime.ORM.Annotations.BooleanType;
+use Runtime.ORM.Annotations.Primary;
+use Runtime.ORM.Annotations.StringType;
 
 
-class MailSearchApi extends SearchApi
+class Gallery extends Relation
 {
 	/**
-	 * Returns api name
+	 * Returns table name
 	 */
-	pure string getApiName() => "admin.wordpress.mail.settings.search";
+	pure string getTableName() => "gallery";
 	
 	
 	/**
-	 * Returns service
+	 * Returns table schema
 	 */
-	CrudService createService() => new MailCrudService();
-	
-	
-	/**
-	 * Returns item fields
-	 */
-	Collection getItemFields() =>
+	pure memorize Collection<BaseStruct> schema() =>
 	[
-		"id",
-		"enable",
-		"plan",
-		"host",
-		"port",
-		"login",
-		"password",
-		"ssl_enable",
-		"is_deleted",
+		/* Fields */
+		new BigIntType{"name": "id"},
+		new StringType{"name": "api_name"},
+		new BooleanType{"name": "is_deleted"},
+		
+		/* Index */
+		new AutoIncrement{"name": "id"},
+		new Primary{"keys": ["id"]},
 	];
-	
-	
-	/**
-	 * Action search
-	 */
-	@ApiMethod
-	async void actionSearch()
-	{
-		await parent();
-	}
 }

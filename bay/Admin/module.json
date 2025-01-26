@@ -2,10 +2,15 @@
 	"name": "Runtime.WordPress.Admin",
 	"assets":
 	[
+		"Components/Image.bay",
 		"FormData/FormDataPage.bay",
 		"FormData/FormDataPageModel.bay",
 		"FormSettings/FormSettingsPage.bay",
 		"FormSettings/FormSettingsPageModel.bay",
+		"Gallery/GalleryPage.bay",
+		"Gallery/GalleryPageModel.bay",
+		"GalleryItem/GalleryItemPage.bay",
+		"GalleryItem/GalleryItemPageModel.bay",
 		"MailLog/MailLogPage.bay",
 		"MailLog/MailLogPageModel.bay",
 		"MailSettings/MailSettingsPage.bay",

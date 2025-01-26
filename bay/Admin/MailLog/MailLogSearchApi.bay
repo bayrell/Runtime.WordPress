@@ -19,8 +19,8 @@
 namespace Runtime.WordPress.Admin.MailLog;
 
 use Runtime.Web.Annotations.ApiMethod;
-use Runtime.Web.Crud.CrudService;
-use Runtime.Web.Crud.SearchApi;
+use Runtime.Widget.Crud.CrudService;
+use Runtime.Widget.Crud.SearchApi;
 use Runtime.WordPress.Admin.MailLog.MailLogCrudService;
 
 

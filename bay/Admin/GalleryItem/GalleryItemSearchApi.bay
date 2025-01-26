@@ -16,26 +16,26 @@
  *  limitations under the License.
  */
 
-namespace Runtime.WordPress.Admin.MailSettings;
+namespace Runtime.WordPress.Admin.GalleryItem;
 
 use Runtime.Web.Annotations.ApiMethod;
 use Runtime.Widget.Crud.CrudService;
-use Runtime.Widget.Crud.SaveApi;
-use Runtime.WordPress.Admin.MailSettings.MailCrudService;
+use Runtime.Widget.Crud.SearchApi;
+use Runtime.WordPress.Admin.GalleryItem.GalleryItemService;
 
 
-class MailSaveApi extends SaveApi
+class GalleryItemSearchApi extends SearchApi
 {
 	/**
 	 * Returns api name
 	 */
-	pure string getApiName() => "admin.wordpress.mail.settings.save";
+	pure string getApiName() => "admin.wordpress.gallery.item.search";
 	
 	
 	/**
 	 * Returns service
 	 */
-	CrudService createService() => new MailCrudService();
+	CrudService createService() => new GalleryItemService();
 	
 	
 	/**
@@ -44,33 +44,29 @@ class MailSaveApi extends SaveApi
 	Collection getItemFields() =>
 	[
 		"id",
-		"enable",
-		"plan",
-		"host",
-		"port",
-		"login",
-		"password",
-		"ssl_enable",
-		"is_deleted",
+		"name",
+		"image",
+		"image_id",
+		"pos",
 	];
 	
 	
 	/**
-	 * Action save
+	 * Action search
 	 */
 	@ApiMethod
-	async void actionSave()
+	async void actionSearch()
 	{
-		await parent();
-	}
-    
-    
-    /**
-	 * Action delete
-	 */
-	@ApiMethod
-	async void actionDelete()
-	{
-		await parent();
+		/* Create service */
+		CrudService service = this.createService();
+		
+		/* Foreign key */
+		await service.loadGallery(this.post_data["foreign_key", "gallery_id"]);
+		
+		/* Search items */
+		await service.search(this.post_data);
+		
+		/* Build result */
+		this.buildResult(service);
 	}
 }

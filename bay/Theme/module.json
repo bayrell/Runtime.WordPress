@@ -1,0 +1,33 @@
+{
+	"name": "Runtime.WordPress.Theme",
+	"assets":
+	[
+		"Components/Form.bay",
+		"Components/FormDialog.bay",
+		"Components/FormDialogModel.bay",
+		"Components/FormModel.bay",
+		"AssetHook.bay",
+		"ModuleDescription.bay"
+	],
+	"modules":
+	[
+		{
+			"src": "WidgetSettings",
+			"type": "module"
+		}
+	],
+	"src": "./",
+	"dest":
+	{
+		"php": "./../../php/Theme",
+		"es6": "./../../es6/Theme"
+	},
+	"allow":
+	[
+		"\\.bay$"
+	],
+	"exclude":
+	[
+		"WidgetSettings/"
+	]
+}

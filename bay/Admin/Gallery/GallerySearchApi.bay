@@ -16,26 +16,26 @@
  *  limitations under the License.
  */
 
-namespace Runtime.WordPress.Admin.MailSettings;
+namespace Runtime.WordPress.Admin.Gallery;
 
 use Runtime.Web.Annotations.ApiMethod;
 use Runtime.Widget.Crud.CrudService;
-use Runtime.Widget.Crud.SaveApi;
-use Runtime.WordPress.Admin.MailSettings.MailCrudService;
+use Runtime.Widget.Crud.SearchApi;
+use Runtime.WordPress.Admin.Gallery.GalleryCrudService;
 
 
-class MailSaveApi extends SaveApi
+class GallerySearchApi extends SearchApi
 {
 	/**
 	 * Returns api name
 	 */
-	pure string getApiName() => "admin.wordpress.mail.settings.save";
+	pure string getApiName() => "admin.wordpress.gallery.search";
 	
 	
 	/**
 	 * Returns service
 	 */
-	CrudService createService() => new MailCrudService();
+	CrudService createService() => new GalleryCrudService();
 	
 	
 	/**
@@ -44,32 +44,15 @@ class MailSaveApi extends SaveApi
 	Collection getItemFields() =>
 	[
 		"id",
-		"enable",
-		"plan",
-		"host",
-		"port",
-		"login",
-		"password",
-		"ssl_enable",
-		"is_deleted",
+		"api_name",
 	];
 	
 	
 	/**
-	 * Action save
+	 * Action search
 	 */
 	@ApiMethod
-	async void actionSave()
-	{
-		await parent();
-	}
-    
-    
-    /**
-	 * Action delete
-	 */
-	@ApiMethod
-	async void actionDelete()
+	async void actionSearch()
 	{
 		await parent();
 	}

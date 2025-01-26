@@ -16,23 +16,40 @@
  *  limitations under the License.
  */
 
-namespace Runtime.WordPress.Admin.MailLog;
+namespace Runtime.WordPress.Admin.GalleryItem;
 
 use Runtime.ORM.Query;
 use Runtime.Widget.Crud.RelationService;
 use Runtime.Widget.Crud.Rules.LowerCase;
-use Runtime.Widget.Crud.Rules.Purify;
+use Runtime.Widget.Crud.Rules.MatchRule;
 use Runtime.Widget.Crud.Rules.Required;
 use Runtime.Widget.Crud.Rules.Unique;
-use Runtime.WordPress.Database.MailDelivery;
+use Runtime.WordPress.Admin.Components.ImageRule;
+use Runtime.WordPress.Admin.Gallery.GalleryCrudService;
+use Runtime.WordPress.Database.Gallery;
+use Runtime.WordPress.Database.GalleryItem;
 
 
-class MailLogCrudService extends RelationService
+class GalleryItemService extends RelationService
 {
+	Gallery gallery = null;
+	
+	
     /**
 	 * Returns relation name
 	 */
-	string getRelationName() => classof MailDelivery;
+	string getRelationName() => classof GalleryItem;
+	
+	
+	/**
+	 * Init rules
+	 */
+	void initRules()
+	{
+		this.rules.addRules([
+			new ImageRule{ "name": "image", "key": "image_id" },
+		]);
+	}
 	
 	
 	/**
@@ -40,7 +57,21 @@ class MailLogCrudService extends RelationService
 	 */
 	Collection getSaveFields() =>
 	[
+		"name",
+		"image_id",
+		"pos",
 	];
+	
+	
+	/**
+	 * Load gallery
+	 */
+	async void loadGallery(int gallery_id)
+	{
+		GalleryCrudService service = new GalleryCrudService();
+		await service.loadItem({ "id": gallery_id });
+		this.gallery = service.item;
+	}
 	
 	
 	/**
@@ -48,6 +79,18 @@ class MailLogCrudService extends RelationService
 	 */
 	async void buildSearchQuery(Query q)
 	{
-		q.orderBy("gmtime_add", "desc");
+		q.where("gallery_id", "=", this.gallery.get("id"));
+		q.orderBy("pos", "desc");
+		q.orderBy("id", "desc");
+	}
+	
+	
+	/**
+	 * Save item
+	 */
+	async void saveItem()
+	{
+		this.item.set("gallery_id", this.gallery.get("id"));
+		await parent();
 	}
 }

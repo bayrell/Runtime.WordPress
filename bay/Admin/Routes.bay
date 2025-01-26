@@ -70,6 +70,18 @@ class Routes extends BaseRoute
 			},
 			new RouteModel
 			{
+				"uri": "admin.php?page=baylang-gallery",
+				"name": "admin:gallery:index",
+				"model": "Runtime.WordPress.Admin.Gallery.GalleryPageModel",
+			},
+			new RouteModel
+			{
+				"uri": "admin.php?page=baylang-gallery&action=item",
+				"name": "admin:gallery:item",
+				"model": "Runtime.WordPress.Admin.GalleryItem.GalleryItemPageModel",
+			},
+			new RouteModel
+			{
 				"uri": "admin.php?page=baylang-mail-log",
 				"name": "admin:mail:log:index",
 				"model": "Runtime.WordPress.Admin.MailLog.MailLogPageModel",
