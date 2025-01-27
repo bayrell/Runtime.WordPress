@@ -27,36 +27,36 @@ use BayLang.Constructor.WidgetPage.ParameterFactory;
 use BayLang.Constructor.WidgetPage.WidgetSettingsInterface;
 
 
-class FormSettings extends BaseObject implements WidgetSettingsInterface
+class GallerySettings extends BaseObject implements WidgetSettingsInterface
 {
 	/**
 	 * Returns widget name
 	 */
-	string getWidgetName() => "WordPress Form";
+	string getWidgetName() => "Gallery";
 	
 	
 	/**
 	 * Returns alias name
 	 */
-	string getAliasName() => "WP_Form";
+	string getAliasName() => "WP_Gallery";
 	
 	
 	/**
 	 * Returns component name
 	 */
-	string getComponentName() => "Runtime.WordPress.Theme.Components.Form.Form";
+	string getComponentName() => "Runtime.WordPress.Theme.Components.Gallery.Gallery";
 	
 	
 	/**
 	 * Returns model name
 	 */
-	string getModelName() => "Runtime.WordPress.Theme.Components.Form.FormModel";
+	string getModelName() => "Runtime.WordPress.Theme.Components.Gallery.GalleryModel";
 	
 	
 	/**
 	 * Returns selector name
 	 */
-	string getSelectorName() => "form";
+	string getSelectorName() => "gallery";
 	
 	
 	/**
@@ -106,6 +106,16 @@ class FormSettings extends BaseObject implements WidgetSettingsInterface
 	{
 		"default": Dict () =>
 		{
+            "content": rs::join("\n", [
+                "<style>",
+				".widget_gallery__item{",
+				"}",
+				".widget_gallery__item_title{",
+				"}",
+				".widget_gallery__item_image{",
+				"}",
+				"</style>"
+            ]),
 		}
 	};
 }

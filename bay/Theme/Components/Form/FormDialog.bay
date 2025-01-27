@@ -16,7 +16,7 @@
  *  limitations under the License.
 -->
 
-<class name="Runtime.WordPress.Theme.Components.FormDialog"
+<class name="Runtime.WordPress.Theme.Components.Form.FormDialog"
 	extends="Runtime.Widget.Dialog.Dialog"
 >
 

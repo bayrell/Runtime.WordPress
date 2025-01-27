@@ -16,7 +16,7 @@
  *  limitations under the License.
  */
 
-namespace Runtime.WordPress.Theme.Components;
+namespace Runtime.WordPress.Theme.Components.Form;
 
 use Runtime.Widget.Dialog.DialogModel;
 use Runtime.Widget.Dialog.DialogModelException;

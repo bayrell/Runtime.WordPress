@@ -20,14 +20,9 @@
 
 <use name="Runtime.DateTime" />
 <use name="Runtime.Core.Message" />
-<use name="Runtime.Web.Crud.Button" component="true" />
-<use name="Runtime.Web.Crud.Helper" />
-<use name="Runtime.Web.Crud.Input" component="true" />
-<use name="Runtime.Web.Events.ChangeEvent" />
-<use name="Runtime.Web.Events.MouseClickEvent" />
-<use name="Runtime.Web.ModelProxy" />
-<use name="Runtime.Web.RenderProvider" />
-<use name="Runtime.Web.VirtualDom" />
+<use name="Runtime.Web.Messages.ValueChangeMessage" />
+<use name="Runtime.Widget.Button" component="true" />
+<use name="Runtime.Widget.Input" component="true" />
 
 
 <style>
@@ -82,11 +77,11 @@
 			<div class="captcha__image">
 				<img @ref="image" />
 				<button class="reload"
-					@event:MouseClickEvent="reloadImage"
+					@event:click="reloadImage"
 				>Reload image</button>
 			</div>
 			<div class="captcha__input">
-				<Input @model=[] />
+				<Input @event:change={{ this.onChange }} />
 			</div>
 		</div>
 		
@@ -96,30 +91,29 @@
 
 <script>
 
-var image;
-
 /**
  * Reload image
  */
 void reloadImage()
 {
-	VirtualDom image = this.image;
-	image <= params <= src <= static::getImageHref();
-	this.repaintRef(image);
+	var image = this.getRef("image");
+	image.src = static::getImageHref();
 }
 
 
 /**
- * On render component
+ * Change event
  */
-void onRepaint()
+void onChange(var e)
 {
-	if (this.vdom.is_new_element)
-	{
-		VirtualDom image = this.image;
-		image <= params <= src <= static::getImageHref();
-		image.updateElemParams();
-	}
+	var input = this.getRef("input");
+	
+	/* Send value change */
+	this.emit("valueChange", new ValueChangeMessage{
+		"value": input.value,
+		"old_value": this.value,
+		"data": this.data,
+	});
 }
 
 

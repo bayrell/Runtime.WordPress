@@ -20,15 +20,11 @@ namespace Runtime.WordPress.Admin.Components;
 
 use Runtime.lib;
 use Runtime.BaseStruct;
-use Runtime.DateTime;
 use Runtime.ORM.Connection;
-use Runtime.ORM.Cursor;
-use Runtime.ORM.Query;
 use Runtime.ORM.Relation;
-use Runtime.Web.ApiResult;
-use Runtime.Web.RenderContainer;
 use Runtime.Widget.Crud.Rules.CrudRule;
 use Runtime.Widget.Crud.CrudService;
+use Runtime.WordPress.WP_Helper;
 
 
 struct ImageRule extends CrudRule
@@ -64,98 +60,16 @@ struct ImageRule extends CrudRule
 			.filter(bool (int id) => id > 0)
 		;
 		
-		/* Get connection */
+		/* Load images */
 		Connection connection = service.getConnection();
-		
-		/* Get images metadata */
-		Query q = new Query()
-			.select()
-			.from("postmeta")
-			.addRawField("*")
-			.where("meta_key", "=", ["_wp_attachment_metadata", "_wp_attached_file"])
-			.where("post_id", "=", images)
-		;
-		Dict images_metadata = await connection.fetchAll(q);
-		
-		/* Get post */
-		Query q = new Query()
-			.select()
-			.from("posts")
-			.addRawField("*")
-			.where("ID", "=", images)
-		;
-		Dict posts = await connection.fetchAll(q);
-		
-		/* Upload dir */
-		string upload_url = "/wp-content/uploads";
+		Dict result = WP_Helper::loadImages(connection, images);
 		
 		/* Map items */
 		for (int i=0; i<service.items.count(); i++)
 		{
 			Dict item = service.items.get(i);
 			int image_id = item.get(this.key);
-				
-			/* Get post */
-			string post_time = "";
-			Dict post = posts.findItem(lib::equalAttr("ID", image_id));
-			if (post)
-			{
-				DateTime d = DateTime::fromString(post["post_modified_gmt"]);
-				post_time = d.timestamp();
-			}
-			
-			Dict res = null;
-			Dict obj_file = images_metadata.findItem(
-				bool (Dict item) use (image_id) =>
-					item["meta_key"] == "_wp_attached_file" and
-					item["post_id"] == image_id
-			);
-			Dict obj_metadata = images_metadata.findItem(
-				bool (Dict item) use (image_id) =>
-					item["meta_key"] == "_wp_attachment_metadata" and
-					item["post_id"] == image_id
-			);
-			if (obj_file and obj_metadata)
-			{
-				obj_metadata = obj_metadata.get("meta_value");
-				obj_file = obj_file.get("meta_value");
-				
-				string image_url_after = "?_=" ~ post_time;
-				
-				#ifcode PHP then
-				$obj_metadata = @unserialize($obj_metadata);
-				if ($obj_metadata)
-				{
-					$image_dir_name = dirname($obj_file);
-					$image_dir_name = $upload_url . "/" . $image_dir_name;
-					$sizes = $obj_metadata["sizes"];
-					
-					foreach ($sizes as $key => &$size)
-					{
-						$size = \Runtime\Dict::from([
-							"size" => $key,
-							"file" => $image_dir_name . "/" .
-								basename($size["file"]) . $image_url_after,
-							"width" => $size["width"],
-							"height" => $size["height"],
-							"mime_type" => $size["mime-type"],
-						]);
-					}
-					
-					$sizes = \Runtime\Dict::from($sizes);
-					$res = \Runtime\Dict::from([
-						"id" => $image_id,
-						"width" => $obj_metadata["width"],
-						"height" => $obj_metadata["height"],
-						"file" => $image_dir_name . "/" .
-							basename($obj_metadata["file"]) . $image_url_after,
-						"sizes" => $sizes,
-					]);
-				}
-				#endif
-			}
-			
-			item.set(this.name, res);
+			item.set(this.name, result.get(image_id));
 		}
 	}
 }

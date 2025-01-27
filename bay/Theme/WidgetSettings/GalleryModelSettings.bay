@@ -32,11 +32,8 @@ use BayLang.Constructor.WidgetPage.ParameterFactory;
 use BayLang.Constructor.WidgetPage.WidgetSettingsInterface;
 
 
-class FormModelSettings extends BaseObject implements WidgetSettingsInterface
+class GalleryModelSettings extends BaseObject implements WidgetSettingsInterface
 {
-	Collection options = null;
-	
-	
 	/**
 	 * Returns widget name
 	 */
@@ -46,7 +43,7 @@ class FormModelSettings extends BaseObject implements WidgetSettingsInterface
 	/**
 	 * Returns alias name
 	 */
-	string getAliasName() => "WP_FormModel";
+	string getAliasName() => "WP_GalleryModel";
 	
 	
 	/**
@@ -58,13 +55,13 @@ class FormModelSettings extends BaseObject implements WidgetSettingsInterface
 	/**
 	 * Returns model name
 	 */
-	string getModelName() => "Runtime.WordPress.Theme.Components.Form.FormModel";
+	string getModelName() => "Runtime.WordPress.Theme.Components.Gallery.GalleryModel";
 	
 	
 	/**
 	 * Returns selector name
 	 */
-	string getSelectorName() => "form";
+	string getSelectorName() => "gallery";
 	
 	
 	/**
@@ -108,8 +105,52 @@ class FormModelSettings extends BaseObject implements WidgetSettingsInterface
 		(
 			classof ParameterModel,
 			{
-				"name": "form_name",
-				"label": "Form name",
+				"name": "api_name",
+				"label": "Api name",
+				"component": "Runtime.Widget.Select",
+				"default": "",
+				"props": {
+					"options": [
+					],
+				}
+			}
+		),
+         new ParameterFactory
+		(
+			classof ParameterModel,
+			{
+				"name": "dialog_image_contains",
+				"label": "Dialog image contains",
+				"component": "Runtime.Widget.Select",
+				"default": "",
+				"props": {
+					"options": [
+                        {"key": "false", "value": "No"},
+                        {"key": "true", "value": "Yes"},
+					],
+				}
+			}
+		),
+        new ParameterFactory
+		(
+			classof ParameterModel,
+			{
+				"name": "big_size",
+				"label": "Big image",
+				"component": "Runtime.Widget.Select",
+				"default": "",
+				"props": {
+					"options": [
+					],
+				}
+			}
+		),
+        new ParameterFactory
+		(
+			classof ParameterModel,
+			{
+				"name": "small_size",
+				"label": "Small image",
 				"component": "Runtime.Widget.Select",
 				"default": "",
 				"props": {
@@ -126,13 +167,6 @@ class FormModelSettings extends BaseObject implements WidgetSettingsInterface
 	 */
 	bool onChange(BaseModel model, ParameterModel param)
 	{
-		/* Change form name */
-		if (param.name == "form_name")
-		{
-			model.form_name = param.value;
-			model.loadForm();
-			return true;
-		}
 		return false;
 	}
 	
@@ -142,28 +176,6 @@ class FormModelSettings extends BaseObject implements WidgetSettingsInterface
 	 */
 	async void loadOptions(var runtime, var widget)
 	{
-		if (this.options) return;
-		
-		Dict data = ParameterFactory::copy(runtime, {
-			"api_name": "admin.wordpress.forms.settings::search",
-			"method_name": "actionSearch",
-			"data": {
-				"limit": "1000",
-			},
-		});
-		ApiResult result = await widget.page_model.layout.callApi(data);
-		if (result.isSuccess())
-		{
-			Dict result_data = ParameterFactory::restore(runtime, result.data);
-			this.options = result_data.get("items").map(Dict (Dict item) => {
-				"key": item.get("api_name"),
-				"value": item.get("name"),
-			});
-		}
-		else
-		{
-			this.options = [];
-		}
 	}
 	
 	
@@ -174,19 +186,6 @@ class FormModelSettings extends BaseObject implements WidgetSettingsInterface
 	{
 		/* Load options */
 		await this.loadOptions(runtime, widget);
-		
-		/* Add options to widget */
-		if (this.options)
-		{
-			Collection options = ParameterFactory::copy(runtime, this.options);
-			ParameterModel form_name_param = widget.params.findItem(
-				bool (Parameter param) => param.name == "form_name"
-			);
-			if (form_name_param)
-			{
-				form_name_param.props.set("options", options);
-			}
-		}
 	}
 	
 	
@@ -202,13 +201,9 @@ class FormModelSettings extends BaseObject implements WidgetSettingsInterface
 				"Runtime.Entity.Factory",
 			],
 			"model": rs::join("\n", [
-				"this.form = this.addWidget(classof WP_FormModel, {",
-				"\t'widget_name': 'form',",
-				"\t'form_name': 'default',",
-				"\t'submit_button':",
-				"\t{",
-				"\t\t'text': 'Отправить заявку',",
-				"\t},",
+				"this.form = this.addWidget(classof WP_GalleryModel, {",
+				"\t'widget_name': 'gallery',",
+				"\t'apiname': 'default',",
 				"});",
 			])
 		}

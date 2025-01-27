@@ -2,10 +2,12 @@
 	"name": "Runtime.WordPress.Theme",
 	"assets":
 	[
-		"Components/Form.bay",
-		"Components/FormDialog.bay",
-		"Components/FormDialogModel.bay",
-		"Components/FormModel.bay",
+		"Components/Form/Form.bay",
+		"Components/Form/FormDialog.bay",
+		"Components/Form/FormDialogModel.bay",
+		"Components/Form/FormModel.bay",
+		"Components/Gallery/Gallery.bay",
+		"Components/Gallery/GalleryModel.bay",
 		"AssetHook.bay",
 		"ModuleDescription.bay"
 	],

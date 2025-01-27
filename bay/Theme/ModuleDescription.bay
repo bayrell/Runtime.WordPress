@@ -66,6 +66,7 @@ class ModuleDescription
 		
 		#ifdef BACKEND then
 		new Api("Runtime.WordPress.Theme.Api.FormSubmitApi"),
+		new Api("Runtime.WordPress.Theme.Api.GalleryApi"),
 		new Route("Runtime.WordPress.Theme.Robots"),
 		Components::header([
 			"Runtime.WordPress.Theme.WP_Head",

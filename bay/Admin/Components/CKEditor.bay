@@ -16,7 +16,7 @@
  *  limitations under the License.
 -->
 
-<class name="Runtime.WordPress.Theme.Components.CKEditor">
+<class name="Runtime.WordPress.Admin.Components.CKEditor">
 
 <use name="Runtime.Web.Messages.ValueChangeMessage" />
 

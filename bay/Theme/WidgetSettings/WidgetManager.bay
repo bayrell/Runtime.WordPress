@@ -22,6 +22,8 @@ use Runtime.BaseObject;
 use Runtime.Web.BaseLayoutModel;
 use Runtime.WordPress.Theme.WidgetSettings.FormModelSettings;
 use Runtime.WordPress.Theme.WidgetSettings.FormSettings;
+use Runtime.WordPress.Theme.WidgetSettings.GalleryModelSettings;
+use Runtime.WordPress.Theme.WidgetSettings.GallerySettings;
 use BayLang.Constructor.WidgetPage.EditorProvider;
 use BayLang.Constructor.WidgetPage.WidgetManagerInterface;
 use BayLang.Constructor.WidgetPage.WidgetSettingsInterface;
@@ -55,5 +57,9 @@ class WidgetManager extends BaseObject implements WidgetManagerInterface
 		/* Forms */
 		new FormModelSettings(),
 		new FormSettings(),
+		
+		/* Gallery */
+		new GalleryModelSettings(),
+		new GallerySettings(),
 	];
 }

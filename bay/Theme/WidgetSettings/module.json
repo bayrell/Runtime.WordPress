@@ -4,6 +4,8 @@
 	[
 		"FormModelSettings.bay",
 		"FormSettings.bay",
+		"GalleryModelSettings.bay",
+		"GallerySettings.bay",
 		"ModuleDescription.bay",
 		"WidgetManager.bay"
 	],

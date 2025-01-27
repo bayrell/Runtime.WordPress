@@ -16,7 +16,7 @@
  *  limitations under the License.
  */
 
-namespace Runtime.WordPress.Theme.Components;
+namespace Runtime.WordPress.Theme.Components.Form;
 
 use Runtime.Serializer;
 use Runtime.Web.ApiResult;
@@ -49,6 +49,7 @@ class FormModel extends FormSubmitModel
 		parent(params);
 		
 		if (params == null) return;
+		if (params.has("form_name")) this.form_name = params.get("form_name");
 		if (params.has("redirect_url")) this.redirect_url = params.get("redirect_url");
 	}
 	
@@ -59,9 +60,6 @@ class FormModel extends FormSubmitModel
 	void initWidget(Dict params)
 	{
 		parent(params);
-		
-		/* Set form name */
-		if (params.has("form_name")) this.form_name = params.get("form_name");
 		
 		/* Setup storage */
 		if (this.storage == null)
