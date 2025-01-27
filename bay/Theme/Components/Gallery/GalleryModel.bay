@@ -99,7 +99,7 @@ class GalleryModel extends BaseGalleryModel
 	 */
 	async void loadItems()
 	{
-		ApiResult result = this.layout.callApi({
+		ApiResult result = await this.layout.callApi({
 			"api_name": "runtime.wordpress.gallery",
 			"method_name": "actionSearch",
 			"data":

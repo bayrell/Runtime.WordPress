@@ -108,11 +108,18 @@ class GallerySettings extends BaseObject implements WidgetSettingsInterface
 		{
             "content": rs::join("\n", [
                 "<style>",
-				".widget_gallery__item{",
-				"}",
-				".widget_gallery__item_title{",
-				"}",
-				".widget_gallery__item_image{",
+				"%(WP_Gallery)widget_gallery{",
+				"\t&__item{",
+				"\t\tmargin: 35px;",
+				"\t}",
+				"\t&__item_title{",
+				"\t}"
+				"\t&__item_image{",
+				"\t\timg{",
+				"\t\t\tmax-width: 300px;",
+				"\t\t\tmax-height: 300px",
+				"\t\t}",
+				"\t}",
 				"}",
 				"</style>"
             ]),

@@ -25,7 +25,6 @@
 	display: flex;
     flex-direction: column;
     align-items: center;
-	margin: 35px;
 }
 .widget_gallery__item_title{
 	font-weight: bold;
@@ -46,14 +45,8 @@
 		%set string small_image = item["image", "sizes", this.model.small_size];
 		%if (small_image)
 		{
-			<div class="widget_gallery__item_image"
-				style={{ rs::join(";", [
-					"background-image: url(" ~ small_image.get("file") ~ ")",
-					"width: " ~ small_image.get("width") ~ "px",
-					"height: " ~ small_image.get("height") ~ "px",
-				]) }}
-				@key="image"
-			>
+			<div class="widget_gallery__item_image" @key="image">
+				<img src={{ small_image.get("file") }} alt={{ item.get("name") }} />
 			</div>
 		}
 		%else

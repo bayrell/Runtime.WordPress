@@ -49,6 +49,27 @@ class GallerySearchApi extends SearchApi
 	
 	
 	/**
+	 * Returns image sizes
+	 */
+	@ApiMethod
+	async void actionImageSizes()
+	{
+		Collection image_sizes;
+		
+		#ifcode PHP then
+		$image_sizes = \Runtime\Collection::from(get_intermediate_image_sizes());
+		#endif
+		
+		this.success({
+			"data":
+			{
+				"items": image_sizes,
+			}
+		});
+	}
+	
+	
+	/**
 	 * Action search
 	 */
 	@ApiMethod

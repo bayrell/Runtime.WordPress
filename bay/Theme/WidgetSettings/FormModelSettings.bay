@@ -100,28 +100,6 @@ class FormModelSettings extends BaseObject implements WidgetSettingsInterface
 	
 	
 	/**
-	 * Returns params
-	 */
-	Collection<ParameterFactory> getParams() =>
-	[
-		new ParameterFactory
-		(
-			classof ParameterModel,
-			{
-				"name": "form_name",
-				"label": "Form name",
-				"component": "Runtime.Widget.Select",
-				"default": "",
-				"props": {
-					"options": [
-					],
-				}
-			}
-		),
-	];
-	
-	
-	/**
 	 * On change
 	 */
 	bool onChange(BaseModel model, ParameterModel param)
@@ -145,7 +123,7 @@ class FormModelSettings extends BaseObject implements WidgetSettingsInterface
 		if (this.options) return;
 		
 		Dict data = ParameterFactory::copy(runtime, {
-			"api_name": "admin.wordpress.forms.settings::search",
+			"api_name": "admin.wordpress.forms.settings.search",
 			"method_name": "actionSearch",
 			"data": {
 				"limit": "1000",
@@ -178,16 +156,38 @@ class FormModelSettings extends BaseObject implements WidgetSettingsInterface
 		/* Add options to widget */
 		if (this.options)
 		{
-			Collection options = ParameterFactory::copy(runtime, this.options);
 			ParameterModel form_name_param = widget.params.findItem(
 				bool (Parameter param) => param.name == "form_name"
 			);
 			if (form_name_param)
 			{
+				Collection options = ParameterFactory::copy(runtime, this.options);
 				form_name_param.props.set("options", options);
 			}
 		}
 	}
+	
+	
+	/**
+	 * Returns params
+	 */
+	Collection<ParameterFactory> getParams() =>
+	[
+		new ParameterFactory
+		(
+			classof ParameterModel,
+			{
+				"name": "form_name",
+				"label": "Form name",
+				"component": "Runtime.Widget.Select",
+				"default": "",
+				"props": {
+					"options": [
+					],
+				}
+			}
+		),
+	];
 	
 	
 	/**

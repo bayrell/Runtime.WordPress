@@ -34,6 +34,10 @@ use BayLang.Constructor.WidgetPage.WidgetSettingsInterface;
 
 class GalleryModelSettings extends BaseObject implements WidgetSettingsInterface
 {
+	Collection api_names = null;
+	Collection image_sizes = null;
+	
+	
 	/**
 	 * Returns widget name
 	 */
@@ -97,6 +101,120 @@ class GalleryModelSettings extends BaseObject implements WidgetSettingsInterface
 	
 	
 	/**
+	 * On change
+	 */
+	bool onChange(BaseModel model, ParameterModel param)
+	{
+		/* Change api name */
+		if (param.name == "api_name")
+		{
+			model.api_name = param.value;
+			model.loadItems();
+			return true;
+		}
+		return false;
+	}
+	
+	
+	/**
+	 * Load form name options
+	 */
+	async void loadOptions(var runtime, var widget)
+	{
+		if (not this.api_names)
+		{
+			Dict data = ParameterFactory::copy(runtime, {
+				"api_name": "admin.wordpress.gallery.search",
+				"method_name": "actionSearch",
+				"data": {
+					"limit": "1000",
+				},
+			});
+			ApiResult result = await widget.page_model.layout.callApi(data);
+			if (result.isSuccess())
+			{
+				Dict result_data = ParameterFactory::restore(runtime, result.data);
+				this.api_names = result_data.get("items").map(Dict (Dict item) => {
+					"key": item.get("api_name"),
+					"value": item.get("api_name"),
+				});
+			}
+			else
+			{
+				this.api_names = [];
+			}
+		}
+		if (not this.image_sizes)
+		{
+			Dict data = ParameterFactory::copy(runtime, {
+				"api_name": "admin.wordpress.gallery.search",
+				"method_name": "actionImageSizes"
+			});
+			ApiResult result = await widget.page_model.layout.callApi(data);
+			if (result.isSuccess())
+			{
+				Dict result_data = ParameterFactory::restore(runtime, result.data);
+				this.image_sizes = result_data.get("items").map(Dict (string name) => {
+					"key": name,
+					"value": name,
+				});
+			}
+			else
+			{
+				this.image_sizes = [];
+			}
+		}
+	}
+	
+	
+	/**
+	 * Setup widget
+	 */
+	async void setup(var runtime, var widget)
+	{
+		/* Load options */
+		await this.loadOptions(runtime, widget);
+		
+		/* Add api_names to widget */
+		if (this.api_names)
+		{
+			ParameterModel parameter = widget.params.findItem(
+				bool (Parameter param) => param.name == "api_name"
+			);
+			if (parameter)
+			{
+				Collection options = ParameterFactory::copy(runtime, this.api_names);
+				parameter.props.set("options", options);
+			}
+		}
+		
+		/* Setup image sizes */
+		if (this.image_sizes)
+		{
+			Collection image_sizes = ParameterFactory::copy(runtime, this.image_sizes);
+			
+			/* Set big_size */
+			ParameterModel parameter = widget.params.findItem(
+				bool (Parameter param) => param.name == "big_size"
+			);
+			if (parameter)
+			{
+				parameter.props.set("options", image_sizes);
+			}
+			
+			/* Set small_size */
+			ParameterModel parameter = widget.params.findItem(
+				bool (Parameter param) => param.name == "small_size"
+			);
+			if (parameter)
+			{
+				parameter.props.set("options", image_sizes);
+			}
+		}
+	}
+	
+	
+	/**
 	 * Returns params
 	 */
 	Collection<ParameterFactory> getParams() =>
@@ -115,7 +233,7 @@ class GalleryModelSettings extends BaseObject implements WidgetSettingsInterface
 				}
 			}
 		),
-         new ParameterFactory
+		 new ParameterFactory
 		(
 			classof ParameterModel,
 			{
@@ -125,27 +243,13 @@ class GalleryModelSettings extends BaseObject implements WidgetSettingsInterface
 				"default": "",
 				"props": {
 					"options": [
-                        {"key": "false", "value": "No"},
-                        {"key": "true", "value": "Yes"},
+						{"key": "false", "value": "No"},
+						{"key": "true", "value": "Yes"},
 					],
 				}
 			}
 		),
-        new ParameterFactory
-		(
-			classof ParameterModel,
-			{
-				"name": "big_size",
-				"label": "Big image",
-				"component": "Runtime.Widget.Select",
-				"default": "",
-				"props": {
-					"options": [
-					],
-				}
-			}
-		),
-        new ParameterFactory
+		new ParameterFactory
 		(
 			classof ParameterModel,
 			{
@@ -159,34 +263,21 @@ class GalleryModelSettings extends BaseObject implements WidgetSettingsInterface
 				}
 			}
 		),
+		new ParameterFactory
+		(
+			classof ParameterModel,
+			{
+				"name": "big_size",
+				"label": "Big image",
+				"component": "Runtime.Widget.Select",
+				"default": "",
+				"props": {
+					"options": [
+					],
+				}
+			}
+		),
 	];
-	
-	
-	/**
-	 * On change
-	 */
-	bool onChange(BaseModel model, ParameterModel param)
-	{
-		return false;
-	}
-	
-	
-	/**
-	 * Load form name options
-	 */
-	async void loadOptions(var runtime, var widget)
-	{
-	}
-	
-	
-	/**
-	 * Setup widget
-	 */
-	async void setup(var runtime, var widget)
-	{
-		/* Load options */
-		await this.loadOptions(runtime, widget);
-	}
 	
 	
 	/**
