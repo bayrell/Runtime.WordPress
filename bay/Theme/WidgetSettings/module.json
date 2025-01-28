@@ -2,10 +2,12 @@
 	"name": "Runtime.WordPress.Theme.WidgetSettings",
 	"assets":
 	[
-		"FormModelSettings.bay",
-		"FormSettings.bay",
-		"GalleryModelSettings.bay",
-		"GallerySettings.bay",
+		"Button/ButtonFormModelSettings.bay",
+		"Button/ButtonFormSettings.bay",
+		"Form/FormModelSettings.bay",
+		"Form/FormSettings.bay",
+		"Gallery/GalleryModelSettings.bay",
+		"Gallery/GallerySettings.bay",
 		"ModuleDescription.bay",
 		"WidgetManager.bay"
 	],

@@ -33,12 +33,16 @@ use Runtime.ORM.Relation;
 use Runtime.Web.BaseApi;
 use Runtime.Web.Annotations.ApiMethod;
 use Runtime.Widget.Crud.FieldException;
-use Runtime.Widget.Crud.FieldResult;
+use Runtime.Widget.Crud.RulesManager;
+use Runtime.WordPress.Database.Form;
+use Runtime.WordPress.Database.FormData;
+use Runtime.WordPress.Database.FormIP;
 
 
 class FormSubmitApi extends BaseApi
 {
 	Relation form = null;
+	RulesManager rules = new RulesManager();
 	
 	
 	/**
@@ -51,15 +55,15 @@ class FormSubmitApi extends BaseApi
 	 * Returns form settings
 	 */
 	@ApiMethod
-	async void actionItem()
+	async void actionSettings()
 	{
 		Connection conn = Connection::get();
 		
 		/* Find form */
 		string form_name = this.post_data["form_name"];
-		this.form = await conn.findRelationByObject("forms", {
-			"api_name": form_name,
-		});
+		this.form = await Form::findByFilter(conn, [
+			new QueryFilter("api_name", "=", form_name),
+		]);
 		if (not this.form)
 		{
 			throw new ApiError(new ItemNotFound(form_name, "Form"));
@@ -94,9 +98,9 @@ class FormSubmitApi extends BaseApi
 		string client_ip = this.backend_storage["client_ip"];
 		int time = DateTime::now().getTimestamp();
 		
-		Relation item = await conn.findRelationByObject("forms_ip", {
-			"ip": client_ip
-		});
+		Relation item = await FormIP::findByFilter(conn, [
+			new QueryFilter("ip", "=", client_ip),
+		]);
 		
 		if (not item)
 		{
@@ -151,7 +155,6 @@ class FormSubmitApi extends BaseApi
 		
 		/* Creat new data */
 		Map new_data = new Map();
-		FieldResult fields_result = this.result.data.get("fields");
 		
 		/* Check fields */
 		Collection<Dict> fields = settings["fields"];
@@ -172,14 +175,13 @@ class FormSubmitApi extends BaseApi
 				if (not required) continue;
 				if (value == "")
 				{
-					fields_result.addFieldError(field_name, "Field is required");
+					this.rules.addFieldError(field_name, "Field is required");
 				}
 			}
 		}
 		
 		/* Check fields error */
-		FieldResult fields = this.result.data.get("fields");
-		if (not fields.isSuccess())
+		if (not this.rules.correct())
 		{
 			throw new ApiError(new FieldException());
 		}
@@ -198,16 +200,16 @@ class FormSubmitApi extends BaseApi
 		
 		/* Find form */
 		string form_name = this.post_data["form_name"];
-		this.form = await conn.findRelationByObject("forms", {
-			"api_name": form_name,
-		});
+		this.form = await Form::findByFilter(conn, [
+			new QueryFilter("api_name", "=", form_name),
+		]);
 		if (!this.form)
 		{
 			throw new ApiError(new ItemNotFound(form_name, "Form"));
 		}
 		
 		/* Create field result */
-		this.result.data.set("fields", new FieldResult);
+		this.result.data.set("fields", this.rules.fields);
 		
 		/* Validate item */
 		Map update_data = this.post_data["item"];
@@ -230,7 +232,7 @@ class FormSubmitApi extends BaseApi
 		}
 		
 		/* Save form */
-		Relation form_data = new Relation("forms_data");
+		Relation form_data = new FormData();
 		form_data.set("form_id", this.form.get("id"));
 		form_data.set("form_title", form_title);
 		form_data.set("data", update_data);

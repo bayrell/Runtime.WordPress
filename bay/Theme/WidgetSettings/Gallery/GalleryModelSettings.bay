@@ -16,7 +16,7 @@
  *  limitations under the License.
  */
 
-namespace Runtime.WordPress.Theme.WidgetSettings;
+namespace Runtime.WordPress.Theme.WidgetSettings.Gallery;
 
 use Runtime.lib;
 use Runtime.BaseObject;
@@ -103,7 +103,7 @@ class GalleryModelSettings extends BaseObject implements WidgetSettingsInterface
 	/**
 	 * On change
 	 */
-	bool onChange(BaseModel model, ParameterModel param)
+	bool onChange(var runtime, BaseModel model, ParameterModel param)
 	{
 		/* Change api name */
 		if (param.name == "api_name")

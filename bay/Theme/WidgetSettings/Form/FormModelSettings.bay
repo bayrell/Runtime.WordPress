@@ -16,7 +16,7 @@
  *  limitations under the License.
  */
 
-namespace Runtime.WordPress.Theme.WidgetSettings;
+namespace Runtime.WordPress.Theme.WidgetSettings.Form;
 
 use Runtime.lib;
 use Runtime.BaseObject;
@@ -102,7 +102,7 @@ class FormModelSettings extends BaseObject implements WidgetSettingsInterface
 	/**
 	 * On change
 	 */
-	bool onChange(BaseModel model, ParameterModel param)
+	bool onChange(var runtime, BaseModel model, ParameterModel param)
 	{
 		/* Change form name */
 		if (param.name == "form_name")
@@ -185,6 +185,15 @@ class FormModelSettings extends BaseObject implements WidgetSettingsInterface
 					"options": [
 					],
 				}
+			}
+		),
+		new ParameterFactory
+		(
+			classof ParameterModel,
+			{
+				"name": "redirect_url",
+				"label": "Redirect URL",
+				"component": "Runtime.Widget.Input",
 			}
 		),
 	];

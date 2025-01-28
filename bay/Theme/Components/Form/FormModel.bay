@@ -103,7 +103,7 @@ class FormModel extends FormSubmitModel
 	{
 		ApiResult result = await this.layout.callApi({
 			"api_name": "runtime.wordpress.form.submit",
-			"method_name": "actionItem",
+			"method_name": "actionSettings",
 			"data": {
 				"form_name": this.form_name,
 			},

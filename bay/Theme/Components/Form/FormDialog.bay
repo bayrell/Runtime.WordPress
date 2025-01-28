@@ -51,7 +51,7 @@
 .widget_dialog %(Form)widget_form__button %(Button)widget_button{
 	width: 100%;
 }
-%(Input)widget_input, %(TextArea)widget_textarea{
+.widget_dialog %(Input)widget_input, .widget_dialog %(TextArea)widget_textarea{
 	padding: 10px;
 	font-size: 16px;
 	border-radius: 5px;

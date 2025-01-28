@@ -16,7 +16,7 @@
  *  limitations under the License.
  */
 
-namespace Runtime.WordPress.Theme.WidgetSettings;
+namespace Runtime.WordPress.Theme.WidgetSettings.Form;
 
 use Runtime.BaseObject;
 use Runtime.Web.BaseModel;
@@ -27,36 +27,36 @@ use BayLang.Constructor.WidgetPage.ParameterFactory;
 use BayLang.Constructor.WidgetPage.WidgetSettingsInterface;
 
 
-class GallerySettings extends BaseObject implements WidgetSettingsInterface
+class FormSettings extends BaseObject implements WidgetSettingsInterface
 {
 	/**
 	 * Returns widget name
 	 */
-	string getWidgetName() => "Gallery";
+	string getWidgetName() => "WordPress Form";
 	
 	
 	/**
 	 * Returns alias name
 	 */
-	string getAliasName() => "WP_Gallery";
+	string getAliasName() => "WP_Form";
 	
 	
 	/**
 	 * Returns component name
 	 */
-	string getComponentName() => "Runtime.WordPress.Theme.Components.Gallery.Gallery";
+	string getComponentName() => "Runtime.WordPress.Theme.Components.Form.Form";
 	
 	
 	/**
 	 * Returns model name
 	 */
-	string getModelName() => "Runtime.WordPress.Theme.Components.Gallery.GalleryModel";
+	string getModelName() => "Runtime.WordPress.Theme.Components.Form.FormModel";
 	
 	
 	/**
 	 * Returns selector name
 	 */
-	string getSelectorName() => "gallery";
+	string getSelectorName() => "form";
 	
 	
 	/**
@@ -106,23 +106,6 @@ class GallerySettings extends BaseObject implements WidgetSettingsInterface
 	{
 		"default": Dict () =>
 		{
-            "content": rs::join("\n", [
-                "<style>",
-				"%(WP_Gallery)widget_gallery{",
-				"\t&__item{",
-				"\t\tmargin: 35px;",
-				"\t}",
-				"\t&__item_title{",
-				"\t}"
-				"\t&__item_image{",
-				"\t\timg{",
-				"\t\t\tmax-width: 300px;",
-				"\t\t\tmax-height: 300px",
-				"\t\t}",
-				"\t}",
-				"}",
-				"</style>"
-            ]),
 		}
 	};
 }

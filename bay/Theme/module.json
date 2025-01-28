@@ -2,6 +2,8 @@
 	"name": "Runtime.WordPress.Theme",
 	"assets":
 	[
+		"Components/Button/ButtonForm.bay",
+		"Components/Button/ButtonFormModel.bay",
 		"Components/Form/Form.bay",
 		"Components/Form/FormDialog.bay",
 		"Components/Form/FormDialogModel.bay",

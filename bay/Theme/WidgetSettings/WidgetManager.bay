@@ -20,10 +20,12 @@ namespace Runtime.WordPress.Theme.WidgetSettings;
 
 use Runtime.BaseObject;
 use Runtime.Web.BaseLayoutModel;
-use Runtime.WordPress.Theme.WidgetSettings.FormModelSettings;
-use Runtime.WordPress.Theme.WidgetSettings.FormSettings;
-use Runtime.WordPress.Theme.WidgetSettings.GalleryModelSettings;
-use Runtime.WordPress.Theme.WidgetSettings.GallerySettings;
+use Runtime.WordPress.Theme.WidgetSettings.Button.ButtonFormModelSettings;
+use Runtime.WordPress.Theme.WidgetSettings.Button.ButtonFormSettings;
+use Runtime.WordPress.Theme.WidgetSettings.Form.FormModelSettings;
+use Runtime.WordPress.Theme.WidgetSettings.Form.FormSettings;
+use Runtime.WordPress.Theme.WidgetSettings.Gallery.GalleryModelSettings;
+use Runtime.WordPress.Theme.WidgetSettings.Gallery.GallerySettings;
 use BayLang.Constructor.WidgetPage.EditorProvider;
 use BayLang.Constructor.WidgetPage.WidgetManagerInterface;
 use BayLang.Constructor.WidgetPage.WidgetSettingsInterface;
@@ -54,6 +56,10 @@ class WidgetManager extends BaseObject implements WidgetManagerInterface
 	 */
 	Collection<WidgetSettingsInterface> getWidgetSettings() =>
 	[
+		/* Button */
+		new ButtonFormModelSettings(),
+		new ButtonFormSettings(),
+		
 		/* Forms */
 		new FormModelSettings(),
 		new FormSettings(),

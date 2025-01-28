@@ -16,19 +16,18 @@
  *  limitations under the License.
  */
 
-namespace Runtime.WordPress.Theme.Components.Form;
+namespace Runtime.WordPress.Theme.Components.Button;
 
-use Runtime.Widget.Dialog.DialogModel;
-use Runtime.Widget.Dialog.DialogModelException;
-use Runtime.WordPress.Theme.Components.Form.FormDialog;
+use Runtime.Widget.ButtonModel;
+use Runtime.WordPress.Theme.Components.Form.FormDialogModel;
 use Runtime.WordPress.Theme.Components.Form.FormModel;
 
 
-class FormDialogModel extends DialogModel
+class ButtonFormModel extends ButtonModel
 {
-	string component = classof FormDialog;
-	string widget_name = "form_dialog";
+	FormDialogModel dialog = null;
 	FormModel form = null;
+	Dict dialog_settings = {};
 	Dict form_settings = {};
 	
 	
@@ -40,24 +39,37 @@ class FormDialogModel extends DialogModel
 		parent(params);
 		
 		if (params == null) return;
-		if (params.has("form")) this.form = params.get("form");
+		if (params.has("dialog_settings")) this.dialog_settings = params.get("dialog_settings");
 		if (params.has("form_settings")) this.form_settings = params.get("form_settings");
 	}
 	
 	
 	/**
-	 * Init widget settings
+	 * Init widget params
 	 */
 	void initWidget(Dict params)
 	{
 		parent(params);
 		
 		/* Add form */
-		if (not this.form)
-		{
-			this.form = this.addWidget(classof FormModel, this.form_settings.concat({
-				"widget_name": "form",
-			}));
-		}
+		this.form = this.addWidget(classof FormModel, this.form_settings.concat({
+			"widget_name": "form",
+		}));
+		
+		/* Add dialog */
+		this.dialog = this.addWidget(classof FormDialogModel, this.dialog_settings.concat({
+			"widget_name": "dialog",
+			"form": this.form,
+		}));
+	}
+	
+	
+	/**
+	 * On click
+	 */
+	void onClick(var data = null)
+	{
+		this.dialog.show();
+		parent(data);
 	}
 }

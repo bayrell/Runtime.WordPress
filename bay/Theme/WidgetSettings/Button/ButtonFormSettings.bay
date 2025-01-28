@@ -16,47 +16,44 @@
  *  limitations under the License.
  */
 
-namespace Runtime.WordPress.Theme.WidgetSettings;
+namespace Runtime.WordPress.Theme.WidgetSettings.Button;
 
 use Runtime.BaseObject;
 use Runtime.Web.BaseModel;
-use BayLang.Constructor.Frontend.Editor.Parameters.ParameterDictModel;
-use BayLang.Constructor.Frontend.Editor.Parameters.ParameterFactoryModel;
-use BayLang.Constructor.Frontend.Editor.Parameters.ParameterModel;
 use BayLang.Constructor.WidgetPage.ParameterFactory;
 use BayLang.Constructor.WidgetPage.WidgetSettingsInterface;
 
 
-class FormSettings extends BaseObject implements WidgetSettingsInterface
+class ButtonFormSettings extends BaseObject implements WidgetSettingsInterface
 {
 	/**
 	 * Returns widget name
 	 */
-	string getWidgetName() => "WordPress Form";
+	string getWidgetName() => "Button form";
 	
 	
 	/**
 	 * Returns alias name
 	 */
-	string getAliasName() => "WP_Form";
+	string getAliasName() => "WP_ButtonForm";
 	
 	
 	/**
 	 * Returns component name
 	 */
-	string getComponentName() => "Runtime.WordPress.Theme.Components.Form.Form";
+	string getComponentName() => "Runtime.WordPress.Theme.Components.Button.ButtonForm";
 	
 	
 	/**
 	 * Returns model name
 	 */
-	string getModelName() => "Runtime.WordPress.Theme.Components.Form.FormModel";
+	string getModelName() => "Runtime.WordPress.Theme.Components.Button.ButtonFormModel";
 	
 	
 	/**
 	 * Returns selector name
 	 */
-	string getSelectorName() => "form";
+	string getSelectorName() => "button";
 	
 	
 	/**
@@ -106,6 +103,13 @@ class FormSettings extends BaseObject implements WidgetSettingsInterface
 	{
 		"default": Dict () =>
 		{
+			"content": rs::join("\n", [
+				"<use name='Runtime.Widget.Button' component='true' />",
+				"<style>",
+				"%(Button)widget_button{",
+				"}"
+				"</style>"
+			]),
 		}
 	};
 }
