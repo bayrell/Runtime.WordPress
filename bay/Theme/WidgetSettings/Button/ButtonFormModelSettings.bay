@@ -223,16 +223,6 @@ class ButtonFormModelSettings extends BaseObject implements WidgetSettingsInterf
 		(
 			classof ParameterModel,
 			{
-				"name": "content",
-				"label": "Button text",
-				"component": "Runtime.Widget.Input",
-				"default": "Click",
-			}
-		),
-		new ParameterFactory
-		(
-			classof ParameterModel,
-			{
 				"name": "styles",
 				"label": "Button styles",
 				"component": "Runtime.Widget.Tag",
