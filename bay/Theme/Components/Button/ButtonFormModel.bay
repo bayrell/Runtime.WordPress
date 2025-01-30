@@ -61,6 +61,19 @@ class ButtonFormModel extends ButtonModel
 			"widget_name": "dialog",
 			"form": this.form,
 		}));
+		
+		/* Set form title */
+		this.form.form_title = this.dialog.title;
+	}
+	
+	
+	/**
+	 * Set title
+	 */
+	void setTitle(string title)
+	{
+		this.dialog.title = title;
+		this.form.form_title = title;
 	}
 	
 	

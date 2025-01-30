@@ -34,9 +34,11 @@ use Runtime.Web.BaseApi;
 use Runtime.Web.Annotations.ApiMethod;
 use Runtime.Widget.Crud.FieldException;
 use Runtime.Widget.Crud.RulesManager;
+use Runtime.WordPress.EmailProvider;
 use Runtime.WordPress.Database.Form;
 use Runtime.WordPress.Database.FormData;
 use Runtime.WordPress.Database.FormIP;
+use Runtime.WordPress.Theme.Components.Email.FormMessage;
 
 
 class FormSubmitApi extends BaseApi
@@ -95,7 +97,7 @@ class FormSubmitApi extends BaseApi
 	{
 		Connection conn = Connection::get();
 		
-		string client_ip = this.backend_storage["client_ip"];
+		string client_ip = this.layout.getWidget("storage").backend.get("client_ip");
 		int time = DateTime::now().getTimestamp();
 		
 		Relation item = await FormIP::findByFilter(conn, [
@@ -104,7 +106,7 @@ class FormSubmitApi extends BaseApi
 		
 		if (not item)
 		{
-			item = new Relation("forms_ip");
+			item = new FormIP();
 			item.set("count", 1);
 			item.set("ip", client_ip);
 			item.set("last", time);
@@ -215,15 +217,22 @@ class FormSubmitApi extends BaseApi
 		Map update_data = this.post_data["item"];
 		update_data = await this.validateItem(update_data);
 		
-		/* Get title */
+		/* Get form title */
 		string form_title = this.form.get("name");
-		if (this.post_data.has("title"))
+		if (this.post_data.has("form_title"))
 		{
-			form_title = this.post_data.get("title");
+			form_title = this.post_data.get("form_title");
+		}
+		
+		/* Get metrika id */
+		string metrika_form_id = "";
+		if (this.post_data.has("metrika_form_id"))
+		{
+			metrika_form_id = this.post_data.get("metrika_form_id");
 		}
 		
 		/* Spam check */
-		bool spam_check = this.checkSpam();
+		bool spam_check = await this.checkSpam();
 		if (spam_check)
 		{
 			return this.result.success({
@@ -235,10 +244,29 @@ class FormSubmitApi extends BaseApi
 		Relation form_data = new FormData();
 		form_data.set("form_id", this.form.get("id"));
 		form_data.set("form_title", form_title);
+		form_data.set("metrika_id", metrika_form_id);
 		form_data.set("data", update_data);
 		form_data.set("spam", spam_check);
-		form_data.set("gmtime_add", DateTime::now());
 		await form_data.save(conn);
+		
+		/* Send email */
+		if (not spam_check)
+		{
+			EmailProvider email = @.provider("email");
+			string email_dest = this.form.get("email_to");
+			await email.send({
+				"dest": email_dest,
+				"title": form_title,
+				"component": classof FormMessage,
+				"props":
+				{
+					"form_name": this.form.get("name"),
+					"form_title": form_title,
+					"metrika_form_id": metrika_form_id,
+					"data": update_data
+				},
+			});
+		}
 		
 		/* Set result */
 		this.result.success({

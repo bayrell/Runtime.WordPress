@@ -19,6 +19,8 @@
 namespace Runtime.WordPress.Database;
 
 use Runtime.BaseStruct;
+use Runtime.DateTime;
+use Runtime.ORM.Connection;
 use Runtime.ORM.Relation;
 use Runtime.ORM.Annotations.AutoIncrement;
 use Runtime.ORM.Annotations.BigIntType;
@@ -47,12 +49,9 @@ class FormData extends Relation
 		new BigIntType{"name": "id"},
 		new BigIntType{"name": "form_id"},
 		new StringType{"name": "form_title"},
-		new StringType{"name": "form_position"},
+		new StringType{"name": "metrika_id"},
 		new JsonType{"name": "data"},
 		new StringType{"name": "utm"},
-		new StringType{"name": "send_email_uuid"},
-		new TinyIntType{"name": "send_email_code"},
-		new StringType{"name": "send_email_error"},
 		new BooleanType{"name": "spam"},
 		new DateTimeType{"name": "gmtime_add"},
 		
@@ -60,4 +59,17 @@ class FormData extends Relation
 		new AutoIncrement{"name": "id"},
 		new Primary{"keys": ["id"]},
 	];
+	
+	
+	/**
+	 * Save
+	 */
+	async void save(Connection connection, Dict params = null)
+	{
+		if (this.get("gmtime_add") == null)
+		{
+			this.set("gmtime_add", DateTime::now());
+		}
+		await parent(connection, params);
+	}
 }

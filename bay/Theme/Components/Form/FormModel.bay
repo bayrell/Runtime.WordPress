@@ -27,6 +27,9 @@ use Runtime.Widget.Form.FormSubmitStorage;
 class FormModel extends FormSubmitModel
 {
 	string form_name = "";
+	string form_title = "";
+	string metrika_event = "";
+	string metrika_form_id = "";
 	string redirect_url = "";
 	
 	
@@ -36,7 +39,6 @@ class FormModel extends FormSubmitModel
 	void serialize(Serializer serializer, Map data)
 	{
 		serializer.process(this, "fields", data);
-		serializer.process(this, "form_name", data);
 		parent(serializer, data);
 	}
 	
@@ -50,6 +52,9 @@ class FormModel extends FormSubmitModel
 		
 		if (params == null) return;
 		if (params.has("form_name")) this.form_name = params.get("form_name");
+		if (params.has("form_title")) this.form_title = params.get("form_title");
+		if (params.has("metrika_event")) this.metrika_event = params.get("metrika_event");
+		if (params.has("metrika_form_id")) this.metrika_form_id = params.get("metrika_form_id");
 		if (params.has("redirect_url")) this.redirect_url = params.get("redirect_url");
 	}
 	
@@ -79,6 +84,8 @@ class FormModel extends FormSubmitModel
 	{
 		post_data = parent(post_data, action);
 		post_data.set("form_name", this.form_name);
+		post_data.set("form_title", this.form_title);
+		post_data.set("metrika_form_id", this.metrika_form_id);
 		return post_data;
 	}
 	

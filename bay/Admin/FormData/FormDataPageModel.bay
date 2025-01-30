@@ -146,14 +146,14 @@ class FormDataPageModel extends BasePageModel
 						"component": classof Label,
 					},
 					{
-						"name": "data",
-						"label": "Data",
-						"calculate": calculateData,
+						"name": "metrika_id",
+						"label": "Metrika form id",
 						"component": classof Label,
 					},
 					{
-						"name": "send_email_error",
-						"label": "Mail error",
+						"name": "data",
+						"label": "Data",
+						"calculate": calculateData,
 						"component": classof Label,
 					},
 					{

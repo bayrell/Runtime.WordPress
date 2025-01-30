@@ -27,8 +27,8 @@
 		"Settings/TabsModel.bay",
 		"AppHook.bay",
 		"CSS.bay",
-		"DefaultLayout.bay",
-		"DefaultLayoutModel.bay",
+		"AdminLayout.bay",
+		"AdminLayoutModel.bay",
 		"ModuleDescription.bay"
 	],
 	"src": "./",

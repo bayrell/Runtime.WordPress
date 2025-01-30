@@ -19,6 +19,8 @@
 namespace Runtime.WordPress.Database;
 
 use Runtime.BaseStruct;
+use Runtime.DateTime;
+use Runtime.ORM.Connection;
 use Runtime.ORM.Relation;
 use Runtime.ORM.Annotations.AutoIncrement;
 use Runtime.ORM.Annotations.BigIntType;
@@ -64,4 +66,17 @@ class MailDelivery extends Relation
 		new Primary{"keys": ["id"]},
 		new Unique{"keys": ["uuid"]},
 	];
+	
+	
+	/**
+	 * Save
+	 */
+	async void save(Connection connection, Dict params = null)
+	{
+		if (this.get("gmtime_add") == null)
+		{
+			this.set("gmtime_add", DateTime::now());
+		}
+		await parent(connection, params);
+	}
 }

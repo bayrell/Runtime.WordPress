@@ -165,6 +165,27 @@ class ButtonFormModelSettings extends BaseObject implements WidgetSettingsInterf
 			return true;
 		}
 		
+		/* Change form content */
+		if (param.name == "form_content")
+		{
+			model.form.form_content = param.value;
+			return true;
+		}
+		
+		/* Change form ID */
+		if (param.name == "form_id")
+		{
+			model.form.form_id = param.value;
+			return true;
+		}
+		
+		/* Change form styles */
+		if (param.name == "form_styles")
+		{
+			model.form.styles = ParameterFactory::restore(runtime, param.value);
+			return true;
+		}
+		
 		/* Change button styles */
 		if (param.name == "styles")
 		{
@@ -192,6 +213,13 @@ class ButtonFormModelSettings extends BaseObject implements WidgetSettingsInterf
 		if (param.name == "form_show_label")
 		{
 			model.form.field_settings.set("show_label", param.value);
+			return true;
+		}
+		
+		/* Change dialog styles */
+		if (param.name == "dialog_styles")
+		{
+			model.dialog.styles = ParameterFactory::restore(runtime, param.value);
 			return true;
 		}
 		
@@ -233,6 +261,38 @@ class ButtonFormModelSettings extends BaseObject implements WidgetSettingsInterf
 		(
 			classof ParameterDictModel,
 			{
+				"name": "redirect_url",
+				"path": ["form_settings", "redirect_url"],
+				"label": "Redirect URL",
+				"component": "Runtime.Widget.Input",
+				"default": "",
+			}
+		),
+		new ParameterFactory
+		(
+			classof ParameterDictModel,
+			{
+				"name": "metrika_event",
+				"path": ["form_settings", "metrika_event"],
+				"label": "Metrika event",
+				"component": "Runtime.Widget.Input",
+				"default": "",
+			}
+		),
+		new ParameterFactory
+		(
+			classof ParameterDictModel,
+			{
+				"name": "metrika_form_id",
+				"path": ["form_settings", "metrika_form_id"],
+				"label": "Metrika form id",
+				"component": "Runtime.Widget.Input",
+			}
+		),
+		new ParameterFactory
+		(
+			classof ParameterDictModel,
+			{
 				"name": "form_name",
 				"path": ["form_settings", "form_name"],
 				"label": "Form name",
@@ -242,6 +302,27 @@ class ButtonFormModelSettings extends BaseObject implements WidgetSettingsInterf
 					"options": [
 					],
 				}
+			}
+		),
+		new ParameterFactory
+		(
+			classof ParameterDictModel,
+			{
+				"name": "form_content",
+				"path": ["form_settings", "form_content"],
+				"label": "Form content",
+				"component": "Runtime.Widget.TextEditable",
+			}
+		),
+		new ParameterFactory
+		(
+			classof ParameterDictModel,
+			{
+				"name": "form_styles",
+				"path": ["form_settings", "styles"],
+				"label": "Form styles",
+				"component": "Runtime.Widget.Tag",
+				"default": [],
 			}
 		),
 		new ParameterFactory
@@ -265,6 +346,17 @@ class ButtonFormModelSettings extends BaseObject implements WidgetSettingsInterf
 		(
 			classof ParameterDictModel,
 			{
+				"name": "dialog_styles",
+				"path": ["dialog_settings", "styles"],
+				"label": "Dialog styles",
+				"component": "Runtime.Widget.Tag",
+				"default": [],
+			}
+		),
+		new ParameterFactory
+		(
+			classof ParameterDictModel,
+			{
 				"name": "dialog_title",
 				"path": ["dialog_settings", "title"],
 				"label": "Dialog title",
@@ -276,20 +368,9 @@ class ButtonFormModelSettings extends BaseObject implements WidgetSettingsInterf
 		(
 			classof ParameterDictModel,
 			{
-				"name": "redirect_url",
-				"path": ["form_settings", "redirect_url"],
-				"label": "Redirect URL",
-				"component": "Runtime.Widget.Input",
-				"default": "",
-			}
-		),
-		new ParameterFactory
-		(
-			classof ParameterDictModel,
-			{
 				"name": "form_button_text",
 				"path": ["form_settings", "submit_button", "text"],
-				"label": "Form button text",
+				"label": "Dialog button text",
 				"component": "Runtime.Widget.Input",
 				"default": "Send",
 			}
@@ -300,7 +381,7 @@ class ButtonFormModelSettings extends BaseObject implements WidgetSettingsInterf
 			{
 				"name": "form_button_styles",
 				"path": ["form_settings", "submit_button", "styles"],
-				"label": "Form button styles",
+				"label": "Dialog button styles",
 				"component": "Runtime.Widget.Tag",
 				"default": ["danger", "large", "stretch"],
 			}

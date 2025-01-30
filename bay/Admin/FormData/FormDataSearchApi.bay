@@ -45,9 +45,7 @@ class FormDataSearchApi extends SearchApi
 	[
 		"id",
 		"form_title",
-		"form_position",
-		"send_email_code",
-		"send_email_error",
+		"metrika_id",
 		"data",
 		"gmtime_add",
 	];

@@ -19,10 +19,10 @@
 namespace Runtime.WordPress.Admin;
 
 use Runtime.Web.BaseLayoutModel;
-use Runtime.WordPress.Admin.DefaultLayout;
+use Runtime.WordPress.Admin.AdminLayout;
 
 
-class DefaultLayoutModel extends BaseLayoutModel
+class AdminLayoutModel extends BaseLayoutModel
 {
-    string component = classof DefaultLayout;
+    string component = classof AdminLayout;
 }

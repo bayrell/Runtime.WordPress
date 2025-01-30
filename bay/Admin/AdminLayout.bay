@@ -16,7 +16,7 @@
  *  limitations under the License.
 -->
 
-<class name="Runtime.WordPress.Admin.DefaultLayout" extends="Runtime.Web.DefaultLayout">
+<class name="Runtime.WordPress.Admin.AdminLayout" extends="Runtime.Web.DefaultLayout">
 
 <style>
 .wp-heading-inline{
@@ -27,6 +27,11 @@
 
 <template name="renderTitle">
     <h1 class="wp-heading-inline">{{ this.layout.title }}</h1>
+</template>
+
+<template name="renderApp">
+	%render this.renderCSS();
+	%render parent();
 </template>
 
 <template>
