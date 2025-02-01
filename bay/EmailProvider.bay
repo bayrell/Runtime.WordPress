@@ -19,14 +19,39 @@
 namespace Runtime.WordPress;
 
 use Runtime.BaseProvider;
+use Runtime.DateTime;
 use Runtime.ORM.Connection;
+use Runtime.ORM.Query;
+use Runtime.ORM.QueryResult;
 use Runtime.Web.RenderContainer;
 use Runtime.Web.RenderResponse;
 use Runtime.WordPress.Database.MailDelivery;
+use Runtime.WordPress.Database.MailSettings;
 
 
 class EmailProvider extends BaseProvider
 {
+	Collection<Dict> settings = null;
+	
+	
+	/**
+	 * Returns settings
+	 */
+	async MailSettings loadSettings()
+	{
+		if (this.settings != null) return;
+		this.settings = {};
+		Connection connection = Connection::get();
+		Query q = MailSettings::select().where("enable", "=", 1);
+		QueryResult items = await connection.fetchAll(q);
+		for (int i=0; i<items.count(); i++)
+		{
+			MailSettings item = items.get(i);
+			this.settings.set(item.get("plan"), item.toMap());
+		}
+	}
+	
+	
 	/**
 	 * Send email
 	 */
@@ -66,5 +91,129 @@ class EmailProvider extends BaseProvider
 		
 		/* Save email */
 		await email.save(connection);
+	}
+	
+	
+	/**
+	 * Send message
+	 */
+	async void sendMessage(MailDelivery email)
+	{
+		if (email == null) return;
+		if (email.get("status") != 0) return;
+		
+		Connection connection = Connection::get();
+		
+		/* Check settings */
+		string plan = email.get("plan");
+		if (not this.settings) return;
+		if (not this.settings.has(plan))
+		{
+			plan = "default";
+		}
+		if (not this.settings.has(plan))
+		{
+			email.set("status", -1);
+			email.set("send_email_error", "Settings not found");
+			await email.save(connection);
+			return;
+		}
+		
+		/* Get settings */
+		Dict settings = this.settings.get(plan);
+		
+		/* Check email */
+		if (email.get("dest") == "")
+		{
+			email.set("status", -1);
+			email.set("send_email_error", "Destination is empty");
+			await email.save(connection);
+			return;
+		}
+		
+		#ifcode PHP then
+		
+		/* Create message */
+		$message = new \PHPMailer\PHPMailer\PHPMailer(true);
+		$message->CharSet = "UTF-8";
+		$message->SMTPAuth = true;
+		$message->isSMTP();
+		
+		/* Set connection */
+		$message->Host = $settings->get("host");
+		$message->Username = $settings->get("login");
+		$message->Password = $settings->get("password");
+		$message->Port = $settings->get("port");
+		
+		/* SSL Options */
+		if ($settings->get("ssl_enable") == 1)
+		{
+			$message->SMTPSecure = \PHPMailer\PHPMailer\PHPMailer::ENCRYPTION_SMTPS;
+		}
+		else if ($settings->get("ssl_enable") == 2)
+		{
+			$message->SMTPOptions = [
+				'ssl' => [
+					'verify_peer' => false,
+					'verify_peer_name' => false,
+					'allow_self_signed' => true,
+				]
+			];
+		}
+		else
+		{
+			$message->SMTPAutoTLS = false;
+		}
+		
+		/* Create message */
+		$message->setFrom($settings->get("login"));
+		$message->addAddress($email->get("dest"));
+		$message->isHTML(true);
+		$message->Subject = $email->get("title");
+		$message->Body = $email->get("message");
+		
+		/* Set email sending status */
+		$email->set("status", 2);
+		$email->set("send_email_code", 0);
+		$email->set("send_email_error", "");
+		$email->save($connection);
+		
+		/* Try to send message */
+		try
+		{
+			$message->send();
+			$email->set("gmtime_send", \Runtime\DateTime::now());
+			$email->set("status", 1);
+			$email->set("send_email_error", "Ok");
+			$email->save($connection);
+		}
+		catch (\Exception $e)
+		{
+			$email->set("status", 2);
+			$email->set("status", -1);
+			$email->set("send_email_code", -1);
+			$email->set("send_email_error", $message->ErrorInfo);
+			$email->save($connection);
+		}
+		
+		#endif
+	}
+	
+	
+	/**
+	 * Send new messages
+	 */
+	async void sendNewMessages()
+	{
+		Connection connection = Connection::get();
+		Query q = MailDelivery::select()
+			.where("status", "=", 0)
+		;
+		
+		QueryResult items = await connection.findRelations(q);
+		for (int i=0; i<items.count(); i++)
+		{
+			await this.sendMessage(items.get(i));
+		}
 	}
 }
