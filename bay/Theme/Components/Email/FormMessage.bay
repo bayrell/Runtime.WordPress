@@ -24,29 +24,29 @@
 			%if (this.site_name)
 			{
 				<tr>
-					<td>Web site:</td>
-					<td>{{ this.site_name }}</td>
+					<td style="padding: 2px; text-align: right">Web site:</td>
+					<td style="padding: 2px; text-align: left">{{ this.site_name }}</td>
 				</tr>
 			}
 			%if (this.form_name)
 			{
 				<tr>
-					<td>Form name:</td>
-					<td>{{ this.form_name }}</td>
+					<td style="padding: 2px; text-align: right">Form name:</td>
+					<td style="padding: 2px; text-align: left">{{ this.form_name }}</td>
 				</tr>
 			}
 			%if (this.form_title)
 			{
 				<tr>
-					<td>Form title:</td>
-					<td>{{ this.form_title }}</td>
+					<td style="padding: 2px; text-align: right">Form title:</td>
+					<td style="padding: 2px; text-align: left">{{ this.form_title }}</td>
 				</tr>
 			}
 			%if (this.metrika_form_id)
 			{
 				<tr>
-					<td>Metrika form id:</td>
-					<td>{{ this.metrika_form_id }}</td>
+					<td style="padding: 2px; text-align: right">Form id:</td>
+					<td style="padding: 2px; text-align: left">{{ this.metrika_form_id }}</td>
 				</tr>
 			}
 			%if (this.data)
@@ -57,8 +57,8 @@
 					%set string name = keys.get(i);
 					%set string value = this.data.get(name);
 					<tr>
-						<td>{{ name }}:</td>
-						<td>{{ value }}</td>
+						<td style="padding: 2px; text-align: right">{{ name }}:</td>
+						<td style="padding: 2px; text-align: left">{{ value }}</td>
 					</tr>
 				}
 			}

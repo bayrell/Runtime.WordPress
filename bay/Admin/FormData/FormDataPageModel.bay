@@ -147,7 +147,7 @@ class FormDataPageModel extends BasePageModel
 					},
 					{
 						"name": "metrika_id",
-						"label": "Metrika form id",
+						"label": "Form id",
 						"component": classof Label,
 					},
 					{

@@ -16,10 +16,9 @@
  *  limitations under the License.
 -->
 
-<class name="Runtime.WordPress.Theme.Components.Button.ButtonForm"
-	extends="Runtime.Widget.Button"
->
+<class name="Runtime.WordPress.Theme.Components.Button.ButtonForm">
 
+<use name="Runtime.Widget.Button" component="true" />
 <use name="Runtime.Widget.Dialog.Dialog" component="true" />
 
 
@@ -27,17 +26,27 @@
 .widget_button__wrap{
 	display: inline-block;
 }
-.widget_button__wrap %(Dialog)widget_dialog{
-	text-align: left;
-}
 </style>
 
 
 <template>
-	<div class="widget_button__wrap">
-		%render parent();
-		%render this.renderWidget(this.model.dialog);
+	<div class="widget_button__wrap"
+		class={{ this.class }}
+		class={{ static::mergeStyles("widget_button__wrap", this.model.styles) }}
+		class={{ this.renderListClass() }}
+	>
+		<Button @event:click={{ void (){ this.model.onClick() } }}>
+			%if (this.model.content)
+			{
+				%render this.model.content;
+			}
+			%else
+			{
+				%render this.renderSlot("default");
+			}
+		</Button>
 	</div>
+	%render this.renderWidget(this.model.dialog);
 </template>
 
 </class>

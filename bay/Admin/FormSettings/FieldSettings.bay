@@ -34,6 +34,18 @@ Collection fields = [
 		"component": classof Input,
 	},
 	{
+		"name": "type",
+		"label": "Type",
+		"component": classof Select,
+		"props": {
+			"options":
+			[
+				{"key": "input", "value": "input"},
+				{"key": "textarea", "value": "textarea"},
+			]
+		},
+	},
+	{
 		"name": "title",
 		"label": "Title",
 		"component": classof Input,
@@ -84,6 +96,7 @@ Collection getItems()
 var createItem() => {
 	"name": "",
 	"title": "",
+	"type": "input",
 	"placeholder": "",
 	"required": true,
 };

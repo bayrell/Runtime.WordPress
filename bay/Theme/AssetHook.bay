@@ -48,7 +48,7 @@ class AssetHook extends BaseAppHook
 		$this->assets_path = \Runtime\rs::join_path(
 			new \Runtime\Collection($template_path, "assets")
 		);
-		$params->get("container")->layout->widgets->set("assets_path", $this->assets_path);
+		$params->get("container")->layout->storage->params->set("assets_path", $this->assets_path);
 		
 		#endif
 	}
@@ -59,7 +59,7 @@ class AssetHook extends BaseAppHook
 	 */
 	void import_container_data_after(Map params)
 	{
-		this.assets_path = params.get("container").layout.widgets.get("assets_path");
+		this.assets_path = params.get("container").layout.storage.params.get("assets_path");
 	}
 	
 	

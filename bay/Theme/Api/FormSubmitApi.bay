@@ -97,7 +97,7 @@ class FormSubmitApi extends BaseApi
 	{
 		Connection conn = Connection::get();
 		
-		string client_ip = this.layout.getWidget("storage").backend.get("client_ip");
+		string client_ip = this.layout.getStorage().backend.get("client_ip");
 		int time = DateTime::now().getTimestamp();
 		
 		Relation item = await FormIP::findByFilter(conn, [
@@ -157,6 +157,13 @@ class FormSubmitApi extends BaseApi
 		
 		/* Creat new data */
 		Map new_data = new Map();
+		Map value_data = new Map();
+		
+		/* Add site name */
+		string site_name = "";
+		#ifcode PHP then
+		$site_name = get_bloginfo("", "name");
+		#endif
 		
 		/* Check fields */
 		Collection<Dict> fields = settings["fields"];
@@ -172,6 +179,7 @@ class FormSubmitApi extends BaseApi
 				
 				/* Set value */
 				new_data.set(field_name, value);
+				value_data.set(field_title, value);
 				
 				/* Check field */
 				if (not required) continue;
@@ -188,7 +196,11 @@ class FormSubmitApi extends BaseApi
 			throw new ApiError(new FieldException());
 		}
 		
-		return new_data;
+		return {
+			"data": new_data,
+			"values": value_data,
+			"site_name": site_name,
+		};
 	}
 	
 	
@@ -215,7 +227,7 @@ class FormSubmitApi extends BaseApi
 		
 		/* Validate item */
 		Map update_data = this.post_data["item"];
-		update_data = await this.validateItem(update_data);
+		Map result = await this.validateItem(update_data);
 		
 		/* Get form title */
 		string form_title = this.form.get("name");
@@ -245,7 +257,7 @@ class FormSubmitApi extends BaseApi
 		form_data.set("form_id", this.form.get("id"));
 		form_data.set("form_title", form_title);
 		form_data.set("metrika_id", metrika_form_id);
-		form_data.set("data", update_data);
+		form_data.set("data", result.get("data"));
 		form_data.set("spam", spam_check);
 		await form_data.save(conn);
 		
@@ -254,16 +266,18 @@ class FormSubmitApi extends BaseApi
 		{
 			EmailProvider email = @.provider("email");
 			string email_dest = this.form.get("email_to");
+			string email_title = form_title ~ " from " ~ result.get("site_name");
 			await email.send({
 				"dest": email_dest,
-				"title": form_title,
+				"title": email_title,
 				"component": classof FormMessage,
 				"props":
 				{
+					"site_name": result.get("site_name"),
 					"form_name": this.form.get("name"),
-					"form_title": form_title,
+					"form_title": email_title,
 					"metrika_form_id": metrika_form_id,
-					"data": update_data
+					"data": result.get("values")
 				},
 			});
 		}

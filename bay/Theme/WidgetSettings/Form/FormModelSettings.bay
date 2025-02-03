@@ -23,6 +23,7 @@ use Runtime.BaseObject;
 use Runtime.Web.ApiResult;
 use Runtime.Web.BaseModel;
 use Runtime.Web.RenderContainer;
+use Runtime.Widget.ButtonModel;
 use BayLang.Constructor.Frontend.Editor.Parameters.Parameter;
 use BayLang.Constructor.Frontend.Editor.Parameters.ParameterComponent;
 use BayLang.Constructor.Frontend.Editor.Parameters.ParameterDictModel;
@@ -111,6 +112,51 @@ class FormModelSettings extends BaseObject implements WidgetSettingsInterface
 			model.loadForm();
 			return true;
 		}
+		
+		/* Change form content */
+		if (param.name == "form_content")
+		{
+			model.form_content = param.value;
+			return true;
+		}
+		
+		/* Change form ID */
+		if (param.name == "form_id")
+		{
+			model.form_id = param.value;
+			return true;
+		}
+		
+		/* Change form styles */
+		if (param.name == "form_styles")
+		{
+			model.styles = ParameterFactory::restore(runtime, param.value);
+			return true;
+		}
+		
+		/* Form button text */
+		if (param.name == "form_button_text")
+		{
+			ButtonModel button = model.bottom_buttons.getWidget("submit");
+			button.content = ParameterFactory::restore(runtime, param.value);
+			return true;
+		}
+		
+		/* Form button styles */
+		if (param.name == "form_button_styles")
+		{
+			ButtonModel button = model.bottom_buttons.getWidget("submit");
+			button.styles = ParameterFactory::restore(runtime, param.value);
+			return true;
+		}
+		
+		/* Form show label */
+		if (param.name == "form_show_label")
+		{
+			model.field_settings.set("show_label", param.value);
+			return true;
+		}
+		
 		return false;
 	}
 	
@@ -191,9 +237,64 @@ class FormModelSettings extends BaseObject implements WidgetSettingsInterface
 		(
 			classof ParameterModel,
 			{
+				"name": "styles",
+				"label": "Form styles",
+				"component": "Runtime.Widget.Tag",
+				"default": [],
+			}
+		),
+		new ParameterFactory
+		(
+			classof ParameterModel,
+			{
+				"name": "form_content",
+				"label": "Form content",
+				"component": "Runtime.Widget.TextEditable",
+			}
+		),
+		new ParameterFactory
+		(
+			classof ParameterModel,
+			{
+				"name": "metrika_form_id",
+				"label": "Form id",
+				"component": "Runtime.Widget.Input",
+			}
+		),
+		new ParameterFactory
+		(
+			classof ParameterModel,
+			{
+				"name": "metrika_event",
+				"label": "Metrika event",
+				"component": "Runtime.Widget.Input",
+				"default": "",
+			}
+		),
+		new ParameterFactory
+		(
+			classof ParameterModel,
+			{
 				"name": "redirect_url",
 				"label": "Redirect URL",
 				"component": "Runtime.Widget.Input",
+			}
+		),
+		new ParameterFactory
+		(
+			classof ParameterDictModel,
+			{
+				"name": "form_show_label",
+				"path": ["field_settings", "show_label"],
+				"label": "Form show label",
+				"component": "Runtime.Widget.Select",
+				"default": "true",
+				"props": {
+					"options": [
+						{"key": "false", "value": "False"},
+						{"key": "true", "value": "True"},
+					],
+				}
 			}
 		),
 	];

@@ -133,6 +133,12 @@ class EmailProvider extends BaseProvider
 		
 		#ifcode PHP then
 		
+		/* Set email sending status */
+		$email->set("status", 2);
+		$email->set("send_email_code", 0);
+		$email->set("send_email_error", "");
+		$email->save($connection);
+		
 		/* Create message */
 		$message = new \PHPMailer\PHPMailer\PHPMailer(true);
 		$message->CharSet = "UTF-8";
@@ -167,16 +173,15 @@ class EmailProvider extends BaseProvider
 		
 		/* Create message */
 		$message->setFrom($settings->get("login"));
-		$message->addAddress($email->get("dest"));
 		$message->isHTML(true);
 		$message->Subject = $email->get("title");
 		$message->Body = $email->get("message");
 		
-		/* Set email sending status */
-		$email->set("status", 2);
-		$email->set("send_email_code", 0);
-		$email->set("send_email_error", "");
-		$email->save($connection);
+		/* Add email */
+		$arr = \Runtime\rs::split(",", $email->get("dest"));
+		$arr->each(function($item) use ($message){
+			$message->addAddress(trim($item));
+		});
 		
 		/* Try to send message */
 		try

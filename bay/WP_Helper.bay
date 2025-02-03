@@ -75,6 +75,23 @@ class WP_Helper
 	
 	
 	/**
+	 * Returns app version
+	 */
+	static string getAppVersion(string version) =>
+		version ~ "_" ~ static::get_option("app_js_vesion")
+	;
+	
+	
+	/**
+	 * Setup app version
+	 */
+	static void setAppVersion(string timestamp)
+	{
+		static::update_option("app_js_vesion", timestamp);
+	}
+	
+	
+	/**
 	 * Check wp nonce
 	 */
 	static bool check_wp_nonce(string nonce_action)

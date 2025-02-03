@@ -285,7 +285,7 @@ class ButtonFormModelSettings extends BaseObject implements WidgetSettingsInterf
 			{
 				"name": "metrika_form_id",
 				"path": ["form_settings", "metrika_form_id"],
-				"label": "Metrika form id",
+				"label": "Form id",
 				"component": "Runtime.Widget.Input",
 			}
 		),

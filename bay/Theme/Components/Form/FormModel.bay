@@ -147,10 +147,19 @@ class FormModel extends FormSubmitModel
 	async ApiResult submit()
 	{
 		ApiResult res = await parent();
+		
+		/* Send event */
+		await @.callHook("runtime.wordpress::form_submit", {
+			"form": this,
+			"res": res,
+		});
+		
+		/* Redirect */
 		if (res.isSuccess() and this.redirect_url != "")
 		{
 			document.location = this.redirect_url;
 		}
+		
 		return res;
 	}
 }
