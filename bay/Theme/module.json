@@ -11,6 +11,7 @@
 		"Components/Gallery/Gallery.bay",
 		"Components/Gallery/GalleryModel.bay",
 		"AssetHook.bay",
+		"Metrika.bay",
 		"ModuleDescription.bay"
 	],
 	"modules":

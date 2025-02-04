@@ -319,7 +319,7 @@ class WP_Helper
 		string content = static::wp_render(container);
 		
 		#ifcode PHP then
-		do_action("baylang_admin_render_page");
+		do_action("admin_render_page");
 		echo $content;
 		#endif
 	}

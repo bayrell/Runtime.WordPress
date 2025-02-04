@@ -230,11 +230,12 @@ class FormSubmitApi extends BaseApi
 		Map result = await this.validateItem(update_data);
 		
 		/* Get form title */
-		string form_title = this.form.get("name");
+		string form_title = "";
 		if (this.post_data.has("form_title"))
 		{
 			form_title = this.post_data.get("form_title");
 		}
+		if (form_title == "") form_title = this.form.get("name");
 		
 		/* Get metrika id */
 		string metrika_form_id = "";
@@ -242,6 +243,7 @@ class FormSubmitApi extends BaseApi
 		{
 			metrika_form_id = this.post_data.get("metrika_form_id");
 		}
+		if (metrika_form_id == "") metrika_form_id = "form";
 		
 		/* Spam check */
 		bool spam_check = await this.checkSpam();
@@ -266,7 +268,12 @@ class FormSubmitApi extends BaseApi
 		{
 			EmailProvider email = @.provider("email");
 			string email_dest = this.form.get("email_to");
-			string email_title = form_title ~ " from " ~ result.get("site_name");
+			string email_title = rs::join(" ", [
+				form_title,
+				"from",
+				result.get("site_name"),
+				"N" ~ form_data.get("id"),
+			]);
 			await email.send({
 				"dest": email_dest,
 				"title": email_title,
@@ -276,6 +283,7 @@ class FormSubmitApi extends BaseApi
 					"site_name": result.get("site_name"),
 					"form_name": this.form.get("name"),
 					"form_title": email_title,
+					"invoice_id": form_data.get("id"),
 					"metrika_form_id": metrika_form_id,
 					"data": result.get("values")
 				},

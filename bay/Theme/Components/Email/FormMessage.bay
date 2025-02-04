@@ -21,6 +21,13 @@
 <template>
 	<div style="font-family:verdana;font-size:16px">
 		<table>
+			%if (this.invoice_id)
+			{
+				<tr>
+					<td style="padding: 2px; text-align: right">Number:</td>
+					<td style="padding: 2px; text-align: left">{{ this.invoice_id }}</td>
+				</tr>
+			}
 			%if (this.site_name)
 			{
 				<tr>
@@ -28,18 +35,18 @@
 					<td style="padding: 2px; text-align: left">{{ this.site_name }}</td>
 				</tr>
 			}
-			%if (this.form_name)
-			{
-				<tr>
-					<td style="padding: 2px; text-align: right">Form name:</td>
-					<td style="padding: 2px; text-align: left">{{ this.form_name }}</td>
-				</tr>
-			}
 			%if (this.form_title)
 			{
 				<tr>
 					<td style="padding: 2px; text-align: right">Form title:</td>
 					<td style="padding: 2px; text-align: left">{{ this.form_title }}</td>
+				</tr>
+			}
+			%if (this.form_name and this.form_title != this.form_name)
+			{
+				<tr>
+					<td style="padding: 2px; text-align: right">Form name:</td>
+					<td style="padding: 2px; text-align: left">{{ this.form_name }}</td>
 				</tr>
 			}
 			%if (this.metrika_form_id)
@@ -71,6 +78,7 @@
 props string site_name = "";
 props string form_name = "";
 props string form_title = "";
+props string invoice_id = "";
 props string metrika_form_id = "";
 props Dict data = {};
 
