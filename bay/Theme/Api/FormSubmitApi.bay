@@ -282,7 +282,7 @@ class FormSubmitApi extends BaseApi
 				{
 					"site_name": result.get("site_name"),
 					"form_name": this.form.get("name"),
-					"form_title": email_title,
+					"form_title": form_title,
 					"invoice_id": form_data.get("id"),
 					"metrika_form_id": metrika_form_id,
 					"data": result.get("values")
