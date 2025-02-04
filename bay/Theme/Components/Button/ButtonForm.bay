@@ -22,20 +22,14 @@
 <use name="Runtime.Widget.Dialog.Dialog" component="true" />
 
 
-<style>
-.widget_button__wrap{
-	display: inline-block;
-}
-</style>
-
-
 <template>
 	<div class="widget_button__wrap"
 		class={{ this.class }}
-		class={{ static::mergeStyles("widget_button__wrap", this.model.styles) }}
 		class={{ this.renderListClass() }}
 	>
-		<Button @event:click={{ void (){ this.model.onClick() } }}>
+		<Button styles={{ this.model.styles }}
+			@event:click={{ void (){ this.model.onClick() } }}
+		>
 			%if (this.model.content)
 			{
 				%render this.model.content;
