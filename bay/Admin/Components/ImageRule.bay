@@ -27,7 +27,7 @@ use Runtime.Widget.Crud.CrudService;
 use Runtime.WordPress.WP_Helper;
 
 
-struct ImageRule extends CrudRule
+class ImageRule extends CrudRule
 {
 	string name = "";
 	string key = "";

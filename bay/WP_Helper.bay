@@ -18,13 +18,17 @@
 
 namespace Runtime.WordPress;
 
-use Runtime.lib;
+use Runtime.BaseLayout;
+use Runtime.Component;
+use Runtime.RenderContainer;
+use Runtime.VirtualDom;
+use Runtime.Providers.RenderContent;
 use Runtime.DateTime;
 use Runtime.RawString;
+use Runtime.Exceptions.ItemNotFound;
 use Runtime.ORM.Connection;
 use Runtime.ORM.Query;
 use Runtime.Web.BaseApp;
-use Runtime.Web.RenderContainer;
 use Runtime.Web.Response;
 use Runtime.Web.RouteInfo;
 use Runtime.Web.RouteList;
@@ -33,8 +37,6 @@ use Runtime.WordPress.Admin.AdminUI;
 
 class WP_Helper
 {
-	#ifdef BACKEND then
-	
 	/**
 	 * Returns option by name
 	 */
@@ -117,7 +119,7 @@ class WP_Helper
 	/**
 	 * Load images
 	 */
-	static Dict loadImages(Connection connection, Collection<int> images)
+	static async Dict loadImages(Connection connection, Collection<int> images)
 	{
 		Dict result = {};
 		
@@ -325,5 +327,43 @@ class WP_Helper
 	}
 	
 	
-	#endif
+	/**
+	 * Render app
+	 */
+	static async void renderApp()
+	{
+		/* Create container and layout */
+		BaseApp app = @.provider("app");
+		RenderContainer container = app.createRenderContainer();
+		
+		/* Create request */
+		container.request = app.createRequest();
+		
+		/* Resolve container */
+		await container.resolve();
+		
+		/* Send response */
+		app.sendResponse(container);
+	}
+	
+	
+	/**
+	 * Render page
+	 */
+	static async void renderPage(string class_name, string layout_name="default")
+	{
+		/* Create container and layout */
+		BaseApp app = @.provider("app");
+		RenderContainer container = app.createRenderContainer();
+		
+		/* Create layout */
+		BaseLayout layout = container.createLayout(layout_name);
+		
+		/* Render page */
+		await container.renderPageModel(class_name);
+		
+		/* Render container */
+		container.createResponse();
+		app.sendResponse(container);
+	}
 }

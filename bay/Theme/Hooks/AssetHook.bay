@@ -16,7 +16,7 @@
  *  limitations under the License.
  */
 
-namespace Runtime.WordPress.Theme;
+namespace Runtime.WordPress.Theme.Hooks;
 
 use Runtime.Web.Hooks.AppHook as BaseAppHook;
 

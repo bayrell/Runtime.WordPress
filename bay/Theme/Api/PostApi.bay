@@ -138,7 +138,7 @@ class PostApi extends CrudApi
 		/* Set post id */
 		if (this.post_data.has("post_id"))
 		{
-			int post_id = (int)this.post_data.get("post_id");
+			int post_id = rtl::toInt(this.post_data.get("post_id"));
 			q.where("posts.ID", "=", post_id);
 			q.calcFoundRows(false);
 		}
@@ -154,7 +154,7 @@ class PostApi extends CrudApi
 		/* Set term id */
 		if (this.post_data.has("term_id"))
 		{
-			int term_id = (int)this.post_data.get("term_id");
+			int term_id = rtl::toInt(this.post_data.get("term_id"));
 			q.innerJoin(
 				"term_relationships",
 				["posts.ID = term_relationships.object_id"]
@@ -170,8 +170,8 @@ class PostApi extends CrudApi
 		if (this.post_data.has("date"))
 		{
 			string date = this.post_data.get("date");
-			string year = (int)rs::substr(date, 0, 4);
-			string month = (int)rs::substr(date, 5, 7);
+			int year = rtl::toInt(rs::substr(date, 0, 4));
+			int month = rtl::toInt(rs::substr(date, 5, 7));
 			
 			if (year > 0 and month > 0 and month <= 12)
 			{
@@ -255,8 +255,8 @@ class PostApi extends CrudApi
 			taxonomy.each(
 				var (Dict data) use (posts, posts_index, categories_allowed, tags_allowed)
 				{
-					int post_id = (int)data.get("object_id");
-					int term_id = (int)data.get("term_id");
+					int post_id = rtl::toInt(data.get("object_id"));
+					int term_id = rtl::toInt(data.get("term_id"));
 					string taxonomy = data.get("taxonomy");
 					string taxonomy_name = data.get("name");
 					
@@ -337,8 +337,8 @@ class PostApi extends CrudApi
 			primary_categories.each(
 				var (Dict postmeta) use (posts, posts_index)
 				{
-					int post_id = (int)postmeta.get("post_id");
-					int meta_value = (int)postmeta.get("meta_value");
+					int post_id = rtl::toInt(postmeta.get("post_id"));
+					int meta_value = rtl::toInt(postmeta.get("meta_value"));
 					string meta_key = postmeta.get("meta_key");
 					
 					if (not posts_index.has(post_id)) return;
@@ -354,7 +354,7 @@ class PostApi extends CrudApi
 			this.items.each(
 				void (Map post)
 				{
-					int primary_category = (int)post.get("primary_category");
+					int primary_category = rtl::toInt(post.get("primary_category"));
 					if (primary_category > 0) return;
 					if (not post.has("taxonomy")) return;
 					if (not post.has("categories")) return;

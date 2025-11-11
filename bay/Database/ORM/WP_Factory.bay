@@ -25,7 +25,7 @@ use Runtime.ORM.Provider;
 use Runtime.ORM.Factory.ConnectionFactory;
 
 
-struct WP_Factory extends ConnectionFactory
+class WP_Factory extends ConnectionFactory
 {
 	/**
 	 * Constructor

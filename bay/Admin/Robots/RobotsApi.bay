@@ -55,11 +55,7 @@ class RobotsApi extends BaseApi
 	@ApiMethod
 	async void actionSave()
 	{
-		string content = this.post_data
-			|> attr "item"
-			|> attr "content"
-			|> default string ""
-		;
+		string content = this.post_data.get("item").get("content");
 		
 		WP_Helper::update_option("robots.txt", content);
 		

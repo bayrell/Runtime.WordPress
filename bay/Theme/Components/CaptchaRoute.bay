@@ -64,11 +64,11 @@ class CaptchaRoute extends BaseRoute
 		
 		/* Create response */
 		Response response = new Response();
-		response <= content <= content;
-		response <= headers <= "Cache-Control" <=
-			"no-store, no-cache, must-revalidate, post-check=0, pre-check=0";
-		response <= headers <= "Pragma" <= "no-cache";
-		response <= headers <= "Content-Type" <= "image/jpeg";
+		response.content = content;
+		response.headers.set("Cache-Control",
+			"no-store, no-cache, must-revalidate, post-check=0, pre-check=0");
+		response.headers.set("Pragma", "no-cache");
+		response.headers.set("Content-Type", "image/jpeg");
 		
 		/* Add JWT cookie */
 		int expires = DateTime::now().timestamp() + 24*60*60;

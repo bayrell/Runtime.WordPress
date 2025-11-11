@@ -174,7 +174,7 @@ class FormSubmitApi extends BaseApi
 				Dict field_settings = fields.get(i);
 				string field_name = field_settings["name"];
 				string field_title = field_settings["title"];
-				bool required = (bool)field_settings["required"];
+				bool required = rtl::toBool(field_settings["required"]);
 				string value = update_data.has(field_name) ? rs::trim(update_data[field_name]) : "";
 				
 				/* Set value */

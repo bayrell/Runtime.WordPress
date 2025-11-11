@@ -51,9 +51,9 @@ class ModuleDescription
 		'Runtime.Web': '>=0.12',
 		'Runtime.Widget': '>=0.12',
 		
-		#ifdef BACKEND then
+		/*#ifdef BACKEND then
 		'Runtime.ORM': '>=0.12',
-		#endif
+		#endif*/
 	};
 	
 	
@@ -63,7 +63,7 @@ class ModuleDescription
 	pure Collection<Dict> entities() => 
 	[
 		#ifdef BACKEND then
-		new Provider("email", "Runtime.WordPress.EmailProvider"),
+		/*new Provider("email", "Runtime.WordPress.EmailProvider"),
 		new Table("Runtime.WordPress.Database.Form"),
 		new Table("Runtime.WordPress.Database.FormData"),
 		new Table("Runtime.WordPress.Database.FormIP"),
@@ -72,7 +72,7 @@ class ModuleDescription
 		new Table("Runtime.WordPress.Database.MailDelivery"),
 		new Table("Runtime.WordPress.Database.MailSettings"),
 		new Migration("Runtime.WordPress.Database.Migrations.Core_2025_01"),
-		new WP_Factory(),
+		new WP_Factory(),*/
 		#endif
 	];
 }

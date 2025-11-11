@@ -16,7 +16,7 @@
  *  limitations under the License.
  */
 
-namespace Runtime.WordPress.Theme;
+namespace Runtime.WordPress.Theme.Hooks;
 
 use Runtime.Web.ApiResult;
 use Runtime.Web.Hooks.AppHook as BaseAppHook;
@@ -53,7 +53,7 @@ class Metrika extends BaseAppHook
 			Dict res = {
 				"event_name": "submit",
 			};
-			await @.callHook("runtime.wordpress::form_submit_event_name", res);
+			@.hook("runtime.wordpress::form_submit_event_name", res);
 			event_name = res.get("event_name");
 		}
 		
