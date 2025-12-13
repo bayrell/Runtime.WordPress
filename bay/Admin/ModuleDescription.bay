@@ -45,8 +45,6 @@ class ModuleDescription
 	 */
 	pure Dict<string> requiredModules() =>
 	{
-		'BayLang': '>=0.12',
-		'BayLang.Constructor': '>=0.12',
 		'Runtime.WordPress': '>=0.1',
 	};
 	
@@ -56,22 +54,24 @@ class ModuleDescription
 	 */
 	pure Collection<Dict> entities() => 
 	[
-		/*new Hook("Runtime.WordPress.Admin.AppHook"),*/
+		new Hook("Runtime.WordPress.Admin.AppHook"),
 		
 		/* Setup layout */
-		/*SetupLayout::create({
+		SetupLayout::hook({
 			"default": "Runtime.WordPress.Admin.AdminLayoutModel",
-		}),*/
+		}),
 		
 		/* Components */
-		/*Components::create([
+		Components::hook([
 			"Runtime.WordPress.Admin.CSS",
-		]),*/
+		]),
 		
 		#ifdef BACKEND then
-		/*new Api("Runtime.WordPress.Admin.FormData.FormDataSearchApi"),
 		new Api("Runtime.WordPress.Admin.FormSettings.FormSaveApi"),
 		new Api("Runtime.WordPress.Admin.FormSettings.FormSearchApi"),
+		new Api("Runtime.WordPress.Admin.Migrations.MigrationApi"),
+		
+		/*new Api("Runtime.WordPress.Admin.FormData.FormDataSearchApi"),
 		new Api("Runtime.WordPress.Admin.Gallery.GallerySaveApi"),
 		new Api("Runtime.WordPress.Admin.Gallery.GallerySearchApi"),
 		new Api("Runtime.WordPress.Admin.GalleryItem.GalleryItemSaveApi"),
@@ -80,7 +80,6 @@ class ModuleDescription
 		new Api("Runtime.WordPress.Admin.MailSettings.MailSaveApi"),
 		new Api("Runtime.WordPress.Admin.MailSettings.MailSearchApi"),
 		new Api("Runtime.WordPress.Admin.Robots.RobotsApi"),
-		new Api("Runtime.WordPress.Admin.Settings.MigrationApi"),
 		new Api("Runtime.WordPress.Admin.Settings.ProjectApi"),
 		new Api("BayLang.Constructor.Backend.Api.AssetsApi"),
 		new Api("BayLang.Constructor.Backend.Api.CodeApi"),
@@ -89,8 +88,8 @@ class ModuleDescription
 		new Api("BayLang.Constructor.Backend.Api.ModuleSearchApi"),
 		new Api("BayLang.Constructor.Backend.Api.WidgetApi"),
 		new Api("BayLang.Constructor.Backend.Api.WidgetSaveApi"),
-		new Api("BayLang.Constructor.Backend.Api.WidgetSearchApi"),
-		new Route("Runtime.WordPress.Admin.Routes"),*/
+		new Api("BayLang.Constructor.Backend.Api.WidgetSearchApi"),*/
+		new Route("Runtime.WordPress.Admin.Routes"),
 		#endif
 	];
 }

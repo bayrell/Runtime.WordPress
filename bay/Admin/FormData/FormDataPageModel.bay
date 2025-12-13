@@ -18,28 +18,42 @@
 
 namespace Runtime.WordPress.Admin.FormData;
 
-use Runtime.lib;
-use Runtime.Entity.Factory;
-use Runtime.Web.BasePageModel;
-use Runtime.Web.ModelFactory;
+use Runtime.BaseModel;
+use Runtime.DateTime;
+use Runtime.Serializer;
+use Runtime.Serializer.DateTimeType;
+use Runtime.Serializer.IntegerType;
+use Runtime.Serializer.MapType;
+use Runtime.Serializer.ObjectType;
+use Runtime.Serializer.StringType;
 use Runtime.Web.RenderContainer;
-use Runtime.Widget.ButtonModel;
-use Runtime.Widget.Input;
-use Runtime.Widget.Label;
-use Runtime.Widget.RowButtonsModel;
-use Runtime.Widget.TextArea;
-use Runtime.Widget.Form.FormModel;
-use Runtime.Widget.Table.SaveDialogModel;
-use Runtime.Widget.Table.TableDialogModel;
-use Runtime.Widget.Table.TableRowButtonsModel;
+use Runtime.Widget.Table.TableModel;
 use Runtime.WordPress.Admin.FormData.FormDataPage;
 
 
-class FormDataPageModel extends BasePageModel
+class FormDataPageModel extends BaseModel
 {
 	string component = classof FormDataPage;
-	FormModel form = null;
-	TableDialogModel table = null;
+	TableModel table = null;
+	
+	
+	/**
+	 * Serialize object
+	 */
+	void serialize(Serializer serialize)
+	{
+		parent(serialize);
+		serialize.addType("table", new ObjectType{
+			"extends": classof TableModel,
+			"item_type": new MapType{
+				"id": new IntegerType(),
+				"form_title": new StringType(),
+				"form_name": new StringType(),
+				"data": new MapType(new StringType()),
+				"date": new DateTimeType(),
+			}
+		});
+	}
 	
 	
 	/**
@@ -49,147 +63,41 @@ class FormDataPageModel extends BasePageModel
 	{
 		parent(params);
 		
-		/* Calculate data */
-		fn calculateData = var (Dict data)
-		{
-			Dict item = data.get("item");
-			if (item.get("data") == null) return "";
-			Collection items = item.get("data")
-				.transition(
-					string (string value, string key)
-					{
-						return key ~ ": " ~ value;
-					}
-				)
-			;
-			if (data.has("table")) return items;
-			return rs::join("\n", items);
-		};
-		
-		
-		/* Add form */
-		this.form = this.addWidget(
-			classof FormModel,
+		/* Create table */
+		this.table = this.createWidget(classof TableModel);
+	}
+	
+	
+	/**
+	 * Load data
+	 */
+	async void loadData(RenderContainer container)
+	{
+		DateTime date = DateTime::fromString("2025-12-01 00:00:00+05");
+		this.table.items = [
 			{
-				"widget_name": "form",
-				"primary_key": ["id"],
-				"fields":
-				[
-					{
-						"name": "form_title",
-						"label": "Title",
-						"component": classof Input,
-						"props": {
-							"readonly": true,
-						}
-					},
-					{
-						"name": "data",
-						"label": "Data",
-						"component": classof TextArea,
-						"calculate": calculateData,
-						"props": {
-							"readonly": true,
-						}
-					},
-					{
-						"name": "gmtime_add",
-						"label": "Data",
-						"component": classof Input,
-						"calculate": lib::pipe()
-							.add(lib::attr(["item", "gmtime_add"]))
-							.add(lib::normalizeDateTime())
-						,
-						"props": {
-							"readonly": true,
-						}
-					},
-				],
-			}
-		);
-		
-		/* Add table */
-		this.table = this.addWidget(
-			classof TableDialogModel,
-			{
-				"widget_name": "table",
-				"styles": ["border"],
-				
-				/* Table storage */
-				"storage": new Factory
-				(
-					"Runtime.Widget.Table.TableStorage",
-					{
-						"api_name": "admin.wordpress.forms.data.search",
-					}
-				),
-				
-				/* Set page */
-				"page": this.layout.request_query.get("p", 1) - 1,
-				"pagination_props":
-				{
-					"name": "p",
+				"id": 1,
+				"form_title": "Title",
+				"form_name": "main_form",
+				"data": {
+					"name": "User",
+					"phone": "+777777",
+					"message": "User message",
 				},
-				
-				/* Form */
-				"edit_form": this.form,
-				
-				/* Table fields */
-				"fields":
-				[
-					{
-						"name": "row_number",
-					},
-					{
-						"name": "form_title",
-						"label": "Title",
-						"component": classof Label,
-					},
-					{
-						"name": "metrika_id",
-						"label": "Form id",
-						"component": classof Label,
-					},
-					{
-						"name": "data",
-						"label": "Data",
-						"calculate": calculateData,
-						"component": classof Label,
-					},
-					{
-						"name": "gmtime_add",
-						"label": "Date",
-						"calculate": lib::pipe()
-							.add(lib::attr(["item", "gmtime_add"]))
-							.add(lib::normalizeDateTime())
-						,
-						"component": classof Label,
-					},
-					{
-						"name": "row_buttons",
-						"model": new ModelFactory(
-							"Runtime.Widget.Table.TableRowButtonsModel",
-							{
-								"delete": false,
-							}
-						),
-					},
-				],
+				"date": date,
+			},
+			{
+				"id": 2,
+				"form_title": "Title",
+				"form_name": "main_form",
+				"data": {
+					"name": "User",
+					"phone": "+777777",
+					"message": "User message",
+				},
+				"date": date,
 			}
-		);
-		
-		/* Remove save button */
-		SaveDialogModel save_dialog = this.table.getWidget("save_dialog");
-		save_dialog.buttons.removeItemByName("confirm_button");
-		
-		/* Change cancel button text */
-		ButtonModel cancel_button = save_dialog.buttons.findItemByName("cancel_button");
-		cancel_button.content = "Close";
-		
-		/* Table row buttons */
-		TableRowButtonsModel row_buttons = this.table.getWidget("row_buttons");
-		ButtonModel edit_button = row_buttons.findItemByName("edit_button");
-		edit_button.content = "View";
+		];
 	}
 	
 	

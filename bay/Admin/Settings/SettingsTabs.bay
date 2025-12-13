@@ -16,12 +16,19 @@
  *  limitations under the License.
 -->
 
-<class name="Runtime.WordPress.Theme.WP_Head">
+<class name="Runtime.WordPress.Admin.Settings.SettingsTabs">
 
-<use name="Runtime.WordPress.WP_Helper" />
+<use name="Runtime.Widget.Tab.Tab" component="true" />
+<use name="Runtime.Widget.Tab.Tabs" component="true" />
+<use name="Runtime.Widget.Tab.TabsModel" />
 
 <template>
-	@raw{ WP_Helper::wp_apply('wp_head') }
+	<Tabs model={{ this.model }}>
+		<Tab name="settings" title="Save project"
+			href={{ this.layout.url("admin:project:save") }} />
+		<Tab name="migration" title="Migration"
+			href={{ this.layout.url("admin:database:migrations") }} />
+	</Tabs>
 </template>
 
 </class>

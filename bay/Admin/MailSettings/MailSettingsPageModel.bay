@@ -18,8 +18,8 @@
 
 namespace Runtime.WordPress.Admin.MailSettings;
 
+use Runtime.BaseModel;
 use Runtime.Entity.Factory;
-use Runtime.Web.BasePageModel;
 use Runtime.Web.ModelFactory;
 use Runtime.Web.RenderContainer;
 use Runtime.Widget.ButtonModel;
@@ -36,7 +36,7 @@ use Runtime.Widget.Table.TableRowButtonsModel;
 use Runtime.WordPress.Admin.MailSettings.MailSettingsPage;
 
 
-class MailSettingsPageModel extends BasePageModel
+class MailSettingsPageModel extends BaseModel
 {
 	string component = classof MailSettingsPage;
 	FormModel form = null;

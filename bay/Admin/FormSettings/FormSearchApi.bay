@@ -18,10 +18,12 @@
 
 namespace Runtime.WordPress.Admin.FormSettings;
 
+use Runtime.ORM.Query;
+use Runtime.Web.ApiRequest;
+use Runtime.Web.ApiResult;
 use Runtime.Web.Annotations.ApiMethod;
-use Runtime.Widget.Crud.CrudService;
-use Runtime.Widget.Crud.SearchApi;
-use Runtime.WordPress.Admin.FormSettings.FormCrudService;
+use Runtime.Widget.Api.SearchApi;
+use Runtime.WordPress.Database.Form;
 
 
 class FormSearchApi extends SearchApi
@@ -33,9 +35,15 @@ class FormSearchApi extends SearchApi
 	
 	
 	/**
-	 * Returns service
+	 * Returns relation name
 	 */
-	CrudService createService() => new FormCrudService();
+	string getRealtionName() => classof Form;
+	
+	
+	/**
+	 * Returns save rules
+	 */
+	Vector rules() => [];
 	
 	
 	/**
@@ -52,11 +60,32 @@ class FormSearchApi extends SearchApi
 	
 	
 	/**
+	 * Build query
+	 */
+	async void buildQuery(Query q)
+	{
+		q.orderBy("name", "asc");
+	}
+	
+	
+	/**
 	 * Action search
 	 */
-	@ApiMethod
-	async void actionSearch()
+	@ApiMethod{ "name": "search" }
+	static async ApiResult actionSearch(ApiRequest request)
 	{
-		await parent();
+		FormSearchApi api = new FormSearchApi{
+			"request": request,
+		};
+		
+		/* Set data */
+		api.setAction("search");
+		api.setFilter(request.data);
+		
+		/* Search */
+		await api.search();
+		api.setResult();
+		
+		return api.success();
 	}
 }

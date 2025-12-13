@@ -18,8 +18,8 @@
 
 namespace Runtime.WordPress.Admin.GalleryItem;
 
+use Runtime.BaseModel;
 use Runtime.Entity.Factory;
-use Runtime.Web.BasePageModel;
 use Runtime.Web.ModelFactory;
 use Runtime.Web.RenderContainer;
 use Runtime.Widget.ButtonModel;
@@ -35,7 +35,7 @@ use Runtime.WordPress.Admin.Components.Image;
 use Runtime.WordPress.Admin.GalleryItem.GalleryItemPage;
 
 
-class GalleryItemPageModel extends BasePageModel
+class GalleryItemPageModel extends BaseModel
 {
 	string component = classof GalleryItemPage;
 	FormModel form = null;

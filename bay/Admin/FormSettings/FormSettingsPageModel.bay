@@ -18,29 +18,41 @@
 
 namespace Runtime.WordPress.Admin.FormSettings;
 
-use Runtime.Entity.Factory;
-use Runtime.Web.BasePageModel;
-use Runtime.Web.ModelFactory;
+use Runtime.ApiResult;
+use Runtime.BaseModel;
+use Runtime.Method;
+use Runtime.Serializer;
+use Runtime.Serializer.IntegerType;
+use Runtime.Serializer.MapType;
+use Runtime.Serializer.ObjectType;
+use Runtime.Serializer.StringType;
 use Runtime.Web.RenderContainer;
-use Runtime.Widget.ButtonModel;
-use Runtime.Widget.Input;
-use Runtime.Widget.Label;
-use Runtime.Widget.RowButtonsModel;
-use Runtime.Widget.TextArea;
-use Runtime.Widget.Table.SaveDialogModel;
-use Runtime.Widget.Table.TableDialogModel;
-use Runtime.Widget.Table.TableRowButtonsModel;
-use Runtime.WordPress.Admin.FormSettings.FieldSettings;
-use Runtime.WordPress.Admin.FormSettings.FormSaveModel;
+use Runtime.Widget.Table.Manager;
 use Runtime.WordPress.Admin.FormSettings.FormSettingsPage;
 
 
-class FormSettingsPageModel extends BasePageModel
+class FormSettingsPageModel extends BaseModel
 {
 	string component = classof FormSettingsPage;
-	FormSaveModel form = null;
-	TableDialogModel table = null;
-	RowButtonsModel top_buttons = null;
+	Manager manager = null;
+	
+	
+	/**
+	 * Serialize object
+	 */
+	void serialize(Serializer serialize)
+	{
+		parent(serialize);
+		serialize.addType("manager", new ObjectType{
+			"class_name": classof Manager,
+			"item_type": new MapType{
+				"id": new IntegerType(),
+				"name": new StringType(),
+				"api_name": new StringType(),
+				"email_to": new StringType(),
+			},
+		});
+	}
 	
 	
 	/**
@@ -50,184 +62,28 @@ class FormSettingsPageModel extends BasePageModel
 	{
 		parent(params);
 		
-		/* Add form */
-		this.form = this.addWidget(
-			classof FormSaveModel,
+		this.manager = this.createWidget(classof Manager, {
+			"primary_key": ["id"],
+			"title": string (string action, Map item)
 			{
-				"widget_name": "form",
-				"primary_key": ["id"],
-				"storage": new Factory
-				(
-					"Runtime.Widget.Form.FormSaveStorage",
-					{
-						"api_name": "admin.wordpress.forms.settings.save",
-					}
-				),
-				"fields":
-				[
-					{
-						"name": "name",
-						"label": "Name",
-						"component": classof Input,
-					},
-					{
-						"name": "api_name",
-						"label": "Api name",
-						"component": classof Input,
-					},
-					{
-						"name": "email_to",
-						"label": "Email to",
-						"component": classof Input,
-					},
-					{
-						"name": "settings",
-						"label": "Settings",
-						"component": classof FieldSettings,
-						"default": {
-							"fields":
-							[
-								{
-									"name": "name",
-									"title": "Name",
-									"placeholder": "",
-									"required": true
-								},
-								{
-									"name": "phone",
-									"title": "Phone",
-									"placeholder": ""
-								},
-								{
-									"name": "email",
-									"title": "E-mail",
-									"placeholder": "",
-									"required": true
-								},
-								{
-									"name": "message",
-									"title": "Message",
-									"placeholder": "",
-									"type": "textarea"
-								}
-							]
-						},
-					},
-				],
-			}
-		);
-		
-		/* Add table */
-		this.table = this.addWidget(
-			classof TableDialogModel,
-			{
-				"widget_name": "table",
-				"styles": ["border"],
-				
-				/* Table title */
-				"get_title": void (Dict params)
-				{
-					string action = params.get("action");
-					Dict item = params.get("item");
-					if (action == "add")
-					{
-						return "Add form";
-					}
-					if (action == "edit")
-					{
-						return "Edit form '" ~ item.get("api_name") ~ "'";
-					}
-					if (action == "delete")
-					{
-						return "Delete form '" ~ item.get("api_name") ~ "'";
-					}
-					return "";
-				},
-				
-				/* Table storage */
-				"storage": new Factory
-				(
-					"Runtime.Widget.Table.TableStorage",
-					{
-						"api_name": "admin.wordpress.forms.settings.search",
-					}
-				),
-				
-				/* Set page */
-				"page": this.layout.request_query.get("p", 1) - 1,
-				"pagination_props":
-				{
-					"name": "p",
-				},
-				
-				/* Form */
-				"add_form": this.form,
-				"edit_form": this.form,
-				
-				/* Delete form */
-				"delete_form": new ModelFactory(
-					classof FormSaveModel,
-					{
-						"widget_name": "delete_form",
-						"primary_key": ["id"],
-						"storage": new Factory(
-							"Runtime.Widget.Form.FormDeleteStorage",
-							{
-								"api_name": "admin.wordpress.forms.settings.save"
-							}
-						),
-					}
-				),
-				
-				/* Table fields */
-				"fields":
-				[
-					{
-						"name": "row_number",
-					},
-					{
-						"name": "name",
-						"label": "Name",
-						"component": classof Label,
-					},
-					{
-						"name": "api_name",
-						"label": "Api name",
-						"component": classof Label,
-					},
-					{
-						"name": "email_to",
-						"label": "Email to",
-						"component": classof Label,
-					},
-					{
-						"name": "row_buttons",
-						"model": new ModelFactory(
-							"Runtime.Widget.Table.TableRowButtonsModel"
-						),
-					},
-				],
-			}
-		);
-		
-		/* Add top buttons */
-		this.top_buttons = this.addWidget(
-			classof RowButtonsModel,
-			{
-				"widget_name": "top_buttons",
-				"styles": ["top_buttons"],
-				"buttons":
-				[
-					new ModelFactory
-					(
-						"Runtime.Widget.Table.AddButtonModel",
-						{
-							"table": this.table,
-						}
-					)
-				],
-			}
-		);
+				if (action == "add") return "Add item";
+				else if (action == "edit") return "Edit item";
+				else if (action == "delete") return "Delete item";
+				else if (action == "delete_message") return "Delete item";
+				return "";
+			},
+		});
+		this.manager.addEventListener("save", new Method(this, "onSave"));
+		this.manager.addEventListener("delete", new Method(this, "onDelete"));
+	}
+	
+	
+	/**
+	 * Load data
+	 */
+	async void loadData(RenderContainer container)
+	{
+		await this.reload();
 	}
 	
 	
@@ -237,5 +93,66 @@ class FormSettingsPageModel extends BasePageModel
 	void buildTitle(RenderContainer container)
 	{
 		this.layout.setPageTitle("Forms settings");
+	}
+	
+	
+	/**
+	 * Reload table
+	 */
+	async void reload()
+	{
+		ApiResult result = await this.layout.sendApi({
+			"api_name": "admin.wordpress.forms.settings.search",
+			"method_name": "search",
+		});
+		if (result.isSuccess())
+		{
+			this.manager.table.items = result.data.get("items");
+		}
+	}
+	
+	
+	/**
+	 * On save
+	 */
+	async void onSave()
+	{
+		this.manager.form.setWaitMessage();
+		ApiResult result = await this.layout.sendApi({
+			"api_name": "admin.wordpress.forms.settings.save",
+			"method_name": "save",
+			"data": {
+				"pk": this.manager.form.pk,
+				"item": this.manager.form.item,
+			},
+		});
+		this.manager.form.setApiResult(result);
+		if (result.isSuccess())
+		{
+			this.reload();
+			this.manager.dialog.hide();
+		}
+	}
+	
+	
+	/**
+	 * On delete
+	 */
+	async void onDelete()
+	{
+		this.manager.form.setWaitMessage();
+		ApiResult result = await this.layout.sendApi({
+			"api_name": "admin.wordpress.forms.settings.save",
+			"method_name": "delete",
+			"data": {
+				"pk": this.manager.form.pk,
+			},
+		});
+		this.manager.form.setApiResult(result);
+		if (result.isSuccess())
+		{
+			this.reload();
+			this.manager.dialog.hide();
+		}
 	}
 }

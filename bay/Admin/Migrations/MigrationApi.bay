@@ -16,15 +16,17 @@
  *  limitations under the License.
  */
 
-namespace Runtime.WordPress.Admin.Settings;
+namespace Runtime.WordPress.Admin.Migrations;
 
+use Runtime.BaseObject;
 use Runtime.ORM.MigrationBuilder;
 use Runtime.Web.Annotations.ApiMethod;
-use Runtime.Web.BaseApi;
+use Runtime.Web.ApiRequest;
+use Runtime.Web.ApiResult;
 use Runtime.WordPress.WP_Helper;
 
 
-class MigrationApi extends BaseApi
+class MigrationApi extends BaseObject
 {
 	/**
 	 * Returns api name
@@ -35,17 +37,16 @@ class MigrationApi extends BaseApi
 	/**
 	 * Execute
 	 */
-	async MigrationBuilder up(bool execute = false)
+	async static MigrationBuilder up(bool execute = false)
 	{
 		/* Get migrations */
 		MigrationBuilder builder = new MigrationBuilder();
-		builder.execute = execute;
 		
 		/* Init builder */
 		await builder.init();
 		
 		/* Up migrations */
-		await builder.up();
+		await builder.up(execute);
 		
 		/* Returns builder */
 		return builder;
@@ -56,10 +57,10 @@ class MigrationApi extends BaseApi
 	 * Action item
 	 */
 	@ApiMethod
-	async void actionItem()
+	async static ApiResult actionItem(ApiRequest request)
 	{
-		MigrationBuilder builder = await this.up();
-		this.success({
+		MigrationBuilder builder = await static::up();
+		return new ApiResult().success({
 			"data": {
 				"items": builder.getSQL(),
 			}
@@ -71,9 +72,9 @@ class MigrationApi extends BaseApi
 	 * Update database
 	 */
 	@ApiMethod
-	async void actionUpdate()
+	async static ApiResult actionUpdate(ApiRequest request)
 	{
 		MigrationBuilder builder = await this.up(true);
-		this.success();
+		return new ApiResult().success();
 	}
 }

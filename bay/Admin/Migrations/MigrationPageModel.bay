@@ -16,24 +16,26 @@
  *  limitations under the License.
  */
 
-namespace Runtime.WordPress.Admin.Settings;
+namespace Runtime.WordPress.Admin.Migrations;
 
 use Runtime.lib;
+use Runtime.ApiResult;
+use Runtime.BaseModel;
 use Runtime.Serializer;
-use Runtime.Web.ApiResult;
-use Runtime.Web.BasePageModel;
+use Runtime.Serializer.ObjectType;
+use Runtime.Serializer.StringType;
+use Runtime.Serializer.VectorType;
 use Runtime.Web.RenderContainer;
-use Runtime.Widget.WidgetResultModel;
-use Runtime.WordPress.Admin.Settings.MigrationPage;
-use Runtime.WordPress.Admin.Settings.TabsModel;
+use Runtime.Widget.ResultModel;
+use Runtime.Widget.Tab.TabsModel;
+use Runtime.WordPress.Admin.Migrations.MigrationPage;
 
 
-class MigrationPageModel extends BasePageModel
+class MigrationPageModel extends BaseModel
 {
 	string component = classof MigrationPage;
-	TabsModel tabs = null;
 	Collection<string> items = [];
-	WidgetResultModel result = null;
+	ResultModel result = null;
 	
 	
 	/**
@@ -43,13 +45,8 @@ class MigrationPageModel extends BasePageModel
 	{
 		parent(params);
 		
-		/* Add tabs */
-		this.tabs = this.addWidget(classof TabsModel, {
-			"active": "database-migrations"
-		});
-		
 		/* Add result */
-		this.result = this.addWidget(classof WidgetResultModel, {
+		this.result = this.createWidget(classof ResultModel, {
 			"styles": ["margin_top"],
 		});
 	}
@@ -58,10 +55,10 @@ class MigrationPageModel extends BasePageModel
 	/**
 	 * Process frontend data
 	 */
-	void serialize(Serializer serializer, Map data)
+	void serialize(Serializer serializer)
 	{
-		serializer.process(this, "items", data);
-		parent(serializer, data);
+		parent(serializer);
+		serializer.addType("items", new VectorType(new StringType()));
 	}
 	
 	
@@ -71,7 +68,7 @@ class MigrationPageModel extends BasePageModel
 	async void updateDatabase()
 	{
 		this.result.setWaitMessage();
-		ApiResult result = await this.layout.callApi({
+		ApiResult result = await this.layout.sendApi({
 			"api_name": "admin.wordpress.migration",
 			"method_name": "actionUpdate",
 		});
@@ -86,7 +83,7 @@ class MigrationPageModel extends BasePageModel
 	{
 		await parent(container);
 		
-		ApiResult result = this.layout.callApi({
+		ApiResult result = this.layout.sendApi({
 			"api_name": "admin.wordpress.migration",
 			"method_name": "actionItem",
 		});
@@ -103,6 +100,6 @@ class MigrationPageModel extends BasePageModel
 	 */
 	void buildTitle(RenderContainer container)
 	{
-		this.layout.setPageTitle("Migrations");
+		this.layout.setPageTitle("Database migrations");
 	}
 }

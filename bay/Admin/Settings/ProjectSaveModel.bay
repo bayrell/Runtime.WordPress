@@ -18,8 +18,8 @@
 
 namespace Runtime.WordPress.Admin.Settings;
 
+use Runtime.BaseModel;
 use Runtime.Entity.Factory;
-use Runtime.Web.BasePageModel;
 use Runtime.Web.RenderContainer;
 use Runtime.Widget.Form.FormModel;
 use Runtime.Widget.Form.FormSaveStorage;
@@ -28,7 +28,7 @@ use Runtime.WordPress.Admin.Settings.ProjectSave;
 use Runtime.WordPress.Admin.Settings.TabsModel;
 
 
-class ProjectSaveModel extends BasePageModel
+class ProjectSaveModel extends BaseModel
 {
 	string component = classof ProjectSave;
 	string project_id = "";

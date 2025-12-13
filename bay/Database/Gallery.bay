@@ -18,7 +18,7 @@
 
 namespace Runtime.WordPress.Database;
 
-use Runtime.BaseStruct;
+use Runtime.BaseObject;
 use Runtime.ORM.Relation;
 use Runtime.ORM.Annotations.AutoIncrement;
 use Runtime.ORM.Annotations.BigIntType;
@@ -38,7 +38,7 @@ class Gallery extends Relation
 	/**
 	 * Returns table schema
 	 */
-	pure memorize Collection<BaseStruct> schema() =>
+	pure memorize Collection<BaseObject> schema() =>
 	[
 		/* Fields */
 		new BigIntType{"name": "id"},

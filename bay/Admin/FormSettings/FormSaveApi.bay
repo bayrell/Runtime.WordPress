@@ -18,10 +18,20 @@
 
 namespace Runtime.WordPress.Admin.FormSettings;
 
+use Runtime.Exceptions.ApiError;
+use Runtime.Exceptions.ItemNotFound;
+use Runtime.Serializer.BaseType;
+use Runtime.Serializer.IntegerType;
+use Runtime.Serializer.MapType;
+use Runtime.Serializer.Required;
+use Runtime.Serializer.StringType;
+use Runtime.ORM.Query;
+use Runtime.Web.ApiRequest;
+use Runtime.Web.ApiResult;
 use Runtime.Web.Annotations.ApiMethod;
-use Runtime.Widget.Crud.CrudService;
-use Runtime.Widget.Crud.SaveApi;
-use Runtime.WordPress.Admin.FormSettings.FormCrudService;
+use Runtime.Widget.Api.SaveApi;
+use Runtime.Widget.Api.Rules.ReadOnlyRule;
+use Runtime.WordPress.Database.Form;
 
 
 class FormSaveApi extends SaveApi
@@ -29,13 +39,39 @@ class FormSaveApi extends SaveApi
 	/**
 	 * Returns api name
 	 */
-	pure string getApiName() => "admin.wordpress.forms.settings.save";
+	static string getApiName() => "admin.wordpress.forms.settings.save";
 	
 	
 	/**
-	 * Returns service
+	 * Returns relation name
 	 */
-	CrudService createService() => new FormCrudService();
+	string getRealtionName() => classof Form;
+	
+	
+	/**
+	 * Returns save rules
+	 */
+	Vector rules() => [];
+	
+	
+	/**
+	 * Returns serialize rules for pk
+	 */
+	BaseType getPrimaryRules() => new MapType{
+		"id": new IntegerType(),
+	}
+	
+	
+	/**
+	 * Returns serialize rules
+	 */
+	BaseType getType() =>
+		new MapType{
+			"name": [new Required(), new StringType()],
+			"api_name": [new Required(), new StringType()],
+			"email_to": new StringType(),
+		}
+	;
 	
 	
 	/**
@@ -52,21 +88,64 @@ class FormSaveApi extends SaveApi
 	
 	
 	/**
-	 * Action save
+	 * Build query
 	 */
-	@ApiMethod
-	async void actionSave()
+	async void buildQuery(Query q)
 	{
-		await parent();
 	}
-    
-    
-    /**
-	 * Action delete
+	
+	
+	/**
+	 * Save form
 	 */
-	@ApiMethod
-	async void actionDelete()
+	@ApiMethod{ "name": "save" }
+	static async ApiResult actionSave(ApiRequest request)
 	{
-		await parent();
+		FormSaveApi api = new FormSaveApi{
+			"action": "save",
+			"request": request,
+		};
+		
+		/* Set primary key */
+		Map pk = request.get("pk");
+		if (pk) api.setPrimaryKey(pk);
+		
+		/* Set data */
+		Map item = request.get("item");
+		api.setData(item);
+		
+		/* Find item */
+		await api.findOrCreate();
+		
+		/* Save item */
+		await api.save();
+		api.setResult();
+		
+		return api.success();
+	}
+	
+	
+	/**
+	 * Delete form
+	 */
+	@ApiMethod{ "name": "delete" }
+	static async ApiResult actionDelete(ApiRequest request)
+	{
+		FormSaveApi api = new FormSaveApi{
+			"action": "delete",
+			"request": request,
+		};
+		
+		/* Set primary key */
+		Map pk = request.get("pk");
+		api.setPrimaryKey(pk);
+		
+		/* Find item */
+		await api.findOrCreate();
+		
+		/* Delete item */
+		await api.delete();
+		
+		return api.success();
 	}
 }

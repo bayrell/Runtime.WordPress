@@ -20,11 +20,11 @@ namespace Runtime.WordPress.Theme.Components.Form;
 
 use Runtime.Serializer;
 use Runtime.Web.ApiResult;
-use Runtime.Widget.Form.FormSubmitModel;
+use Runtime.Widget.Form.FormModel as BaseFormModel;
 use Runtime.Widget.Form.FormSubmitStorage;
 
 
-class FormModel extends FormSubmitModel
+class FormModel extends BaseFormModel
 {
 	string form_name = "";
 	string form_title = "";

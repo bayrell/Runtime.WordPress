@@ -19,8 +19,8 @@
 namespace Runtime.WordPress.Admin.MailLog;
 
 use Runtime.lib;
+use Runtime.BaseModel;
 use Runtime.Entity.Factory;
-use Runtime.Web.BasePageModel;
 use Runtime.Web.ModelFactory;
 use Runtime.Web.RenderContainer;
 use Runtime.Widget.ButtonModel;
@@ -36,7 +36,7 @@ use Runtime.Widget.Table.TableRowButtonsModel;
 use Runtime.WordPress.Admin.MailLog.MailLogPage;
 
 
-class MailLogPageModel extends BasePageModel
+class MailLogPageModel extends BaseModel
 {
 	string component = classof MailLogPage;
 	FormModel form = null;

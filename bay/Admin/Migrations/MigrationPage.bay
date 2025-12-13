@@ -17,31 +17,35 @@
 -->
 
 
-<class name="Runtime.WordPress.Admin.Settings.MigrationPage">
+<class name="Runtime.WordPress.Admin.Migrations.MigrationPage">
 
 <use name="Runtime.Widget.Button" component="true" />
 <use name="Runtime.Widget.RowButtons" component="true" />
 <use name="Runtime.Widget.TextEditable" component="true" />
-<use name="Runtime.Widget.WidgetResult" component="true" />
 
 <style>
-.database_migration_page %(TextEditable)widget_text{
-	height: 500px;
+.database_migration_page{
+	.text_editable{
+		height: 350px;
+	}
+	.buttons{
+		margin-top: calc(var(--space) * 2);
+		text-align: center;
+	}
 }
 </style>
 
 <template>
 	<div class="database_migration_page">
-		%render this.renderWidget(this.model.tabs);
 		%if (this.model.items.count() > 0)
 		{
 			<TextEditable value={{ rs::join("\n", this.model.items) }}></TextEditable>
-			<RowButtons styles=["center", "bottom_buttons"]>
+			<div class="buttons">
 				<Button styles=["primary"]
 					@event:click={{ void(){ this.model.updateDatabase(); } }}
 				>Update</Button>
-			</RowButtons>
-			<WidgetResult @model={{ this.model.result }} />
+			</div>
+			%render this.renderWidget(this.model.result);
 		}
 		%else
 		{

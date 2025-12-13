@@ -18,9 +18,9 @@
 
 namespace Runtime.WordPress.Admin.Robots;
 
-use Runtime.Callback;
+use Runtime.BaseModel;
+use Runtime.Method;
 use Runtime.Entity.Factory;
-use Runtime.Web.BasePageModel;
 use Runtime.Web.RenderContainer;
 use Runtime.Widget.ButtonModel;
 use Runtime.Widget.Input;
@@ -30,7 +30,7 @@ use Runtime.Widget.Form.FormModel;
 use Runtime.WordPress.Admin.Robots.RobotsPage;
 
 
-class RobotsPageModel extends BasePageModel
+class RobotsPageModel extends BaseModel
 {
 	string component = classof RobotsPage;
 	FormModel form = null;
@@ -74,7 +74,7 @@ class RobotsPageModel extends BasePageModel
 				"styles": ["large", "primary"],
 				"events":
 				{
-					"click": new Callback(this, "onSave")
+					"click": new Method(this, "onSave")
 				},
 			}
 		);

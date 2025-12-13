@@ -32,6 +32,7 @@ use Runtime.Web.BaseApp;
 use Runtime.Web.Response;
 use Runtime.Web.RouteInfo;
 use Runtime.Web.RouteList;
+use Runtime.Web.RouteProvider;
 use Runtime.WordPress.Admin.AdminUI;
 
 
@@ -79,9 +80,12 @@ class WP_Helper
 	/**
 	 * Returns app version
 	 */
-	static string getAppVersion(string version) =>
-		version ~ "_" ~ static::get_option("app_js_vesion")
-	;
+	static string getAppVersion(string version)
+	{
+		string js_version = static::get_option("app_js_vesion");
+		if (js_version) return version ~ "_" ~ js_version;
+		return version;
+	}
 	
 	
 	/**
@@ -256,78 +260,6 @@ class WP_Helper
 	
 	
 	/**
-	 * Call wp admin route
-	 */
-	async static string wp_admin_route(string route_name, fn route_before = null)
-	{
-		string content = "";
-		
-		/* Create render container */
-		BaseApp app = @.getApp();
-		RenderContainer container = app.createRenderContainer();
-		
-		/* Create request */
-		container.request = app.createRequest();
-		
-		/* Setup route */
-		RouteList routes = @.provider(classof RouteList);
-		RouteInfo route = routes.routes_list.findItem(lib::equalAttr("name", route_name));
-		container.route = route;
-		
-		/* Create layout */
-		string layout_name = container.getLayoutName();
-		await container.createLayout(layout_name);
-		
-		/* Call route before */
-		if (route_before)
-		{
-			await rtl::apply(route_before, [container]);
-		}
-		
-		/* Resolve route */
-		await container.resolveRoute();
-		
-		/* Return container */
-		return container;
-	}
-	
-	
-	/**
-	 * Render
-	 */
-	async static string wp_render(RenderContainer container)
-	{
-		string content = "";
-		
-		if (container.response instanceof Response)
-		{
-			content = container.response.getContent(false);
-		}
-		else
-		{
-			content = "<p>404 Response not found</p>";
-		}
-		
-		return content;
-	}
-	
-	
-	/**
-	 * Render page
-	 */
-	async static void wp_render_page(string route_name, fn route_before = null)
-	{
-		RenderContainer container = static::wp_admin_route(route_name, route_before);
-		string content = static::wp_render(container);
-		
-		#ifcode PHP then
-		do_action("admin_render_page");
-		echo $content;
-		#endif
-	}
-	
-	
-	/**
 	 * Render app
 	 */
 	static async void renderApp()
@@ -342,19 +274,49 @@ class WP_Helper
 		/* Resolve container */
 		await container.resolve();
 		
-		/* Send response */
-		app.sendResponse(container);
+		/* Returns container */
+		return container;
 	}
 	
 	
 	/**
 	 * Render page
 	 */
-	static async void renderPage(string class_name, string layout_name="default")
+	static async void renderPage(string route_name, Map params = null)
 	{
 		/* Create container and layout */
 		BaseApp app = @.provider("app");
 		RenderContainer container = app.createRenderContainer();
+		
+		/* Create request */
+		container.request = app.createRequest();
+		
+		/* Find route */
+		RouteProvider routes = @.provider(classof RouteProvider);
+		container.route = routes.getRoute(route_name);
+		
+		/* Set matches */
+		if (container.route and params) container.route.matches = params;
+		
+		/* Resolve route */
+		container.resolveRoute();
+		
+		/* Returns container */
+		return container;
+	}
+	
+	
+	/**
+	 * Render page model
+	 */
+	static async void renderPageModel(string class_name, string layout_name="default")
+	{
+		/* Create container and layout */
+		BaseApp app = @.provider("app");
+		RenderContainer container = app.createRenderContainer();
+		
+		/* Create request */
+		container.request = app.createRequest();
 		
 		/* Create layout */
 		BaseLayout layout = container.createLayout(layout_name);
@@ -362,8 +324,29 @@ class WP_Helper
 		/* Render page */
 		await container.renderPageModel(class_name);
 		
-		/* Render container */
-		container.createResponse();
-		app.sendResponse(container);
+		/* Returns container */
+		return container;
+	}
+	
+	
+	/**
+	 * Render container
+	 */
+	static async void render(RenderContainer container)
+	{
+		#ifcode PHP then
+		
+		do_action("admin_render_page");
+		
+		if ($container->route == null)
+		{
+			echo "<p>Page not found</p>";
+		}
+		else
+		{
+			echo $container->renderApp();
+		}
+		
+		#endif
 	}
 }

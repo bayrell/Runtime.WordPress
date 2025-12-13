@@ -81,7 +81,7 @@ class Core_2025_01 extends BaseMigration
 				"  `email_to` varchar(255) NOT NULL,",
 				"  `is_deleted` tinyint(4) NOT NULL DEFAULT 0,",
 				"  PRIMARY KEY (`id`)",
-				") ENGINE=InnoDB"
+				") ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci"
 			]);
 		},
 		"down": async void ()
@@ -113,7 +113,7 @@ class Core_2025_01 extends BaseMigration
 				"  `gmtime_add` datetime NOT NULL,",
 				"  PRIMARY KEY (`id`),",
 				"  KEY `form_id` (`form_id`)",
-				") ENGINE=InnoDB"
+				") ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci"
 			]);
 		},
 		"down": async void ()
@@ -135,11 +135,11 @@ class Core_2025_01 extends BaseMigration
 			this.comment("Create table " ~ table_name);
 			this.executeSQL([
 				"CREATE TABLE `" ~ table_name ~ "` (",
-				"  `ip` varchar(64) COLLATE utf8mb4_unicode_ci NOT NULL,",
+				"  `ip` varchar(64) NOT NULL,",
 				"  `count` int(11) NOT NULL,",
 				"  `last` int(11) NOT NULL,",
 				"  PRIMARY KEY (`ip`)",
-				") ENGINE=InnoDB"
+				") ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci"
 			]);
 		},
 		"down": async void ()
@@ -165,7 +165,7 @@ class Core_2025_01 extends BaseMigration
 				"  `api_name` varchar(255) NOT NULL,",
 				"  `is_deleted` tinyint(4) NOT NULL DEFAULT 0,",
 				"  PRIMARY KEY (`id`)",
-				") ENGINE=InnoDB"
+				") ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci"
 			]);
 		},
 		"down": async void ()
@@ -196,7 +196,7 @@ class Core_2025_01 extends BaseMigration
 				"  `is_deleted` tinyint(4) NOT NULL DEFAULT 0,",
 				"  KEY `pos` (`pos`),",
 				"  PRIMARY KEY (`id`)",
-				") ENGINE=InnoDB"
+				") ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci"
 			]);
 			this.comment("Create foreign key " ~ table_name ~ "_id");
 			await this.executeSQL([
@@ -231,26 +231,22 @@ class Core_2025_01 extends BaseMigration
 			this.executeSQL([
 				"CREATE TABLE `" ~ table_name ~ "` (",
 				"  `id` bigint(20) NOT NULL AUTO_INCREMENT COMMENT 'Notify ID',",
-				"  `worker` varchar(150) COLLATE utf8mb4_unicode_ci NOT NULL " ~
+				"  `worker` varchar(150) NOT NULL " ~
 					"COMMENT 'Worker for delivery message email, etc ..',",
 				"  `plan` varchar(150) CHARACTER SET utf8mb4 NOT NULL DEFAULT 'default' " ~
 					"COMMENT 'Delivery plan zakaz, billing, etc ...',",
 				"  `status` smallint(6) NOT NULL DEFAULT 0 " ~
 					"COMMENT 'Delivery status. 0 - Planned, 1 - Delivered, 2 - Process, -1 - Error',",
-				"  `dest` longtext COLLATE utf8mb4_unicode_ci NOT NULL " ~
-					"COMMENT 'Destination',",
-				"  `uuid` varchar(150) COLLATE utf8mb4_unicode_ci DEFAULT NULL " ~
-					"COMMENT 'Delivery uuid',",
-				"  `title` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL " ~
-					"COMMENT 'Title of the message',",
-				"  `message` longtext COLLATE utf8mb4_unicode_ci NOT NULL " ~
-					"COMMENT 'Message',",
+				"  `dest` longtext NOT NULL COMMENT 'Destination',",
+				"  `uuid` varchar(150) DEFAULT NULL COMMENT 'Delivery uuid',",
+				"  `title` varchar(255) NOT NULL COMMENT 'Title of the message',",
+				"  `message` longtext NOT NULL COMMENT 'Message',",
 				"  `gmtime_plan` datetime DEFAULT NULL " ~
 					"COMMENT 'Time by UTC when delivery task will be started. " ~
 					"If null message must be send immediately',",
 				"  `gmtime_send` datetime DEFAULT NULL " ~
 					"COMMENT 'Time by UTC when message have been sended',",
-				"  `send_email_error` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL " ~
+				"  `send_email_error` varchar(255) NOT NULL " ~
 					"COMMENT 'Delivery error message',",
 				"  `send_email_code` int(11) NOT NULL DEFAULT 0 COMMENT 'Delivery error code',",
 				"  `gmtime_add` datetime NOT NULL COMMENT 'Time of create record by UTC',",
@@ -262,7 +258,7 @@ class Core_2025_01 extends BaseMigration
 				"  KEY `gmtime_add` (`gmtime_add`),",
 				"  KEY `gmtime_send` (`gmtime_send`),",
 				"  KEY `plan` (`plan`)",
-				") ENGINE=InnoDB COMMENT='Log of delivered messages'",
+				") ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='Log of delivered messages'",
 			]);
 		},
 		"down": async void ()
@@ -283,19 +279,19 @@ class Core_2025_01 extends BaseMigration
 			string table_name = this.connection.getTableName("mail_settings");
 			this.comment("Create table " ~ table_name);
 			this.executeSQL([
-				"CREATE TABLE `wp1_mail_settings` (",
+				"CREATE TABLE `" ~ table_name ~ "` (",
 				"  `id` bigint(20) NOT NULL AUTO_INCREMENT,",
 				"  `enable` tinyint(4) NOT NULL,",
-				"  `plan` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,",
-				"  `host` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,",
-				"  `port` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,",
-				"  `login` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,",
-				"  `password` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,",
+				"  `plan` varchar(255) NOT NULL,",
+				"  `host` varchar(255) NOT NULL,",
+				"  `port` varchar(255) NOT NULL,",
+				"  `login` varchar(255) NOT NULL,",
+				"  `password` varchar(255) NOT NULL,",
 				"  `ssl_enable` tinyint(4) NOT NULL,",
 				"  `is_deleted` tinyint(4) NOT NULL,",
 				"  PRIMARY KEY (`id`),",
 				"  UNIQUE KEY `plan` (`plan`)",
-				") ENGINE=InnoDB",
+				") ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci",
 			]);
 		},
 		"down": async void ()
