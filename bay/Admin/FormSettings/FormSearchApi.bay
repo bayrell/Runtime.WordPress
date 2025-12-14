@@ -75,11 +75,11 @@ class FormSearchApi extends SearchApi
 	static async ApiResult actionSearch(ApiRequest request)
 	{
 		FormSearchApi api = new FormSearchApi{
+			"action": "search",
 			"request": request,
 		};
 		
-		/* Set data */
-		api.setAction("search");
+		/* Set filter */
 		api.setFilter(request.data);
 		
 		/* Search */

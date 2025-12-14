@@ -18,10 +18,12 @@
 
 namespace Runtime.WordPress.Admin.MailSettings;
 
+use Runtime.ORM.Query;
+use Runtime.Web.ApiResult;
+use Runtime.Web.ApiRequest;
 use Runtime.Web.Annotations.ApiMethod;
-use Runtime.Widget.Crud.CrudService;
-use Runtime.Widget.Crud.SearchApi;
-use Runtime.WordPress.Admin.MailSettings.MailCrudService;
+use Runtime.Widget.Api.SearchApi;
+use Runtime.WordPress.Database.MailSettings;
 
 
 class MailSearchApi extends SearchApi
@@ -33,9 +35,15 @@ class MailSearchApi extends SearchApi
 	
 	
 	/**
-	 * Returns service
+	 * Returns relation name
 	 */
-	CrudService createService() => new MailCrudService();
+	string getRealtionName() => classof MailSettings;
+	
+	
+	/**
+	 * Returns save rules
+	 */
+	Vector rules() => [];
 	
 	
 	/**
@@ -56,11 +64,32 @@ class MailSearchApi extends SearchApi
 	
 	
 	/**
+	 * Build query
+	 */
+	async void buildQuery(Query q)
+	{
+		q.orderBy("id", "asc");
+	}
+	
+	
+	/**
 	 * Action search
 	 */
-	@ApiMethod
-	async void actionSearch()
+	@ApiMethod{ "name": "search" }
+	async static ApiResult actionSearch(ApiRequest request)
 	{
-		await parent();
+		MailSearchApi api = new MailSearchApi{
+			"action": "search",
+			"request": request,
+		};
+		
+		/* Set filter */
+		api.setFilter(request.data);
+		
+		/* Search */
+		await api.search();
+		api.setResult();
+		
+		return api.success();
 	}
 }

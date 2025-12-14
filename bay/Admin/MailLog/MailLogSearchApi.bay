@@ -18,10 +18,12 @@
 
 namespace Runtime.WordPress.Admin.MailLog;
 
+use Runtime.ORM.Query;
+use Runtime.Web.ApiResult;
+use Runtime.Web.ApiRequest;
 use Runtime.Web.Annotations.ApiMethod;
-use Runtime.Widget.Crud.CrudService;
-use Runtime.Widget.Crud.SearchApi;
-use Runtime.WordPress.Admin.MailLog.MailLogCrudService;
+use Runtime.Widget.Api.SearchApi;
+use Runtime.WordPress.Database.MailLog;
 
 
 class MailLogSearchApi extends SearchApi
@@ -33,9 +35,15 @@ class MailLogSearchApi extends SearchApi
 	
 	
 	/**
-	 * Returns service
+	 * Returns relation name
 	 */
-	CrudService createService() => new MailLogCrudService();
+	string getRealtionName() => classof MailLog;
+	
+	
+	/**
+	 * Returns save rules
+	 */
+	Vector rules() => [];
 	
 	
 	/**
@@ -61,11 +69,32 @@ class MailLogSearchApi extends SearchApi
 	
 	
 	/**
+	 * Build query
+	 */
+	async void buildQuery(Query q)
+	{
+		q.orderBy("gmtime_add", "desc");
+	}
+	
+	
+	/**
 	 * Action search
 	 */
-	@ApiMethod
-	async void actionSearch()
+	@ApiMethod{ "name": "search" }
+	async ApiResult actionSearch(ApiRequest request)
 	{
-		await parent();
+		MailLogSearchApi api = new MailLogSearchApi{
+			"action": "search",
+			"request": request,
+		};
+		
+		/* Set filter */
+		api.setFilter(request.data);
+		
+		/* Search */
+		await api.search();
+		api.setResult();
+		
+		return api.success();
 	}
 }

@@ -19,10 +19,117 @@
 
 <class name="Runtime.WordPress.Admin.MailSettings.MailSettingsPage">
 
+<use name="Runtime.Widget.Button" component="true" />
+<use name="Runtime.Widget.RowButtons" component="true" />
+<use name="Runtime.Widget.Input" component="true" />
+<use name="Runtime.Widget.Select" component="true" />
+<use name="Runtime.Widget.Form.Form" component="true" />
+<use name="Runtime.Widget.Form.FormRow" component="true" />
+<use name="Runtime.Widget.Table.Table" component="true" />
+<use name="Runtime.Widget.Table.TableDialog" component="true" />
+
 <template>
-	<div class="form_settings_page">
-		%render this.renderWidget(this.model.top_buttons);
-		%render this.renderWidget(this.model.table);
+	<div class="mail_settings_page">
+		<RowButtons class="margin_bottom">
+			<Button class="button--success"
+				@event:click="this.model.manager.showAddDialog()"
+			>Add</Button>
+		</RowButtons>
+		<Table model={{ this.model.manager.table }}>
+			<slot name="header">
+				<th></th>
+				<th>Enable</th>
+				<th>Plan</th>
+				<th>Host</th>
+				<th>Port</th>
+				<th>Login</th>
+				<th>SSL</th>
+				<th></th>
+			</slot>
+			<slot name="row" args="Map item, int row_number">
+				<td>{{ row_number + 1 }}</td>
+				<td>{{ item.get("enable") ? "Yes" : "No" }}</td>
+				<td>{{ item.get("plan") }}</td>
+				<td>{{ item.get("host") }}</td>
+				<td>{{ item.get("port") }}</td>
+				<td>{{ item.get("login") }}</td>
+				<td>{{ item.get("ssl_enable") ? "Yes" : "No" }}</td>
+				<td>
+					<RowButtons>
+						<Button class="button--small"
+							@event:click="this.model.manager.showEditDialog(item.copy())"
+						>Edit</Button>
+						<Button class="button--small button--danger"
+							@event:click="this.model.manager.showDeleteDialog(item.copy())"
+						>Delete</Button>
+					</RowButtons>
+				</td>
+			</slot>
+		</Table>
+		<TableDialog model={{ this.model.manager.dialog }} manager={{ this.model.manager }}>
+			<slot name="save">
+				%set Map item = this.model.manager.form.item;
+				<Form>
+					<FormRow name="enable" label="Enable"
+						result={{ this.model.manager.form.field_errors.get("enable") }}
+					>
+						<Select name="enable" value={{ item.get("enable") }}
+							options=[
+								{"key": "0", "value": "No"},
+								{"key": "1", "value": "Yes"},
+							]
+							@event:valueChange="item.set('enable', event.value)" />
+					</FormRow>
+				</Form>
+				<Form>
+					<FormRow name="plan" label="Plan"
+						result={{ this.model.manager.form.field_errors.get("plan") }}
+					>
+						<Input name="plan" value={{ item.get("plan") }}
+							@event:valueChange="item.set('plan', event.value)" />
+					</FormRow>
+				</Form>
+				<Form>
+					<FormRow name="host" label="Host"
+						result={{ this.model.manager.form.field_errors.get("host") }}
+					>
+						<Input name="host" value={{ item.get("host") }}
+							@event:valueChange="item.set('host', event.value)" />
+					</FormRow>
+				</Form>
+				<Form>
+					<FormRow name="port" label="Port"
+						result={{ this.model.manager.form.field_errors.get("port") }}
+					>
+						<Input name="port" value={{ item.get("port") }}
+							@event:valueChange="item.set('port', event.value)" />
+					</FormRow>
+				</Form>
+				<Form>
+					<FormRow name="login" label="Login"
+						result={{ this.model.manager.form.field_errors.get("login") }}
+					>
+						<Input name="login" value={{ item.get("login") }}
+							@event:valueChange="item.set('login', event.value)" />
+					</FormRow>
+				</Form>
+				<Form>
+					<FormRow name="ssl_enable" label="SSL"
+						result={{ this.model.manager.form.field_errors.get("ssl_enable") }}
+					>
+						<Select name="ssl_enable" value={{ item.get("ssl_enable") }}
+							options=[
+								{"key": "0", "value": "No"},
+								{"key": "1", "value": "Yes"},
+							]
+							@event:valueChange="item.set('ssl_enable', event.value)" />
+					</FormRow>
+				</Form>
+				%render this.renderWidget(this.model.manager.form.result, {
+					"class": "result--center"
+				});
+			</slot>
+		</TableDialog>
 	</div>
 </template>
 

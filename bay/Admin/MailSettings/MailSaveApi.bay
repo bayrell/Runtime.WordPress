@@ -18,10 +18,17 @@
 
 namespace Runtime.WordPress.Admin.MailSettings;
 
+use Runtime.Serializer.BaseType;
+use Runtime.Serializer.IntegerType;
+use Runtime.Serializer.MapType;
+use Runtime.Serializer.Required;
+use Runtime.Serializer.StringType;
+use Runtime.ORM.Query;
+use Runtime.Web.ApiResult;
+use Runtime.Web.ApiRequest;
 use Runtime.Web.Annotations.ApiMethod;
-use Runtime.Widget.Crud.CrudService;
-use Runtime.Widget.Crud.SaveApi;
-use Runtime.WordPress.Admin.MailSettings.MailCrudService;
+use Runtime.Widget.Api.SaveApi;
+use Runtime.WordPress.Database.MailSettings;
 
 
 class MailSaveApi extends SaveApi
@@ -33,9 +40,39 @@ class MailSaveApi extends SaveApi
 	
 	
 	/**
-	 * Returns service
+	 * Returns relation name
 	 */
-	CrudService createService() => new MailCrudService();
+	string getRealtionName() => classof MailSettings;
+	
+	
+	/**
+	 * Returns save rules
+	 */
+	Vector rules() => [];
+	
+	
+	/**
+	 * Returns serialize rules for pk
+	 */
+	BaseType getPrimaryRules() => new MapType{
+		"id": new IntegerType(),
+	}
+	
+	
+	/**
+	 * Returns serialize rules
+	 */
+	BaseType getType() =>
+		new MapType{
+			"enable": new IntegerType(),
+			"plan": new StringType(),
+			"host": new StringType(),
+			"port": new StringType(),
+			"login": new StringType(),
+			"password": new StringType(),
+			"ssl_enable": new IntegerType(),
+		}
+	;
 	
 	
 	/**
@@ -51,26 +88,68 @@ class MailSaveApi extends SaveApi
 		"login",
 		"password",
 		"ssl_enable",
-		"is_deleted",
 	];
+	
+	
+	/**
+	 * Build query
+	 */
+	async void buildQuery(Query q)
+	{
+	}
 	
 	
 	/**
 	 * Action save
 	 */
-	@ApiMethod
-	async void actionSave()
+	@ApiMethod{ "name": "save" }
+	async static ApiResult actionSave(ApiRequest request)
 	{
-		await parent();
+		MailSaveApi api = new MailSaveApi{
+			"action": "save",
+			"request": request,
+		};
+		
+		/* Set primary key */
+		Map pk = request.get("pk");
+		if (pk) api.setPrimaryKey(pk);
+		
+		/* Set data */
+		Map item = request.get("item");
+		api.setData(item);
+		
+		/* Find item */
+		await api.findOrCreate();
+		
+		/* Save item */
+		await api.save();
+		api.setResult();
+		
+		return api.success();
 	}
     
     
     /**
 	 * Action delete
 	 */
-	@ApiMethod
-	async void actionDelete()
+	@ApiMethod{ "name": "delete" }
+	async static ApiResult actionDelete(ApiRequest request)
 	{
-		await parent();
+		MailSaveApi api = new MailSaveApi{
+			"action": "delete",
+			"request": request,
+		};
+		
+		/* Set primary key */
+		Map pk = request.get("pk");
+		api.setPrimaryKey(pk);
+		
+		/* Find item */
+		await api.findOrCreate();
+		
+		/* Delete item */
+		await api.delete();
+		
+		return api.success();
 	}
 }

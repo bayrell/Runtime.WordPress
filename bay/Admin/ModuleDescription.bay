@@ -69,6 +69,8 @@ class ModuleDescription
 		#ifdef BACKEND then
 		new Api("Runtime.WordPress.Admin.FormSettings.FormSaveApi"),
 		new Api("Runtime.WordPress.Admin.FormSettings.FormSearchApi"),
+		new Api("Runtime.WordPress.Admin.MailSettings.MailSaveApi"),
+		new Api("Runtime.WordPress.Admin.MailSettings.MailSearchApi"),
 		new Api("Runtime.WordPress.Admin.Migrations.MigrationApi"),
 		
 		/*new Api("Runtime.WordPress.Admin.FormData.FormDataSearchApi"),
@@ -77,8 +79,6 @@ class ModuleDescription
 		new Api("Runtime.WordPress.Admin.GalleryItem.GalleryItemSaveApi"),
 		new Api("Runtime.WordPress.Admin.GalleryItem.GalleryItemSearchApi"),
 		new Api("Runtime.WordPress.Admin.MailLog.MailLogSearchApi"),
-		new Api("Runtime.WordPress.Admin.MailSettings.MailSaveApi"),
-		new Api("Runtime.WordPress.Admin.MailSettings.MailSearchApi"),
 		new Api("Runtime.WordPress.Admin.Robots.RobotsApi"),
 		new Api("Runtime.WordPress.Admin.Settings.ProjectApi"),
 		new Api("BayLang.Constructor.Backend.Api.AssetsApi"),
