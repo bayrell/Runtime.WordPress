@@ -72,6 +72,7 @@ class ModuleDescription
 		new Api("Runtime.WordPress.Admin.MailSettings.MailSaveApi"),
 		new Api("Runtime.WordPress.Admin.MailSettings.MailSearchApi"),
 		new Api("Runtime.WordPress.Admin.Migrations.MigrationApi"),
+		new Api("Runtime.WordPress.Admin.Robots.RobotsApi"),
 		
 		/*new Api("Runtime.WordPress.Admin.FormData.FormDataSearchApi"),
 		new Api("Runtime.WordPress.Admin.Gallery.GallerySaveApi"),
@@ -79,7 +80,6 @@ class ModuleDescription
 		new Api("Runtime.WordPress.Admin.GalleryItem.GalleryItemSaveApi"),
 		new Api("Runtime.WordPress.Admin.GalleryItem.GalleryItemSearchApi"),
 		new Api("Runtime.WordPress.Admin.MailLog.MailLogSearchApi"),
-		new Api("Runtime.WordPress.Admin.Robots.RobotsApi"),
 		new Api("Runtime.WordPress.Admin.Settings.ProjectApi"),
 		new Api("BayLang.Constructor.Backend.Api.AssetsApi"),
 		new Api("BayLang.Constructor.Backend.Api.CodeApi"),

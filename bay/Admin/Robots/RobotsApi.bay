@@ -18,6 +18,8 @@
 
 namespace Runtime.WordPress.Admin.Robots;
 
+use Runtime.Web.ApiResult;
+use Runtime.Web.ApiRequest;
 use Runtime.Web.BaseApi;
 use Runtime.Web.Annotations.ApiMethod;
 use Runtime.WordPress.WP_Helper;
@@ -28,22 +30,19 @@ class RobotsApi extends BaseApi
 	/**
 	 * Returns api name
 	 */
-	pure string getApiName() => "admin.wordpress.robots.save";
+	pure string getApiName() => "admin.wordpress.robots";
 	
 	
 	/**
 	 * Action item
 	 */
-	@ApiMethod
-	async void actionItem()
+	@ApiMethod{ "name": "item" }
+	static async ApiResult actionItem(ApiRequest request)
 	{
 		string content = WP_Helper::get_option("robots.txt");
-		this.result.success({
+		return new ApiResult().success({
 			"data": {
-				"pk": true,
-				"item": {
-					"content": content,
-				},
+				"content": content,
 			}
 		});
 	}
@@ -52,20 +51,13 @@ class RobotsApi extends BaseApi
 	/**
 	 * Action save
 	 */
-	@ApiMethod
-	async void actionSave()
+	@ApiMethod{ "name": "save" }
+	static async ApiResult actionSave(ApiRequest request)
 	{
-		string content = this.post_data.get("item").get("content");
+		string content = request.get("content");
 		
 		WP_Helper::update_option("robots.txt", content);
 		
-		this.result.success({
-			"data": {
-				"pk": true,
-				"item": {
-					"content": content,
-				},
-			}
-		});
+		return new ApiResult().success();
 	}
 }

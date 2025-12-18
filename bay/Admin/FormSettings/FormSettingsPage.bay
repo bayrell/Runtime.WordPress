@@ -70,16 +70,12 @@
 						<Input name="name" value={{ item.get("name") }}
 							@event:valueChange="item.set('name', event.value)" />
 					</FormRow>
-				</Form>
-				<Form>
 					<FormRow name="api_name" label="Api name"
 						result={{ this.model.manager.form.field_errors.get("api_name") }}
 					>
 						<Input name="api_name" value={{ item.get("api_name") }}
 							@event:valueChange="item.set('api_name', event.value)" />
 					</FormRow>
-				</Form>
-				<Form>
 					<FormRow name="email_to" label="Email to"
 						result={{ this.model.manager.form.field_errors.get("email_to") }}
 					>

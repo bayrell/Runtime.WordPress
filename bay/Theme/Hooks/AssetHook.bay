@@ -18,10 +18,10 @@
 
 namespace Runtime.WordPress.Theme.Hooks;
 
-use Runtime.Web.Hooks.AppHook as BaseAppHook;
+use Runtime.Web.Hooks.AppHook as AppHook;
 
 
-class AssetHook extends BaseAppHook
+class AssetHook extends AppHook
 {
 	string assets_path = "";
 	

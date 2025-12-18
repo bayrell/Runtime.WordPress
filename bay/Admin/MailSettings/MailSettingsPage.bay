@@ -80,40 +80,30 @@
 							]
 							@event:valueChange="item.set('enable', event.value)" />
 					</FormRow>
-				</Form>
-				<Form>
 					<FormRow name="plan" label="Plan"
 						result={{ this.model.manager.form.field_errors.get("plan") }}
 					>
 						<Input name="plan" value={{ item.get("plan") }}
 							@event:valueChange="item.set('plan', event.value)" />
 					</FormRow>
-				</Form>
-				<Form>
 					<FormRow name="host" label="Host"
 						result={{ this.model.manager.form.field_errors.get("host") }}
 					>
 						<Input name="host" value={{ item.get("host") }}
 							@event:valueChange="item.set('host', event.value)" />
 					</FormRow>
-				</Form>
-				<Form>
 					<FormRow name="port" label="Port"
 						result={{ this.model.manager.form.field_errors.get("port") }}
 					>
 						<Input name="port" value={{ item.get("port") }}
 							@event:valueChange="item.set('port', event.value)" />
 					</FormRow>
-				</Form>
-				<Form>
 					<FormRow name="login" label="Login"
 						result={{ this.model.manager.form.field_errors.get("login") }}
 					>
 						<Input name="login" value={{ item.get("login") }}
 							@event:valueChange="item.set('login', event.value)" />
 					</FormRow>
-				</Form>
-				<Form>
 					<FormRow name="ssl_enable" label="SSL"
 						result={{ this.model.manager.form.field_errors.get("ssl_enable") }}
 					>
