@@ -26,14 +26,4 @@ use Runtime.WordPress.Admin.AdminLayout;
 class AdminLayoutModel extends BaseLayout
 {
 	string component = classof AdminLayout;
-	
-	
-	/**
-	 * Make ulr
-	 */
-	void url(string name, Map params = null)
-	{
-		RouteList router = this.get("router");
-		return router.url(name, params);
-	}
 }

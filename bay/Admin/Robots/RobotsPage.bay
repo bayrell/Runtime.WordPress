@@ -25,20 +25,6 @@
 <use name="Runtime.Widget.Form.Form" component="true" />
 <use name="Runtime.Widget.Form.FormRow" component="true" />
 
-<style>
-.form_settings_page{
-	textarea{
-		min-height: 300px;
-	}
-	.result{
-		margin-bottom: calc(var(--space) * 2);
-	}
-	.row_buttons{
-		justify-content: center;
-	}
-}
-</style>
-
 <template>
 	<div class="form_settings_page">
 		<Form model={{ this.model.form }}>
@@ -49,7 +35,7 @@
 				/>
 			</FormRow>
 			%render this.renderWidget(this.model.form.result, {
-				"class": "result--center",
+				"class": "result--form",
 			});
 			<RowButtons>
 				<Button class="button--primary button--large"

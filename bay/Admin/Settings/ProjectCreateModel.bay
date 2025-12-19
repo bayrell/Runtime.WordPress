@@ -18,13 +18,12 @@
 
 namespace Runtime.WordPress.Admin.Settings;
 
+use Runtime.ApiResult;
 use Runtime.BaseModel;
-use Runtime.Entity.Factory;
+use Runtime.Serializer;
+use Runtime.Serializer.ObjectType;
 use Runtime.Web.RenderContainer;
 use Runtime.Widget.Form.FormModel;
-use Runtime.Widget.Form.FormSubmitStorage;
-use Runtime.Widget.Form.FormSaveStorage;
-use Runtime.Widget.Form.FormSubmitModel;
 use Runtime.WordPress.Admin.Settings.ProjectCreate;
 use Runtime.WordPress.Admin.Settings.TabsModel;
 
@@ -37,6 +36,17 @@ class ProjectCreateModel extends BaseModel
 	
 	
 	/**
+	 * Serialize object
+	 */
+	void serialize(Serializer serializer)
+	{
+		parent(serializer);
+		serializer.addType("tabs", new ObjectType{ "class_name": classof TabsModel });
+		serializer.addType("form", new ObjectType{ "class_name": classof FormModel });
+	}
+	
+	
+	/**
 	 * Init widget settings
 	 */
 	void initWidget(Dict params)
@@ -44,42 +54,12 @@ class ProjectCreateModel extends BaseModel
 		parent(params);
 		
 		/* Add tabs */
-		this.tabs = this.addWidget(classof TabsModel, {
-			"active": "create-project"
+		this.tabs = this.createWidget(classof TabsModel, {
+			"active": "create"
 		});
 		
 		/* Save form */
-		this.form = this.addWidget(
-			classof FormSubmitModel,
-			{
-				"widget_name": "form",
-				"primary_key": ["id"],
-				"submit_button": {
-					"text": "Save",
-					"styles": ["success", "large"],
-				},
-				"storage": new Factory(
-					classof FormSubmitStorage,
-					{
-						"api_name": "admin.wordpress.project",
-						"method_name": "actionCreate",
-					}
-				),
-				"fields":
-				[
-					{
-						"name": "id",
-						"label": "Api name",
-						"component": "Runtime.Widget.Input",
-					},
-					{
-						"name": "name",
-						"label": "Name",
-						"component": "Runtime.Widget.Input",
-					},
-				],
-			}
-		);
+		this.form = this.createWidget(classof FormModel);
 	}
 	
 	
@@ -89,5 +69,22 @@ class ProjectCreateModel extends BaseModel
 	void buildTitle(RenderContainer container)
 	{
 		this.layout.setPageTitle("Create project");
+	}
+	
+	
+	/**
+	 * Save form
+	 */
+	async void onSave()
+	{
+		this.form.setWaitMessage();
+		ApiResult result = await this.layout.sendApi({
+			"api_name": "admin.wordpress.project",
+			"method_name": "create",
+			"data": {
+				"item": this.form.item,
+			},
+		});
+		this.form.setApiResult(result);
 	}
 }

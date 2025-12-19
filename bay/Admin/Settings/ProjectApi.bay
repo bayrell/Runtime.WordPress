@@ -18,10 +18,22 @@
 
 namespace Runtime.WordPress.Admin.Settings;
 
+use Runtime.fs;
+use Runtime.Exceptions.ApiError;
+use Runtime.Exceptions.ItemNotFound;
+use Runtime.Exceptions.RuntimeException;
+use Runtime.Serializer.BaseType;
+use Runtime.Serializer.IntegerType;
+use Runtime.Serializer.MapType;
+use Runtime.Serializer.Required;
+use Runtime.Serializer.StringType;
+use Runtime.Web.ApiResult;
+use Runtime.Web.ApiRequest;
 use Runtime.Web.Annotations.ApiMethod;
-use Runtime.Widget.Crud.CrudService;
-use Runtime.Widget.Crud.SaveApi;
-use Runtime.WordPress.Admin.Settings.ProjectService;
+use Runtime.Widget.Api.SaveApi;
+use BayLang.Compiler.Project;
+use BayLang.Constructor.Backend.ApiHook;
+use BayLang_Plugin;
 
 
 class ProjectApi extends SaveApi
@@ -33,9 +45,13 @@ class ProjectApi extends SaveApi
 	
 	
 	/**
-	 * Returns service
+	 * Returns serialize rules
 	 */
-	CrudService createService() => new ProjectService();
+	BaseType getType() => new MapType{
+		"id": [new StringType(), new Required()],
+		"name": [new StringType(), new Required()],
+		"description": new StringType(),
+	};
 	
 	
 	/**
@@ -50,51 +66,176 @@ class ProjectApi extends SaveApi
 	
 	
 	/**
-	 * Reload cache
+	 * Returns theme root path
 	 */
-	@ApiMethod
-	async void reloadCache()
+	string getThemeRoot()
 	{
-		/* Create service */
-		CrudService service = this.createService();
-		
-		/* Load item */
-		await service.loadItem(this.post_data.get("pk"));
-		
-		/* Save */
-		await service.reload();
-		
-		/* Build result */
-		this.buildResult(service);
+		#ifcode PHP then
+		return get_theme_root();
+		#endif
 	}
 	
 	
 	/**
-	 * Action item
+	 * Check if theme is exists
 	 */
-	@ApiMethod
-	async void actionItem()
+	async void checkExists(string api_name)
 	{
-		parent();
+		string theme_root_path = this.getThemeRoot();
+		
+		/* Check theme is exists */
+		string theme_path = fs::join([theme_root_path, api_name]);
+		if (await fs::exists(theme_path))
+		{
+			throw new ApiError(new RuntimeException("Api name is exists"))
+		}
+	}
+	
+	
+	/**
+	 * Create project
+	 */
+	async void createProject(string api_name)
+	{
+		string theme_root_path = this.getThemeRoot();
+		string theme_path = fs::join([theme_root_path, api_name]);
+		string file_archive = fs::join([BayLang_Plugin::getPath(), "/files/clear-theme.zip"]);
+		
+		if (not await fs::exists(theme_path))
+		{
+			await fs::mkdir(theme_path);
+		}
+		
+		/* Copy project */
+		#ifcode PHP then
+		shell_exec("unzip $file_archive -d $theme_path");
+		#endif
+	}
+	
+	
+	/**
+	 * Read project
+	 */
+	async Project readProject(string api_name)
+	{
+		string theme_root_path = this.getThemeRoot();
+		string theme_path = fs::join([theme_root_path, api_name]);
+		Project project = await Project::readProject(theme_path);
+		return project;
+	}
+	
+	
+	/**
+	 * Save style
+	 */
+	async void saveStyle(Project project)
+	{
+		Vector<string> content = [
+			"/*",
+			" * Theme Name: " ~ project.getName(),
+			" * Description: " ~ project.getDescription(),
+			" */",
+		];
+		string file_path = fs::join([project.getPath(), "style.css"]);
+		await fs::saveFile(file_path, rs::join("\n", content));
+	}
+	
+	
+	/**
+	 * Reload cache
+	 */
+	@ApiMethod{ "name": "reload" }
+	static async ApiResult reload(ApiRequest request)
+	{
+		return new ApiResult().fail();
 	}
 	
 	
 	/**
 	 * Action create
 	 */
-	@ApiMethod
-	async void actionCreate()
+	@ApiMethod{ "name": "create" }
+	static async ApiResult actionCreate(ApiRequest request)
 	{
-		parent();
+		ProjectApi api = new ProjectApi();
+		api.setData(request.get("item"));
+		
+		/* Check if project with same name exist */
+		string api_name = api.update_data.get("id");
+		await api.checkExists(api_name);
+		
+		/* Create project */
+		await api.createProject(api_name);
+		
+		/* Find project */
+		Project project = api.readProject(api_name);
+		if (not project)
+		{
+			throw new ApiError(new ItemNotFound("Project"));
+		}
+		
+		/* Save project */
+		project.setName(request.get("name"));
+		await project.save();
+		
+		/* Save style */
+		await api.saveStyle(project);
+		
+		return new ApiResult().success();
+	}
+	
+	
+	/**
+	 * Read item
+	 */
+	@ApiMethod{ "name": "item" }
+	static async ApiResult actionItem(ApiRequest request)
+	{
+		Project project = await ApiHook::getProject();
+		if (not project)
+		{
+			throw new ApiError(new ItemNotFound("Project"));
+		}
+		
+		return new ApiResult().success({
+			"data": {
+				"item": {
+					"id": project.getID(),
+					"name": project.getName(),
+					"description": project.getDescription(),
+				}
+			},
+		});
 	}
 	
 	
 	/**
 	 * Action save
 	 */
-	@ApiMethod
-	async void actionSave()
+	@ApiMethod{ "name": "save" }
+	static async ApiResult actionSave(ApiRequest request)
 	{
-		parent();
+		/* Get project */
+		Project project = await ApiHook::getProject();
+		if (not project)
+		{
+			throw new ApiError(new ItemNotFound("Project"));
+		}
+		
+		ProjectApi api = new ProjectApi();
+		
+		/* Set data */
+		api.setData(request.get("item"));
+		project.setName(api.update_data.get("name"));
+		project.setDescription(api.update_data.get("description"));
+		
+		/* Save project */
+		await project.save();
+		
+		/* Save style */
+		await api.saveStyle(project);
+		
+		/* Returns result */
+		return new ApiResult().success();
 	}
 }

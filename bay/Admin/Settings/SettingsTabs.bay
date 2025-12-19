@@ -26,8 +26,8 @@
 	<Tabs model={{ this.model }}>
 		<Tab name="settings" title="Save project"
 			href={{ this.layout.url("admin:project:save") }} />
-		<Tab name="migration" title="Migration"
-			href={{ this.layout.url("admin:database:migrations") }} />
+		<Tab name="create" title="Create project"
+			href={{ this.layout.url("admin:project:create") }} />
 	</Tabs>
 </template>
 

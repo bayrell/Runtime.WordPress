@@ -18,12 +18,14 @@
 
 namespace Runtime.WordPress.Admin.Settings;
 
+use Runtime.ApiResult;
 use Runtime.BaseModel;
-use Runtime.Entity.Factory;
+use Runtime.Serializer;
+use Runtime.Serializer.MapType;
+use Runtime.Serializer.ObjectType;
+use Runtime.Serializer.StringType;
 use Runtime.Web.RenderContainer;
 use Runtime.Widget.Form.FormModel;
-use Runtime.Widget.Form.FormSaveStorage;
-use Runtime.Widget.Form.FormSubmitModel;
 use Runtime.WordPress.Admin.Settings.ProjectSave;
 use Runtime.WordPress.Admin.Settings.TabsModel;
 
@@ -33,7 +35,25 @@ class ProjectSaveModel extends BaseModel
 	string component = classof ProjectSave;
 	string project_id = "";
 	TabsModel tabs = null;
-	FormModel edit_form = null;
+	FormModel form = null;
+	
+	
+	/**
+	 * Serialize object
+	 */
+	void serialize(Serializer serializer)
+	{
+		parent(serializer);
+		serializer.addType("tabs", new ObjectType{ "class_name": classof TabsModel });
+		serializer.addType("form", new ObjectType{
+			"class_name": classof FormModel,
+			"item_type": new MapType{
+				"id": new StringType(),
+				"name": new StringType(),
+				"description": new StringType(),
+			},
+		});
+	}
 	
 	
 	/**
@@ -43,57 +63,13 @@ class ProjectSaveModel extends BaseModel
 	{
 		parent(params);
 		
-		/* Project id */
-		this.project_id = this.layout.route.matches.get("project_id");
-		
 		/* Add tabs */
-		this.tabs = this.addWidget(classof TabsModel, {
+		this.tabs = this.createWidget(classof TabsModel, {
 			"active": "settings"
 		});
 		
-		/* Edit form */
-		this.edit_form = this.addWidget(
-			classof FormSubmitModel,
-			{
-				"widget_name": "edit_form",
-				"primary_key": ["id"],
-				"pk": {
-					"id": this.project_id,
-				},
-				"submit_button": {
-					"text": "Save",
-					"styles": ["success", "large"],
-				},
-				"storage": new Factory(
-					classof FormSaveStorage,
-					{
-						"api_name": "admin.wordpress.project"
-					}
-				),
-				"fields":
-				[
-					{
-						"name": "name",
-						"label": "Name",
-						"component": "Runtime.Widget.Input",
-					},
-					{
-						"name": "description",
-						"label": "Description",
-						"component": "Runtime.Widget.TextArea",
-						"props":
-						{
-							"height": "150px",
-						},
-					},
-					{
-						"name": "reload_cache",
-						"label": "Reload cache",
-						"component": "Runtime.WordPress.Admin.Settings.ReloadCache",
-					},
-				],
-			}
-		);
+		/* Form */
+		this.form = this.createWidget(classof FormModel);
 	}
 	
 	
@@ -103,5 +79,38 @@ class ProjectSaveModel extends BaseModel
 	void buildTitle(RenderContainer container)
 	{
 		this.layout.setPageTitle("Save project");
+	}
+	
+	
+	/**
+	 * Load data
+	 */
+	async void loadData(RenderContainer container)
+	{
+		ApiResult result = this.layout.sendApi({
+			"api_name": "admin.wordpress.project",
+			"method_name": "item",
+		});
+		if (result.isSuccess())
+		{
+			this.form.item = result.data.get("item");
+		}
+	}
+	
+	
+	/**
+	 * Save form
+	 */
+	async void onSave()
+	{
+		this.form.setWaitMessage();
+		ApiResult result = await this.layout.sendApi({
+			"api_name": "admin.wordpress.project",
+			"method_name": "save",
+			"data": {
+				"item": this.form.item,
+			},
+		});
+		this.form.setApiResult(result);
 	}
 }
