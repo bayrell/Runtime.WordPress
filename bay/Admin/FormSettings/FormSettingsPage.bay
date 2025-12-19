@@ -27,6 +27,7 @@
 <use name="Runtime.Widget.Form.FormRow" component="true" />
 <use name="Runtime.Widget.Table.Table" component="true" />
 <use name="Runtime.Widget.Table.TableDialog" component="true" />
+<use name="Runtime.WordPress.Admin.FormSettings.FieldSettings" component="true" />
 
 <template>
 	<div class="form_settings_page">
@@ -62,33 +63,54 @@
 		</Table>
 		<TableDialog model={{ this.model.manager.dialog }} manager={{ this.model.manager }}>
 			<slot name="save">
-				%set Map item = this.model.manager.form.item;
-				<Form>
-					<FormRow name="name" label="Name"
-						result={{ this.model.manager.form.field_errors.get("name") }}
-					>
-						<Input name="name" value={{ item.get("name") }}
-							@event:valueChange="item.set('name', event.value)" />
-					</FormRow>
-					<FormRow name="api_name" label="Api name"
-						result={{ this.model.manager.form.field_errors.get("api_name") }}
-					>
-						<Input name="api_name" value={{ item.get("api_name") }}
-							@event:valueChange="item.set('api_name', event.value)" />
-					</FormRow>
-					<FormRow name="email_to" label="Email to"
-						result={{ this.model.manager.form.field_errors.get("email_to") }}
-					>
-						<Input name="email_to" value={{ item.get("email_to") }}
-							@event:valueChange="item.set('email_to', event.value)" />
-					</FormRow>
-				</Form>
-				%render this.renderWidget(this.model.manager.form.result, {
-					"class": "result--center"
-				});
+				<Form fields={{ this.form }} model={{ this.model.manager.form }} />
 			</slot>
 		</TableDialog>
 	</div>
 </template>
+
+<script>
+
+computed Map form() => [
+	{
+		"name": "name",
+		"label": "Name",
+		"component": classof Input,
+	},
+	{
+		"name": "api_name",
+		"label": "Api name",
+		"component": classof Input,
+	},
+	{
+		"name": "email_to",
+		"label": "Email to",
+		"component": classof Input,
+	},
+	{
+		"name": "fields",
+		"label": "Fields",
+		"component": classof FieldSettings,
+		"value": Vector (Map item)
+		{
+			Map settings = item.get("settings");
+			if (not settings) return [];
+			Vector fields = settings.get("fields");
+			return fields ? fields : [];
+		},
+		"setValue": void (Map item, Vector value)
+		{
+			Map settings = item.get("settings");
+			if (not settings)
+			{
+				settings = {};
+				item.set("settings", settings);
+			}
+			settings.set("fields", value);
+		},
+	}
+];
+
+</script>
 
 </class>

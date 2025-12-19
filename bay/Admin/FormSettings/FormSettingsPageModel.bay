@@ -22,12 +22,15 @@ use Runtime.ApiResult;
 use Runtime.BaseModel;
 use Runtime.Method;
 use Runtime.Serializer;
+use Runtime.Serializer.BooleanType;
 use Runtime.Serializer.IntegerType;
 use Runtime.Serializer.MapType;
 use Runtime.Serializer.ObjectType;
 use Runtime.Serializer.StringType;
+use Runtime.Serializer.VectorType;
 use Runtime.Web.RenderContainer;
 use Runtime.Widget.Table.Manager;
+use Runtime.WordPress.Admin.FormSettings.FormItem;
 use Runtime.WordPress.Admin.FormSettings.FormSettingsPage;
 
 
@@ -45,12 +48,6 @@ class FormSettingsPageModel extends BaseModel
 		parent(serialize);
 		serialize.addType("manager", new ObjectType{
 			"class_name": classof Manager,
-			"item_type": new MapType{
-				"id": new IntegerType(),
-				"name": new StringType(),
-				"api_name": new StringType(),
-				"email_to": new StringType(),
-			},
 		});
 	}
 	
@@ -64,6 +61,7 @@ class FormSettingsPageModel extends BaseModel
 		
 		this.manager = this.createWidget(classof Manager, {
 			"primary_key": ["id"],
+			"data_object": classof FormItem,
 			"title": string (string action, Map item)
 			{
 				if (action == "add") return "Add item";
@@ -107,7 +105,7 @@ class FormSettingsPageModel extends BaseModel
 		});
 		if (result.isSuccess())
 		{
-			this.manager.table.items = result.data.get("items");
+			this.manager.table.setItems(result.data.get("items"));
 		}
 	}
 	

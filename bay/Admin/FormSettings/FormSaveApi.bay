@@ -20,11 +20,15 @@ namespace Runtime.WordPress.Admin.FormSettings;
 
 use Runtime.Exceptions.ApiError;
 use Runtime.Exceptions.ItemNotFound;
+use Runtime.Serializer;
 use Runtime.Serializer.BaseType;
+use Runtime.Serializer.BooleanType;
 use Runtime.Serializer.IntegerType;
+use Runtime.Serializer.ObjectType;
 use Runtime.Serializer.MapType;
 use Runtime.Serializer.Required;
 use Runtime.Serializer.StringType;
+use Runtime.Serializer.VectorType;
 use Runtime.ORM.Query;
 use Runtime.Web.ApiRequest;
 use Runtime.Web.ApiResult;
@@ -32,6 +36,7 @@ use Runtime.Web.Annotations.ApiMethod;
 use Runtime.Widget.Api.SaveApi;
 use Runtime.Widget.Api.Rules.ReadOnlyRule;
 use Runtime.WordPress.Database.Form;
+use Runtime.WordPress.Admin.FormSettings.FormItem;
 
 
 class FormSaveApi extends SaveApi
@@ -57,21 +62,20 @@ class FormSaveApi extends SaveApi
 	/**
 	 * Returns serialize rules for pk
 	 */
-	BaseType getPrimaryRules() => new MapType{
-		"id": new IntegerType(),
-	}
+	BaseType getPrimaryRules() => FormItem::getPrimaryRules();
 	
 	
 	/**
 	 * Returns serialize rules
 	 */
-	BaseType getType() =>
-		new MapType{
-			"name": [new Required(), new StringType()],
-			"api_name": [new Required(), new StringType()],
-			"email_to": new StringType(),
-		}
-	;
+	BaseType getType() => new ObjectType{
+		"class_name": classof FormItem,
+		"rules": void (Serializer serializer)
+		{
+			serializer.addType("name", new Required());
+			serializer.addType("api_name", new Required());
+		},
+	};
 	
 	
 	/**
@@ -92,6 +96,17 @@ class FormSaveApi extends SaveApi
 	 */
 	async void buildQuery(Query q)
 	{
+	}
+	
+	
+	/**
+	 * Before save
+	 */
+	async void onSaveBefore()
+	{
+		/* Set settings */
+		Map settings = this.item.get("settings");
+		if (settings == null) this.item.set("settings", {});
 	}
 	
 	

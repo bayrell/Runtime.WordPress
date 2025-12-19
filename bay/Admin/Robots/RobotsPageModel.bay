@@ -46,7 +46,7 @@ class RobotsPageModel extends BaseModel
 		serializer.addType("form", new ObjectType{
 			"class_name": classof FormModel,
 			"item_type": new MapType{
-				"content": new StringType{ "multiline": true },
+				"content": new StringType{},
 			}
 		});
 	}
