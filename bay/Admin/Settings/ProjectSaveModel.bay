@@ -20,7 +20,6 @@ namespace Runtime.WordPress.Admin.Settings;
 
 use Runtime.ApiResult;
 use Runtime.BaseModel;
-use Runtime.Serializer;
 use Runtime.Serializer.MapType;
 use Runtime.Serializer.ObjectType;
 use Runtime.Serializer.StringType;
@@ -41,12 +40,15 @@ class ProjectSaveModel extends BaseModel
 	/**
 	 * Serialize object
 	 */
-	void serialize(Serializer serializer)
+	static void serialize(ObjectType rules)
 	{
-		parent(serializer);
-		serializer.addType("tabs", new ObjectType{ "class_name": classof TabsModel });
-		serializer.addType("form", new ObjectType{
+		parent(rules);
+		rules.addType("tabs", new ObjectType{ "class_name": classof TabsModel });
+		rules.addType("form", new ObjectType{
 			"class_name": classof FormModel,
+			"pk_type": new MapType{
+				"id": new StringType(),
+			},
 			"item_type": new MapType{
 				"id": new StringType(),
 				"name": new StringType(),
@@ -93,7 +95,7 @@ class ProjectSaveModel extends BaseModel
 		});
 		if (result.isSuccess())
 		{
-			this.form.item = result.data.get("item");
+			this.form.setItem(result.data.get("item"));
 		}
 	}
 	

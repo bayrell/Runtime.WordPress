@@ -21,7 +21,6 @@ namespace Runtime.WordPress.Admin.FormSettings;
 use Runtime.ApiResult;
 use Runtime.BaseModel;
 use Runtime.Method;
-use Runtime.Serializer;
 use Runtime.Serializer.BooleanType;
 use Runtime.Serializer.IntegerType;
 use Runtime.Serializer.MapType;
@@ -43,11 +42,29 @@ class FormSettingsPageModel extends BaseModel
 	/**
 	 * Serialize object
 	 */
-	void serialize(Serializer serialize)
+	static void serialize(ObjectType rules)
 	{
-		parent(serialize);
-		serialize.addType("manager", new ObjectType{
+		parent(rules);
+		rules.addType("manager", new ObjectType{
 			"class_name": classof Manager,
+			"pk_type": new MapType{
+				"id": new IntegerType()
+			},
+			"item_type": new MapType{
+				"id": new IntegerType(),
+				"name": new StringType(),
+				"api_name": new StringType(),
+				"email_to": new StringType(),
+				"settings": new MapType{
+					"fields": new VectorType(new MapType{
+						"name": new StringType(),
+						"type": new StringType(),
+						"title": new StringType(),
+						"placeholder": new StringType(),
+						"required": new StringType(),
+					})
+				}
+			},
 		});
 	}
 	

@@ -18,16 +18,16 @@
 
 namespace Runtime.WordPress.Admin.FormSettings;
 
-use Runtime.DataObject;
-use Runtime.Serializer;
+use Runtime.SerializeObject;
 use Runtime.Serializer.BaseType;
 use Runtime.Serializer.IntegerType;
+use Runtime.Serializer.ObjectType;
 use Runtime.Serializer.MapType;
 use Runtime.Serializer.StringType;
 use Runtime.Serializer.VectorType;
 
 
-class FormItem extends DataObject
+class FormItem extends SerializeObject
 {
 	int id = 0;
 	string name = "";
@@ -39,14 +39,14 @@ class FormItem extends DataObject
 	/**
 	 * Serialize object
 	 */
-	void serialize(Serializer serializer)
+	static void serialize(ObjectType rules)
 	{
-		parent(serializer);
-		serializer.addType("id", new IntegerType());
-		serializer.addType("name", new StringType());
-		serializer.addType("api_name", new StringType());
-		serializer.addType("email_to", new StringType());
-		serializer.addType("settings", new MapType{
+		parent(rules);
+		rules.addType("id", new IntegerType());
+		rules.addType("name", new StringType());
+		rules.addType("api_name", new StringType());
+		rules.addType("email_to", new StringType());
+		rules.addType("settings", new MapType{
 			"fields": new VectorType(new MapType{
 				"name": new StringType(),
 				"type": new StringType(),

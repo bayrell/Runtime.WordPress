@@ -20,7 +20,6 @@ namespace Runtime.WordPress.Admin.Settings;
 
 use Runtime.ApiResult;
 use Runtime.BaseModel;
-use Runtime.Serializer;
 use Runtime.Serializer.ObjectType;
 use Runtime.Web.RenderContainer;
 use Runtime.Widget.Form.FormModel;
@@ -38,11 +37,11 @@ class ProjectCreateModel extends BaseModel
 	/**
 	 * Serialize object
 	 */
-	void serialize(Serializer serializer)
+	static void serialize(ObjectType rules)
 	{
-		parent(serializer);
-		serializer.addType("tabs", new ObjectType{ "class_name": classof TabsModel });
-		serializer.addType("form", new ObjectType{ "class_name": classof FormModel });
+		parent(rules);
+		rules.addType("tabs", new ObjectType{ "class_name": classof TabsModel });
+		rules.addType("form", new ObjectType{ "class_name": classof FormModel });
 	}
 	
 	

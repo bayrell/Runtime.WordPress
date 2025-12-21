@@ -21,7 +21,6 @@ namespace Runtime.WordPress.Admin.Migrations;
 use Runtime.lib;
 use Runtime.ApiResult;
 use Runtime.BaseModel;
-use Runtime.Serializer;
 use Runtime.Serializer.ObjectType;
 use Runtime.Serializer.StringType;
 use Runtime.Serializer.VectorType;
@@ -55,10 +54,10 @@ class MigrationPageModel extends BaseModel
 	/**
 	 * Process frontend data
 	 */
-	void serialize(Serializer serializer)
+	static void serialize(ObjectType rules)
 	{
-		parent(serializer);
-		serializer.addType("items", new VectorType(new StringType()));
+		parent(rules);
+		rules.addType("items", new VectorType(new StringType()));
 	}
 	
 	

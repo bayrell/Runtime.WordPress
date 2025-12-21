@@ -21,7 +21,6 @@ namespace Runtime.WordPress.Admin.Robots;
 use Runtime.ApiResult;
 use Runtime.BaseModel;
 use Runtime.Method;
-use Runtime.Serializer;
 use Runtime.Serializer.MapType;
 use Runtime.Serializer.Multiline;
 use Runtime.Serializer.ObjectType;
@@ -40,10 +39,10 @@ class RobotsPageModel extends BaseModel
 	/**
 	 * Serialize object
 	 */
-	void serialize(Serializer serializer)
+	static void serialize(ObjectType rules)
 	{
-		parent(serializer);
-		serializer.addType("form", new ObjectType{
+		parent(rules);
+		rules.addType("form", new ObjectType{
 			"class_name": classof FormModel,
 			"item_type": new MapType{
 				"content": new StringType{},

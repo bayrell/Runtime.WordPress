@@ -68,59 +68,54 @@
 		</Table>
 		<TableDialog model={{ this.model.manager.dialog }} manager={{ this.model.manager }}>
 			<slot name="save">
-				%set Map item = this.model.manager.form.item;
-				<Form>
-					<FormRow name="enable" label="Enable"
-						result={{ this.model.manager.form.field_errors.get("enable") }}
-					>
-						<Select name="enable" value={{ item.get("enable") }}
-							options=[
-								{"key": "0", "value": "No"},
-								{"key": "1", "value": "Yes"},
-							]
-							@event:valueChange="item.set('enable', event.value)" />
-					</FormRow>
-					<FormRow name="plan" label="Plan"
-						result={{ this.model.manager.form.field_errors.get("plan") }}
-					>
-						<Input name="plan" value={{ item.get("plan") }}
-							@event:valueChange="item.set('plan', event.value)" />
-					</FormRow>
-					<FormRow name="host" label="Host"
-						result={{ this.model.manager.form.field_errors.get("host") }}
-					>
-						<Input name="host" value={{ item.get("host") }}
-							@event:valueChange="item.set('host', event.value)" />
-					</FormRow>
-					<FormRow name="port" label="Port"
-						result={{ this.model.manager.form.field_errors.get("port") }}
-					>
-						<Input name="port" value={{ item.get("port") }}
-							@event:valueChange="item.set('port', event.value)" />
-					</FormRow>
-					<FormRow name="login" label="Login"
-						result={{ this.model.manager.form.field_errors.get("login") }}
-					>
-						<Input name="login" value={{ item.get("login") }}
-							@event:valueChange="item.set('login', event.value)" />
-					</FormRow>
-					<FormRow name="ssl_enable" label="SSL"
-						result={{ this.model.manager.form.field_errors.get("ssl_enable") }}
-					>
-						<Select name="ssl_enable" value={{ item.get("ssl_enable") }}
-							options=[
-								{"key": "0", "value": "No"},
-								{"key": "1", "value": "Yes"},
-							]
-							@event:valueChange="item.set('ssl_enable', event.value)" />
-					</FormRow>
-				</Form>
-				%render this.renderWidget(this.model.manager.form.result, {
-					"class": "result--center"
-				});
+				<Form fields={{ this.form }} model={{ this.model.manager.form }} />
 			</slot>
 		</TableDialog>
 	</div>
 </template>
+
+<script>
+
+computed Map form() => [
+	{
+		"name": "enable",
+		"label": "Enable",
+		"component": classof Select,
+		"props": {
+			"options": [
+				{"key": "0", "value": "No"},
+				{"key": "1", "value": "Yes"},
+			]
+		}
+	},
+	{
+		"name": "plan",
+		"label": "Plan",
+		"component": classof Input,
+	},
+	{
+		"name": "host",
+		"label": "Host",
+		"component": classof Input,
+	},
+	{
+		"name": "login",
+		"label": "Login",
+		"component": classof Input,
+	},
+	{
+		"name": "ssl_enable",
+		"label": "SSL",
+		"component": classof Select,
+		"props": {
+			"options": [
+				{"key": "0", "value": "No"},
+				{"key": "1", "value": "Yes"},
+			],
+		},
+	}
+];
+
+</script>
 
 </class>

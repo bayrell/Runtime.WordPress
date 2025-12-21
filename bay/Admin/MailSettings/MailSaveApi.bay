@@ -65,7 +65,7 @@ class MailSaveApi extends SaveApi
 	BaseType getType() =>
 		new MapType{
 			"enable": new IntegerType(),
-			"plan": new StringType(),
+			"plan": [new Required(), new StringType()],
 			"host": new StringType(),
 			"port": new StringType(),
 			"login": new StringType(),
@@ -127,9 +127,9 @@ class MailSaveApi extends SaveApi
 		
 		return api.success();
 	}
-    
-    
-    /**
+	
+	
+	/**
 	 * Action delete
 	 */
 	@ApiMethod{ "name": "delete" }

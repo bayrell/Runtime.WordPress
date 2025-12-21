@@ -21,9 +21,10 @@ namespace Runtime.WordPress.Admin.MailSettings;
 use Runtime.ApiResult;
 use Runtime.BaseModel;
 use Runtime.Method;
-use Runtime.Serializer;
+use Runtime.Serializer.IntegerType;
 use Runtime.Serializer.MapType;
 use Runtime.Serializer.ObjectType;
+use Runtime.Serializer.StringType;
 use Runtime.Web.RenderContainer;
 use Runtime.Widget.Table.Manager;
 use Runtime.Widget.Table.TableModel;
@@ -41,12 +42,20 @@ class MailSettingsPageModel extends BaseModel
 	/**
 	 * Serialize object
 	 */
-	void serialize(Serializer serializer)
+	static void serialize(ObjectType rules)
 	{
-		parent(serializer);
-		serializer.addType("manager", new ObjectType{
+		parent(rules);
+		rules.addType("manager", new ObjectType{
 			"class_name": classof Manager,
-			"item_type": new MapType(),
+			"item_type": new MapType{
+				"enable": new IntegerType(),
+				"plan": new StringType(),
+				"host": new StringType(),
+				"port": new StringType(),
+				"login": new StringType(),
+				"password": new StringType(),
+				"ssl_enable": new IntegerType(),
+			},
 		});
 	}
 	

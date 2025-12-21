@@ -62,19 +62,28 @@ class FormSaveApi extends SaveApi
 	/**
 	 * Returns serialize rules for pk
 	 */
-	BaseType getPrimaryRules() => FormItem::getPrimaryRules();
+	BaseType getPrimaryRules() => new MapType{
+		"id": new IntegerType()
+	};
 	
 	
 	/**
 	 * Returns serialize rules
 	 */
-	BaseType getType() => new ObjectType{
-		"class_name": classof FormItem,
-		"rules": void (Serializer serializer)
-		{
-			serializer.addType("name", new Required());
-			serializer.addType("api_name", new Required());
-		},
+	BaseType getType() => new MapType{
+		"id": new IntegerType(),
+		"name": new StringType(),
+		"api_name": new StringType(),
+		"email_to": new StringType(),
+		"settings": new MapType{
+			"fields": new VectorType(new MapType{
+				"name": new StringType(),
+				"type": new StringType(),
+				"title": new StringType(),
+				"placeholder": new StringType(),
+				"required": new StringType(),
+			})
+		}
 	};
 	
 	

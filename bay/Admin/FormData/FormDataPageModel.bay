@@ -20,7 +20,6 @@ namespace Runtime.WordPress.Admin.FormData;
 
 use Runtime.BaseModel;
 use Runtime.DateTime;
-use Runtime.Serializer;
 use Runtime.Serializer.DateTimeType;
 use Runtime.Serializer.IntegerType;
 use Runtime.Serializer.MapType;
@@ -40,11 +39,11 @@ class FormDataPageModel extends BaseModel
 	/**
 	 * Serialize object
 	 */
-	void serialize(Serializer serialize)
+	static void serialize(ObjectType rules)
 	{
-		parent(serialize);
-		serialize.addType("table", new ObjectType{
-			"extends": classof TableModel,
+		parent(rules);
+		rules.addType("table", new ObjectType{
+			"class_name": classof TableModel,
 			"item_type": new MapType{
 				"id": new IntegerType(),
 				"form_title": new StringType(),
