@@ -31,7 +31,7 @@ class MailSearchApi extends SearchApi
 	/**
 	 * Returns api name
 	 */
-	pure string getApiName() => "admin.wordpress.mail.settings.search";
+	pure string getApiName() => "admin.wordpress.mail.settings";
 	
 	
 	/**
@@ -78,18 +78,6 @@ class MailSearchApi extends SearchApi
 	@ApiMethod{ "name": "search" }
 	async static ApiResult actionSearch(ApiRequest request)
 	{
-		MailSearchApi api = new MailSearchApi{
-			"action": "search",
-			"request": request,
-		};
-		
-		/* Set filter */
-		api.setFilter(request.data);
-		
-		/* Search */
-		await api.search();
-		api.setResult();
-		
-		return api.success();
+		return await parent(request);
 	}
 }

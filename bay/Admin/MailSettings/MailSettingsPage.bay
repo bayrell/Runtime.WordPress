@@ -23,58 +23,84 @@
 <use name="Runtime.Widget.RowButtons" component="true" />
 <use name="Runtime.Widget.Input" component="true" />
 <use name="Runtime.Widget.Select" component="true" />
-<use name="Runtime.Widget.Form.Form" component="true" />
-<use name="Runtime.Widget.Form.FormRow" component="true" />
-<use name="Runtime.Widget.Table.Table" component="true" />
-<use name="Runtime.Widget.Table.TableDialog" component="true" />
+<use name="Runtime.Widget.Table.TableWrap" component="true" />
 
 <template>
 	<div class="mail_settings_page">
-		<RowButtons class="margin_bottom">
-			<Button class="button--success"
-				@event:click="this.model.manager.showAddDialog()"
-			>Add</Button>
-		</RowButtons>
-		<Table model={{ this.model.manager.table }}>
-			<slot name="header">
-				<th></th>
-				<th>Enable</th>
-				<th>Plan</th>
-				<th>Host</th>
-				<th>Port</th>
-				<th>Login</th>
-				<th>SSL</th>
-				<th></th>
+		<TableWrap model={{ this.model.manager }}
+			table_fields={{ this.table }}
+			form_fields={{ this.form }}
+		>
+			<slot name="top_buttons">
+				<RowButtons>
+					<Button class="button--success"
+						@event:click="this.model.manager.showAddDialog()"
+					>Add</Button>
+				</RowButtons>
 			</slot>
-			<slot name="row" args="Map item, int row_number">
-				<td>{{ row_number + 1 }}</td>
-				<td>{{ item.get("enable") ? "Yes" : "No" }}</td>
-				<td>{{ item.get("plan") }}</td>
-				<td>{{ item.get("host") }}</td>
-				<td>{{ item.get("port") }}</td>
-				<td>{{ item.get("login") }}</td>
-				<td>{{ item.get("ssl_enable") ? "Yes" : "No" }}</td>
-				<td>
-					<RowButtons>
-						<Button class="button--small"
-							@event:click="this.model.manager.showEditDialog(item.copy())"
-						>Edit</Button>
-						<Button class="button--small button--danger"
-							@event:click="this.model.manager.showDeleteDialog(item.copy())"
-						>Delete</Button>
-					</RowButtons>
-				</td>
+			<slot name="row_buttons" args="Map item, Map field, int row_buttons">
+				<RowButtons>
+					<Button class="button--small"
+						@event:click="this.model.manager.showEditDialog(item.copy())"
+					>Edit</Button>
+					<Button class="button--small button--danger"
+						@event:click="this.model.manager.showDeleteDialog(item.copy())"
+					>Delete</Button>
+				</RowButtons>
 			</slot>
-		</Table>
-		<TableDialog model={{ this.model.manager.dialog }} manager={{ this.model.manager }}>
-			<slot name="save">
-				<Form fields={{ this.form }} model={{ this.model.manager.form }} />
-			</slot>
-		</TableDialog>
+		</TableWrap>
 	</div>
 </template>
 
 <script>
+
+computed Map table() => [
+	{
+		"name": "row_number"
+	},
+	{
+		"name": "enable",
+		"label": "Enable",
+		"value": string (Map item, Map field, int row_number)
+		{
+			string value = item.get("enable");
+			if (value == "0") return "No";
+			if (value == "1") return "Yes";
+			return "";
+		}
+	},
+	{
+		"name": "plan",
+		"label": "Plan",
+	},
+	{
+		"name": "host",
+		"label": "Host",
+	},
+	{
+		"name": "port",
+		"label": "Port",
+	},
+	{
+		"name": "login",
+		"label": "Login",
+	},
+	{
+		"name": "ssl_enable",
+		"label": "SSL",
+		"value": string (Map item, Map field, int row_number)
+		{
+			string value = item.get("enable");
+			if (value == "0") return "No";
+			if (value == "1") return "Yes";
+			return "";
+		}
+	},
+	{
+		"name": "buttons",
+		"slot": "row_buttons",
+	}
+];
 
 computed Map form() => [
 	{

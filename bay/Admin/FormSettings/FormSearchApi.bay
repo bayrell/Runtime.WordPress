@@ -31,7 +31,7 @@ class FormSearchApi extends SearchApi
 	/**
 	 * Returns api name
 	 */
-	pure string getApiName() => "admin.wordpress.forms.settings.search";
+	pure string getApiName() => "admin.wordpress.forms.settings";
 	
 	
 	/**
@@ -74,18 +74,6 @@ class FormSearchApi extends SearchApi
 	@ApiMethod{ "name": "search" }
 	static async ApiResult actionSearch(ApiRequest request)
 	{
-		FormSearchApi api = new FormSearchApi{
-			"action": "search",
-			"request": request,
-		};
-		
-		/* Set filter */
-		api.setFilter(request.data);
-		
-		/* Search */
-		await api.search();
-		api.setResult();
-		
-		return api.success();
+		return await parent(request);
 	}
 }

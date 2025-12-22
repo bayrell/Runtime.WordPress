@@ -46,27 +46,41 @@ class FormSettingsPageModel extends BaseModel
 	{
 		parent(rules);
 		rules.addType("manager", new ObjectType{
-			"class_name": classof Manager,
-			"pk_type": new MapType{
-				"id": new IntegerType()
-			},
-			"item_type": new MapType{
-				"id": new IntegerType(),
-				"name": new StringType(),
-				"api_name": new StringType(),
-				"email_to": new StringType(),
-				"settings": new MapType{
-					"fields": new VectorType(new MapType{
-						"name": new StringType(),
-						"type": new StringType(),
-						"title": new StringType(),
-						"placeholder": new StringType(),
-						"required": new StringType(),
-					})
-				}
-			},
+			"pk_type": static::getPrimaryRules(),
+			"item_type": static::getItemRules(),
 		});
 	}
+	
+	
+	/**
+	 * Returns primary rules
+	 */
+	static MapType getPrimaryRules() => new MapType
+	{
+		"id": new IntegerType()
+	};
+	
+	
+	/**
+	 * Returns item rules
+	 */
+	static MapType getItemRules() => new MapType
+	{
+		"id": new IntegerType(),
+		"name": new StringType(),
+		"api_name": new StringType(),
+		"email_to": new StringType(),
+		"settings": new MapType
+		{
+			"fields": new VectorType(new MapType{
+				"name": new StringType(),
+				"type": new StringType(),
+				"title": new StringType(),
+				"placeholder": new StringType(),
+				"required": new StringType(),
+			})
+		}
+	};
 	
 	
 	/**
@@ -77,19 +91,23 @@ class FormSettingsPageModel extends BaseModel
 		parent(params);
 		
 		this.manager = this.createWidget(classof Manager, {
-			"primary_key": ["id"],
-			"data_object": classof FormItem,
-			"title": string (string action, Map item)
-			{
-				if (action == "add") return "Add item";
-				else if (action == "edit") return "Edit item";
-				else if (action == "delete") return "Delete item";
-				else if (action == "delete_message") return "Delete item";
-				return "";
-			},
+			"api_name": "admin.wordpress.forms.settings",
+			"page_name": "p",
+			"title": new Method(this, "getItemTitle"),
 		});
-		this.manager.addEventListener("save", new Method(this, "onSave"));
-		this.manager.addEventListener("delete", new Method(this, "onDelete"));
+	}
+	
+	
+	/**
+	 * Returns item title
+	 */
+	string getItemTitle(string action, Map item)
+	{
+		if (action == "add") return "Add item";
+		else if (action == "edit") return "Edit item";
+		else if (action == "delete") return "Delete item";
+		else if (action == "delete_message") return "Delete item";
+		return "";
 	}
 	
 	
@@ -98,7 +116,7 @@ class FormSettingsPageModel extends BaseModel
 	 */
 	async void loadData(RenderContainer container)
 	{
-		await this.reload();
+		await this.manager.loadData(container);
 	}
 	
 	
@@ -108,66 +126,5 @@ class FormSettingsPageModel extends BaseModel
 	void buildTitle(RenderContainer container)
 	{
 		this.layout.setPageTitle("Forms settings");
-	}
-	
-	
-	/**
-	 * Reload table
-	 */
-	async void reload()
-	{
-		ApiResult result = await this.layout.sendApi({
-			"api_name": "admin.wordpress.forms.settings.search",
-			"method_name": "search",
-		});
-		if (result.isSuccess())
-		{
-			this.manager.table.setItems(result.data.get("items"));
-		}
-	}
-	
-	
-	/**
-	 * On save
-	 */
-	async void onSave()
-	{
-		this.manager.form.setWaitMessage();
-		ApiResult result = await this.layout.sendApi({
-			"api_name": "admin.wordpress.forms.settings.save",
-			"method_name": "save",
-			"data": {
-				"pk": this.manager.form.pk,
-				"item": this.manager.form.item,
-			},
-		});
-		this.manager.form.setApiResult(result);
-		if (result.isSuccess())
-		{
-			this.reload();
-			this.manager.dialog.hide();
-		}
-	}
-	
-	
-	/**
-	 * On delete
-	 */
-	async void onDelete()
-	{
-		this.manager.form.setWaitMessage();
-		ApiResult result = await this.layout.sendApi({
-			"api_name": "admin.wordpress.forms.settings.save",
-			"method_name": "delete",
-			"data": {
-				"pk": this.manager.form.pk,
-			},
-		});
-		this.manager.form.setApiResult(result);
-		if (result.isSuccess())
-		{
-			this.reload();
-			this.manager.dialog.hide();
-		}
 	}
 }

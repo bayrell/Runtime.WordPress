@@ -44,7 +44,7 @@ class FormSaveApi extends SaveApi
 	/**
 	 * Returns api name
 	 */
-	static string getApiName() => "admin.wordpress.forms.settings.save";
+	static string getApiName() => "admin.wordpress.forms.settings";
 	
 	
 	/**
@@ -72,8 +72,8 @@ class FormSaveApi extends SaveApi
 	 */
 	BaseType getType() => new MapType{
 		"id": new IntegerType(),
-		"name": new StringType(),
-		"api_name": new StringType(),
+		"name": [new Required(), new StringType()],
+		"api_name": [new Required(), new StringType()],
 		"email_to": new StringType(),
 		"settings": new MapType{
 			"fields": new VectorType(new MapType{
@@ -125,27 +125,7 @@ class FormSaveApi extends SaveApi
 	@ApiMethod{ "name": "save" }
 	static async ApiResult actionSave(ApiRequest request)
 	{
-		FormSaveApi api = new FormSaveApi{
-			"action": "save",
-			"request": request,
-		};
-		
-		/* Set primary key */
-		Map pk = request.get("pk");
-		if (pk) api.setPrimaryKey(pk);
-		
-		/* Set data */
-		Map item = request.get("item");
-		api.setData(item);
-		
-		/* Find item */
-		await api.findOrCreate();
-		
-		/* Save item */
-		await api.save();
-		api.setResult();
-		
-		return api.success();
+		return await parent(request);
 	}
 	
 	
@@ -155,21 +135,6 @@ class FormSaveApi extends SaveApi
 	@ApiMethod{ "name": "delete" }
 	static async ApiResult actionDelete(ApiRequest request)
 	{
-		FormSaveApi api = new FormSaveApi{
-			"action": "delete",
-			"request": request,
-		};
-		
-		/* Set primary key */
-		Map pk = request.get("pk");
-		api.setPrimaryKey(pk);
-		
-		/* Find item */
-		await api.findOrCreate();
-		
-		/* Delete item */
-		await api.delete();
-		
-		return api.success();
+		return await parent(request);
 	}
 }

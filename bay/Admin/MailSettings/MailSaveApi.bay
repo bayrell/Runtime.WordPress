@@ -36,7 +36,7 @@ class MailSaveApi extends SaveApi
 	/**
 	 * Returns api name
 	 */
-	pure string getApiName() => "admin.wordpress.mail.settings.save";
+	pure string getApiName() => "admin.wordpress.mail.settings";
 	
 	
 	/**
@@ -105,27 +105,7 @@ class MailSaveApi extends SaveApi
 	@ApiMethod{ "name": "save" }
 	async static ApiResult actionSave(ApiRequest request)
 	{
-		MailSaveApi api = new MailSaveApi{
-			"action": "save",
-			"request": request,
-		};
-		
-		/* Set primary key */
-		Map pk = request.get("pk");
-		if (pk) api.setPrimaryKey(pk);
-		
-		/* Set data */
-		Map item = request.get("item");
-		api.setData(item);
-		
-		/* Find item */
-		await api.findOrCreate();
-		
-		/* Save item */
-		await api.save();
-		api.setResult();
-		
-		return api.success();
+		return await parent(request);
 	}
 	
 	
@@ -135,21 +115,6 @@ class MailSaveApi extends SaveApi
 	@ApiMethod{ "name": "delete" }
 	async static ApiResult actionDelete(ApiRequest request)
 	{
-		MailSaveApi api = new MailSaveApi{
-			"action": "delete",
-			"request": request,
-		};
-		
-		/* Set primary key */
-		Map pk = request.get("pk");
-		api.setPrimaryKey(pk);
-		
-		/* Find item */
-		await api.findOrCreate();
-		
-		/* Delete item */
-		await api.delete();
-		
-		return api.success();
+		return await parent(request);
 	}
 }

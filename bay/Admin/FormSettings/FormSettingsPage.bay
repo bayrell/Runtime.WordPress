@@ -22,54 +22,59 @@
 <use name="Runtime.Widget.Button" component="true" />
 <use name="Runtime.Widget.Input" component="true" />
 <use name="Runtime.Widget.RowButtons" component="true" />
-<use name="Runtime.Widget.Dialog.Dialog" component="true" />
-<use name="Runtime.Widget.Form.Form" component="true" />
-<use name="Runtime.Widget.Form.FormRow" component="true" />
-<use name="Runtime.Widget.Table.Table" component="true" />
-<use name="Runtime.Widget.Table.TableDialog" component="true" />
+<use name="Runtime.Widget.Table.TableWrap" component="true" />
 <use name="Runtime.WordPress.Admin.FormSettings.FieldSettings" component="true" />
 
 <template>
 	<div class="form_settings_page">
-		<RowButtons class="margin_bottom">
-			<Button class="button--success"
-				@event:click="this.model.manager.showAddDialog()"
-			>Add</Button>
-		</RowButtons>
-		<Table model={{ this.model.manager.table }}>
-			<slot name="header">
-				<th></th>
-				<th>Name</th>
-				<th>Api name</th>
-				<th>Email to</th>
-				<th></th>
+		<TableWrap model={{ this.model.manager }}
+			table_fields={{ this.table }}
+			form_fields={{ this.form }}
+		>
+			<slot name="top_buttons">
+				<RowButtons>
+					<Button class="button--success"
+						@event:click="this.model.manager.showAddDialog()"
+					>Add</Button>
+				</RowButtons>
 			</slot>
-			<slot name="row" args="Map item, int row_number">
-				<td>{{ row_number + 1 }}</td>
-				<td>{{ item.get("name") }}</td>
-				<td>{{ item.get("api_name") }}</td>
-				<td>{{ item.get("email_to") }}</td>
-				<td>
-					<RowButtons>
-						<Button class="button--small"
-							@event:click="this.model.manager.showEditDialog(item.copy())"
-						>Edit</Button>
-						<Button class="button--small button--danger"
-							@event:click="this.model.manager.showDeleteDialog(item.copy())"
-						>Delete</Button>
-					</RowButtons>
-				</td>
+			<slot name="row_buttons" args="Map item, Map field, int row_number">
+				<RowButtons>
+					<Button class="button--small"
+						@event:click="this.model.manager.showEditDialog(item.copy())"
+					>Edit</Button>
+					<Button class="button--small button--danger"
+						@event:click="this.model.manager.showDeleteDialog(item.copy())"
+					>Delete</Button>
+				</RowButtons>
 			</slot>
-		</Table>
-		<TableDialog model={{ this.model.manager.dialog }} manager={{ this.model.manager }}>
-			<slot name="save">
-				<Form fields={{ this.form }} model={{ this.model.manager.form }} />
-			</slot>
-		</TableDialog>
+		</TableWrap>
 	</div>
 </template>
 
 <script>
+
+computed Map table() => [
+	{
+		"name": "row_number",
+	},
+	{
+		"name": "name",
+		"label": "Name",
+	},
+	{
+		"name": "api_name",
+		"label": "Api name",
+	},
+	{
+		"name": "email_to",
+		"label": "Email to",
+	},
+	{
+		"name": "buttons",
+		"slot": "row_buttons",
+	},
+];
 
 computed Map form() => [
 	{
