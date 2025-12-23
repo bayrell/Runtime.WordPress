@@ -72,8 +72,8 @@ class FormSearchApi extends SearchApi
 	 * Action search
 	 */
 	@ApiMethod{ "name": "search" }
-	static async ApiResult actionSearch(ApiRequest request)
+	async ApiResult actionSearch()
 	{
-		return await parent(request);
+		return await parent();
 	}
 }

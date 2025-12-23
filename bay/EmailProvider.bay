@@ -57,6 +57,8 @@ class EmailProvider extends BaseProvider
 	 */
 	async void send(Dict params)
 	{
+		return;
+		
 		string plan = params.get("plan", "default");
 		string dest = params.get("dest", "");
 		string title = params.get("title", "");

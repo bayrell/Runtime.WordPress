@@ -58,7 +58,7 @@ class ModuleDescription
 		
 		/* Setup layout */
 		SetupLayout::hook({
-			"default": "Runtime.WordPress.Admin.AdminLayoutModel",
+			"admin": "Runtime.WordPress.Admin.AdminLayoutModel",
 		}),
 		
 		/* Components */

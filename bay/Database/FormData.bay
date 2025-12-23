@@ -21,6 +21,7 @@ namespace Runtime.WordPress.Database;
 use Runtime.BaseObject;
 use Runtime.DateTime;
 use Runtime.ORM.Connection;
+use Runtime.ORM.Record;
 use Runtime.ORM.Relation;
 use Runtime.ORM.Annotations.AutoIncrement;
 use Runtime.ORM.Annotations.BigIntType;
@@ -30,20 +31,22 @@ use Runtime.ORM.Annotations.JsonType;
 use Runtime.ORM.Annotations.Primary;
 use Runtime.ORM.Annotations.StringType;
 use Runtime.ORM.Annotations.TinyIntType;
+use Runtime.WordPress.EmailProvider;
+use Runtime.WordPress.Theme.Components.Email.FormMessage;
 
 
 class FormData extends Relation
 {
-    /**
-     * Returns table name
-     */
-    pure string getTableName() => "forms_data";
-    
-    
-    /**
-     * Returns table schema
-     */
-    pure memorize Collection<BaseObject> schema() =>
+	/**
+	 * Returns table name
+	 */
+	pure string getTableName() => "forms_data";
+	
+	
+	/**
+	 * Returns table schema
+	 */
+	pure memorize Collection<BaseObject> schema() =>
 	[
 		/* Fields */
 		new BigIntType{"name": "id"},
@@ -64,12 +67,43 @@ class FormData extends Relation
 	/**
 	 * Save
 	 */
-	async void save(Connection connection, Dict params = null)
+	async void save(Record<FormData> item, Dict params = null)
 	{
-		if (this.get("gmtime_add") == null)
+		if (item.get("gmtime_add") == null)
 		{
-			this.set("gmtime_add", DateTime::now());
+			item.set("gmtime_add", DateTime::now());
 		}
-		await parent(connection, params);
+		await parent(item, params);
+	}
+	
+	
+	/**
+	 * Send email
+	 */
+	async void sendEmail(
+		Record<Form> form, Record<FormData> form_data, EmailProvider email, string site_name
+	)
+	{
+		string email_dest = form.email_to;
+		string email_title = rs::join(" ", [
+			form_data.form_title,
+			"from",
+			site_name,
+			"N" ~ form_data.id,
+		]);
+		await email.send({
+			"dest": email_dest,
+			"title": email_title,
+			"component": classof FormMessage,
+			"props":
+			{
+				"site_name": site_name,
+				"form_name": form.name,
+				"form_title": form_data.form_title,
+				"invoice_id": form_data.id,
+				"metrika_form_id": form_data.metrika_id,
+				"data": form_data.data
+			},
+		});
 	}
 }

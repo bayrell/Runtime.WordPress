@@ -28,7 +28,7 @@ class Routes extends BaseRoute
 	/**
 	 * Returns layout name
 	 */
-	static string getLayoutName() => "default";
+	static string getLayoutName() => "admin";
     
     
     /**

@@ -103,9 +103,9 @@ class MailSaveApi extends SaveApi
 	 * Action save
 	 */
 	@ApiMethod{ "name": "save" }
-	async static ApiResult actionSave(ApiRequest request)
+	async ApiResult actionSave()
 	{
-		return await parent(request);
+		return await parent();
 	}
 	
 	
@@ -113,8 +113,8 @@ class MailSaveApi extends SaveApi
 	 * Action delete
 	 */
 	@ApiMethod{ "name": "delete" }
-	async static ApiResult actionDelete(ApiRequest request)
+	async ApiResult actionDelete()
 	{
-		return await parent(request);
+		return await parent();
 	}
 }

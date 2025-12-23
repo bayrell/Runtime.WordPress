@@ -145,7 +145,7 @@ class ProjectApi extends SaveApi
 	 * Reload cache
 	 */
 	@ApiMethod{ "name": "reload" }
-	static async ApiResult reload(ApiRequest request)
+	async ApiResult reload()
 	{
 		return new ApiResult().fail();
 	}
@@ -155,31 +155,30 @@ class ProjectApi extends SaveApi
 	 * Action create
 	 */
 	@ApiMethod{ "name": "create" }
-	static async ApiResult actionCreate(ApiRequest request)
+	async ApiResult actionCreate()
 	{
-		ProjectApi api = new ProjectApi();
-		api.setData(request.get("item"));
+		this.setData(this.request.get("item"));
 		
 		/* Check if project with same name exist */
-		string api_name = api.update_data.get("id");
-		await api.checkExists(api_name);
+		string api_name = this.update_data.get("id");
+		await this.checkExists(api_name);
 		
 		/* Create project */
-		await api.createProject(api_name);
+		await this.createProject(api_name);
 		
 		/* Find project */
-		Project project = api.readProject(api_name);
+		Project project = this.readProject(api_name);
 		if (not project)
 		{
 			throw new ApiError(new ItemNotFound("Project"));
 		}
 		
 		/* Save project */
-		project.setName(request.get("name"));
+		project.setName(this.request.get("name"));
 		await project.save();
 		
 		/* Save style */
-		await api.saveStyle(project);
+		await this.saveStyle(project);
 		
 		return new ApiResult().success();
 	}
@@ -189,7 +188,7 @@ class ProjectApi extends SaveApi
 	 * Read item
 	 */
 	@ApiMethod{ "name": "item" }
-	static async ApiResult actionItem(ApiRequest request)
+	async ApiResult actionItem()
 	{
 		Project project = await ApiHook::getProject();
 		if (not project)
@@ -213,7 +212,7 @@ class ProjectApi extends SaveApi
 	 * Action save
 	 */
 	@ApiMethod{ "name": "save" }
-	static async ApiResult actionSave(ApiRequest request)
+	async ApiResult actionSave()
 	{
 		/* Get project */
 		Project project = await ApiHook::getProject();
@@ -222,18 +221,16 @@ class ProjectApi extends SaveApi
 			throw new ApiError(new ItemNotFound("Project"));
 		}
 		
-		ProjectApi api = new ProjectApi();
-		
 		/* Set data */
-		api.setData(request.get("item"));
-		project.setName(api.update_data.get("name"));
-		project.setDescription(api.update_data.get("description"));
+		this.setData(this.request.get("item"));
+		project.setName(this.update_data.get("name"));
+		project.setDescription(this.update_data.get("description"));
 		
 		/* Save project */
 		await project.save();
 		
 		/* Save style */
-		await api.saveStyle(project);
+		await this.saveStyle(project);
 		
 		/* Returns result */
 		return new ApiResult().success();

@@ -123,9 +123,9 @@ class FormSaveApi extends SaveApi
 	 * Save form
 	 */
 	@ApiMethod{ "name": "save" }
-	static async ApiResult actionSave(ApiRequest request)
+	async ApiResult actionSave()
 	{
-		return await parent(request);
+		return await parent();
 	}
 	
 	
@@ -133,8 +133,8 @@ class FormSaveApi extends SaveApi
 	 * Delete form
 	 */
 	@ApiMethod{ "name": "delete" }
-	static async ApiResult actionDelete(ApiRequest request)
+	async ApiResult actionDelete()
 	{
-		return await parent(request);
+		return await parent();
 	}
 }

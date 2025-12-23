@@ -65,8 +65,9 @@ class ModuleDescription
 		
 		#ifdef BACKEND then
 		new Hook("Runtime.WordPress.Theme.Hooks.LayoutHook"),
-		/*new Api("Runtime.WordPress.Theme.Api.FormSubmitApi"),
-		new Api("Runtime.WordPress.Theme.Api.GalleryApi"),
+		new Api("Runtime.WordPress.Theme.Api.FormSubmitApi"),
+		new Api("Runtime.WordPress.Theme.Api.PostApi"),
+		/*new Api("Runtime.WordPress.Theme.Api.GalleryApi"),
 		new Route("Runtime.WordPress.Theme.Robots"),*/
 		#endif
 	];

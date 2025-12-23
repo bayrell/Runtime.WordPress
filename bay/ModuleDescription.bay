@@ -64,7 +64,7 @@ class ModuleDescription
 	[
 		#ifdef BACKEND then
 		new Hook("Runtime.WordPress.Theme.Hooks.ConstructorHook"),
-		/*new Provider("email", "Runtime.WordPress.EmailProvider"),*/
+		new Provider("email", "Runtime.WordPress.EmailProvider"),
 		new Table("Runtime.WordPress.Database.Form"),
 		new Table("Runtime.WordPress.Database.FormData"),
 		new Table("Runtime.WordPress.Database.FormIP"),
@@ -72,6 +72,7 @@ class ModuleDescription
 		new Table("Runtime.WordPress.Database.GalleryItem"),
 		new Table("Runtime.WordPress.Database.MailDelivery"),
 		new Table("Runtime.WordPress.Database.MailSettings"),
+		new Table("Runtime.WordPress.Database.Post"),
 		new Migration("Runtime.WordPress.Database.Migrations.Core_2025_01"),
 		new WP_Factory(),
 		#endif

@@ -18,6 +18,7 @@
 
 namespace Runtime.WordPress.Theme.Hooks;
 
+use Runtime.RawString;
 use Runtime.VirtualDom;
 use Runtime.Hooks.RuntimeHook;
 use Runtime.WordPress.WP_Helper;
@@ -56,11 +57,11 @@ class LayoutHook extends RuntimeHook
 	void footer(Map params)
 	{
 		Vector components = params.get("components");
-		string header = WP_Helper::wp_apply('wp_footer');
+		string footer = WP_Helper::wp_apply('wp_footer');
 		
 		VirtualDom vdom = new VirtualDom();
 		vdom.is_raw = true;
-		vdom.push(header);
+		vdom.push(footer);
 		components.push(vdom);
 	}
 }
