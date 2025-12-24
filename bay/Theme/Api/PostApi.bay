@@ -68,6 +68,15 @@ class PostApi extends SearchApi
 	
 	
 	/**
+	 * Returns serialize rules for pk
+	 */
+	void getPrimaryRules(BaseType rules)
+	{
+		rules.addType("id", new IntegerType());
+	}
+	
+	
+	/**
 	 * Returns item fields
 	 */
 	Map getItemFields() => [
@@ -115,6 +124,8 @@ class PostApi extends SearchApi
 	 */
 	async void buildQuery(Query q)
 	{
+		await parent(q);
+		
 		string post_type = this.data.get("post_type");
 		string post_status = this.data.get("post_status");
 		
@@ -132,8 +143,6 @@ class PostApi extends SearchApi
 		.where("post_status", "=", post_status);
 		
 		this.buildLangQuery(q);
-		
-		/*q.debug(true);*/
 	}
 	
 	
@@ -142,6 +151,16 @@ class PostApi extends SearchApi
 	 */
 	@ApiMethod{ "name": "search" }
 	async void actionSearch()
+	{
+		await parent();
+	}
+	
+	
+	/**
+	 * Item post
+	 */
+	@ApiMethod{ "name": "item" }
+	async void actionItem()
 	{
 		await parent();
 	}
