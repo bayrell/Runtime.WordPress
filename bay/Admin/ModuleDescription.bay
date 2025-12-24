@@ -67,6 +67,7 @@ class ModuleDescription
 		]),
 		
 		#ifdef BACKEND then
+		new Api("Runtime.WordPress.Admin.FormData.FormDataSearchApi"),
 		new Api("Runtime.WordPress.Admin.FormSettings.FormSaveApi"),
 		new Api("Runtime.WordPress.Admin.FormSettings.FormSearchApi"),
 		new Api("Runtime.WordPress.Admin.MailSettings.MailSaveApi"),

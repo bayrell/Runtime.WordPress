@@ -54,6 +54,7 @@ class ProjectApi extends SaveApi
 		rules.addType("name", new Required());
 		rules.addType("name", new StringType());
 		rules.addType("description", new StringType());
+		rules.addType("version", new StringType());
 	}
 	
 	
@@ -137,6 +138,7 @@ class ProjectApi extends SaveApi
 			"/*",
 			" * Theme Name: " ~ project.getName(),
 			" * Description: " ~ project.getDescription(),
+			" * Version: " ~ project.getVersion(),
 			" */",
 		];
 		string file_path = fs::join([project.getPath(), "style.css"]);
@@ -205,6 +207,7 @@ class ProjectApi extends SaveApi
 					"id": project.getID(),
 					"name": project.getName(),
 					"description": project.getDescription(),
+					"version": project.getVersion(),
 				}
 			},
 		});
@@ -228,6 +231,7 @@ class ProjectApi extends SaveApi
 		this.setData(this.request.get("item"));
 		project.setName(this.update_data.get("name"));
 		project.setDescription(this.update_data.get("description"));
+		project.setVersion(this.update_data.get("version"))
 		
 		/* Save project */
 		await project.save();

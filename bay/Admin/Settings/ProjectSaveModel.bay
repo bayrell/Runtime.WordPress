@@ -53,6 +53,7 @@ class ProjectSaveModel extends BaseModel
 				"id": new StringType(),
 				"name": new StringType(),
 				"description": new StringType(),
+				"version": new StringType(),
 			},
 		});
 	}

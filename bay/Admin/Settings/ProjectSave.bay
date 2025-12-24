@@ -36,6 +36,12 @@
 					@event:valueChange="this.model.form.item.set('name', event.value)"
 				/>
 			</FormRow>
+			<FormRow label="Version" result={{ this.model.form.getResult("version") }}>
+				<Input name="version"
+					value={{ this.model.form.item.get("version") }}
+					@event:valueChange="this.model.form.item.set('version', event.value)"
+				/>
+			</FormRow>
 			<FormRow label="Description" result={{ this.model.form.getResult("description") }}>
 				<TextArea name="description"
 					value={{ this.model.form.item.get("description") }}

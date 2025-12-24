@@ -21,6 +21,7 @@ namespace Runtime.WordPress.Theme.Api;
 use Runtime.DateTime;
 use Runtime.Exceptions.ApiError;
 use Runtime.Exceptions.ItemNotFound;
+use Runtime.Exceptions.FieldException;
 use Runtime.Exceptions.RuntimeException;
 use Runtime.Serializer.BaseType;
 use Runtime.Serializer.MapType;
@@ -132,7 +133,7 @@ class FormSubmitApi extends BaseApi
 		Vector errors = [];
 		
 		/* Validate data */
-		Map update_data = this.filter(new MapType{
+		Map update_data = this.filter(this.request.data, new MapType{
 			"form_name": new StringType(),
 			"form_title": new StringType(),
 			"metrika_form_id": new StringType(),
@@ -152,19 +153,14 @@ class FormSubmitApi extends BaseApi
 			throw new ApiError(new ItemNotFound(form_name, "Form"));
 		}
 		
-		/* Create field result */
-		FieldErrors field = new FieldErrors();
-		
 		/* Validate item */
 		BaseType rules = this.relation_form.getRules(form);
 		Map item_data = rules.filter(update_data.get("item"), errors);
 		if (not item_data or errors.count() > 0)
 		{
-			field.addFieldErrors(errors);
-			return this.result.fail({
-				"message": "Field exception",
-				"fields": field.errors,
-			});
+			return this.result.fail(new FieldException({
+				"fields": TypeError::getMap(errors),
+			}));
 		}
 		
 		/* Spam check */

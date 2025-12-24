@@ -51,7 +51,7 @@
 				<td>{{ item.get("form_name") }}</td>
 				<td>%render this.renderData(item.get("data"));</td>
 				<td>
-					%set DateTime date = item.get("date");
+					%set DateTime date = item.get("gmtime_add");
 					{{ date ? date.normalize().format() : "" }}
 				</td>
 				<td>
@@ -71,7 +71,7 @@
 					<FormRow label="Title">{{ this.current_item.get("form_title") }}</FormRow>
 					<FormRow label="Name">{{ this.current_item.get("form_name") }}</FormRow>
 					<FormRow label="Date">
-						%set DateTime date = this.current_item.get("date");
+						%set DateTime date = this.current_item.get("gmtime_add");
 						{{ date ? date.normalize().format() : "" }}
 					</FormRow>
 					<FormRow label="Data">

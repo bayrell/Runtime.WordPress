@@ -18,10 +18,10 @@
 
 namespace Runtime.WordPress.Admin.FormData;
 
+use Runtime.ORM.Query;
 use Runtime.Web.Annotations.ApiMethod;
-use Runtime.Widget.Crud.CrudService;
-use Runtime.Widget.Crud.SearchApi;
-use Runtime.WordPress.Admin.FormData.FormDataCrudService;
+use Runtime.Widget.Api.SearchApi;
+use Runtime.WordPress.Database.FormData;
 
 
 class FormDataSearchApi extends SearchApi
@@ -29,13 +29,13 @@ class FormDataSearchApi extends SearchApi
 	/**
 	 * Returns api name
 	 */
-	pure string getApiName() => "admin.wordpress.forms.data.search";
+	pure string getApiName() => "admin.wordpress.forms.data";
 	
 	
 	/**
-	 * Returns service
+	 * Returns relation name
 	 */
-	CrudService createService() => new FormDataCrudService();
+	string getRealtionName() => classof FormData;
 	
 	
 	/**
@@ -44,6 +44,7 @@ class FormDataSearchApi extends SearchApi
 	Collection getItemFields() =>
 	[
 		"id",
+		"form_name",
 		"form_title",
 		"metrika_id",
 		"data",
@@ -52,9 +53,20 @@ class FormDataSearchApi extends SearchApi
 	
 	
 	/**
+	 * Build query
+	 */
+	async void buildQuery(Query q)
+	{
+		q.innerJoin("forms", "forms.id = forms_data.form_id")
+			.addField("forms.name as form_name")
+			.orderBy("id", "desc");
+	}
+	
+	
+	/**
 	 * Action search
 	 */
-	@ApiMethod
+	@ApiMethod{ "name": "search" }
 	async void actionSearch()
 	{
 		await parent();
