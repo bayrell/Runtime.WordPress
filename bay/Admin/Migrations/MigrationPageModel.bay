@@ -69,7 +69,7 @@ class MigrationPageModel extends BaseModel
 		this.result.setWaitMessage();
 		ApiResult result = await this.layout.sendApi({
 			"api_name": "admin.wordpress.migration",
-			"method_name": "actionUpdate",
+			"method_name": "update",
 		});
 		this.result.setApiResult(result);
 	}
@@ -84,7 +84,7 @@ class MigrationPageModel extends BaseModel
 		
 		ApiResult result = this.layout.sendApi({
 			"api_name": "admin.wordpress.migration",
-			"method_name": "actionItem",
+			"method_name": "item",
 		});
 		
 		if (result.isSuccess())

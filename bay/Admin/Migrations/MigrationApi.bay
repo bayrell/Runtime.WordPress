@@ -21,12 +21,11 @@ namespace Runtime.WordPress.Admin.Migrations;
 use Runtime.BaseObject;
 use Runtime.ORM.MigrationBuilder;
 use Runtime.Web.Annotations.ApiMethod;
-use Runtime.Web.ApiRequest;
-use Runtime.Web.ApiResult;
+use Runtime.Web.BaseApi;
 use Runtime.WordPress.WP_Helper;
 
 
-class MigrationApi extends BaseObject
+class MigrationApi extends BaseApi
 {
 	/**
 	 * Returns api name
@@ -37,7 +36,7 @@ class MigrationApi extends BaseObject
 	/**
 	 * Execute
 	 */
-	async static MigrationBuilder up(bool execute = false)
+	async MigrationBuilder up(bool execute = false)
 	{
 		/* Get migrations */
 		MigrationBuilder builder = new MigrationBuilder();
@@ -56,11 +55,11 @@ class MigrationApi extends BaseObject
 	/**
 	 * Action item
 	 */
-	@ApiMethod
-	async static ApiResult actionItem(ApiRequest request)
+	@ApiMethod{ "name": "item" }
+	async void actionItem()
 	{
-		MigrationBuilder builder = await static::up();
-		return new ApiResult().success({
+		MigrationBuilder builder = await this.up();
+		this.success({
 			"data": {
 				"items": builder.getSQL(),
 			}
@@ -71,10 +70,10 @@ class MigrationApi extends BaseObject
 	/**
 	 * Update database
 	 */
-	@ApiMethod
-	async static ApiResult actionUpdate(ApiRequest request)
+	@ApiMethod{ "name": "update" }
+	async void actionUpdate()
 	{
 		MigrationBuilder builder = await this.up(true);
-		return new ApiResult().success();
+		this.success();
 	}
 }
