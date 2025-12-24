@@ -76,8 +76,8 @@ class MailSearchApi extends SearchApi
 	 * Action search
 	 */
 	@ApiMethod{ "name": "search" }
-	async ApiResult actionSearch()
+	async void actionSearch()
 	{
-		return await parent();
+		await parent();
 	}
 }

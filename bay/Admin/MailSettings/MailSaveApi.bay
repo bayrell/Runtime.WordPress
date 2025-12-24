@@ -54,25 +54,27 @@ class MailSaveApi extends SaveApi
 	/**
 	 * Returns serialize rules for pk
 	 */
-	BaseType getPrimaryRules() => new MapType{
-		"id": new IntegerType(),
+	void getPrimaryRules(BaseType rules)
+	{
+		rules.addType("id", new IntegerType());
 	}
 	
 	
 	/**
 	 * Returns serialize rules
 	 */
-	BaseType getType() =>
-		new MapType{
-			"enable": new IntegerType(),
-			"plan": [new Required(), new StringType()],
-			"host": new StringType(),
-			"port": new StringType(),
-			"login": new StringType(),
-			"password": new StringType(),
-			"ssl_enable": new IntegerType(),
-		}
-	;
+	void getItemRules(BaseType rules)
+	{
+		parent(rules);
+		rules.addType("enable", new IntegerType());
+		rules.addType("plan", new Required());
+		rules.addType("plan", new StringType());
+		rules.addType("host", new StringType());
+		rules.addType("port", new StringType());
+		rules.addType("login", new StringType());
+		rules.addType("password", new StringType());
+		rules.addType("ssl_enable", new IntegerType());
+	}
 	
 	
 	/**
@@ -103,9 +105,9 @@ class MailSaveApi extends SaveApi
 	 * Action save
 	 */
 	@ApiMethod{ "name": "save" }
-	async ApiResult actionSave()
+	async void actionSave()
 	{
-		return await parent();
+		await parent();
 	}
 	
 	
@@ -113,8 +115,8 @@ class MailSaveApi extends SaveApi
 	 * Action delete
 	 */
 	@ApiMethod{ "name": "delete" }
-	async ApiResult actionDelete()
+	async void actionDelete()
 	{
-		return await parent();
+		await parent();
 	}
 }

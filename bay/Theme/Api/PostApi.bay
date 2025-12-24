@@ -20,6 +20,7 @@ namespace Runtime.WordPress.Theme.Api;
 
 use Runtime.DateTime;
 use Runtime.Serializer.Allowed;
+use Runtime.Serializer.BaseType;
 use Runtime.Serializer.IntegerType;
 use Runtime.Serializer.MapType;
 use Runtime.Serializer.StringType;
@@ -33,16 +34,13 @@ use Runtime.ORM.Record;
 use Runtime.ORM.Relation;
 use Runtime.Web.ApiRequest;
 use Runtime.Web.ApiResult;
-use Runtime.Web.BaseApi;
 use Runtime.Web.Annotations.ApiMethod;
+use Runtime.Widget.Api.SearchApi;
 use Runtime.WordPress.Database.Post;
 
 
-class PostApi extends BaseApi
+class PostApi extends SearchApi
 {
-	Post relation_post = null;
-	
-	
 	/**
 	 * Returns api name
 	 */
@@ -50,12 +48,92 @@ class PostApi extends BaseApi
 	
 	
 	/**
-	 * Create object
+	 * Returns relation name
 	 */
-	void constructor()
+	string getRealtionName() => classof Post;
+	
+	
+	/**
+	 * Returns data rules
+	 */
+	void getDataRules(BaseType rules)
 	{
-		parent();
-		this.relation_post = new Post();
+		parent(rules);
+		rules.addType("lang", new StringType());
+		rules.addType("post_type", new Allowed(["post", "page"]));
+		rules.addType("post_type", new StringType{ "default": "post" });
+		rules.addType("post_status", new Allowed(["publish"]));
+		rules.addType("post_status", new StringType{ "default": "publish" });
+	}
+	
+	
+	/**
+	 * Returns item fields
+	 */
+	Map getItemFields() => [
+		"ID",
+		"post_content",
+		"post_title",
+		"post_name",
+		"post_status",
+		"post_type",
+		"post_date_gmt",
+		"post_modified_gmt",
+	];
+	
+	
+	/**
+	 * Build lang
+	 */
+	async void buildLangQuery(Query q)
+	{
+		string lang = this.data.get("lang");
+		if (lang == "") return;
+		
+		Query q_taxonomy = new Query()
+			.select([
+				"term_taxonomy.term_taxonomy_id"
+			])
+			.from("term_taxonomy")
+			.innerJoin("terms", "terms.term_id = term_taxonomy.term_id")
+			.where("term_taxonomy.taxonomy", "=", "language")
+			.where("terms.slug", "=", lang)
+		;
+		
+		Connection conn = Connection::get();
+		Map row = await conn.fetchOne(q_taxonomy);
+		if (not row) return;
+		
+		int term_taxonomy_id = row.get("term_taxonomy_id");
+		q.innerJoin("term_relationships", "term_lang.object_id = posts.ID", "term_lang")
+		q.where("term_lang.term_taxonomy_id", "=", term_taxonomy_id)
+	}
+	
+	
+	/**
+	 * Build Query
+	 */
+	async void buildQuery(Query q)
+	{
+		string post_type = this.data.get("post_type");
+		string post_status = this.data.get("post_status");
+		
+		q.select([
+			"posts.ID",
+			"posts.post_content",
+			"posts.post_title",
+			"posts.post_name",
+			"posts.post_status",
+			"posts.post_type",
+			"posts.post_date_gmt",
+			"posts.post_modified_gmt",
+		])
+		.where("post_type", "=", post_type)
+		.where("post_status", "=", post_status);
+		
+		this.buildLangQuery(q);
+		
+		/*q.debug(true);*/
 	}
 	
 	
@@ -63,54 +141,8 @@ class PostApi extends BaseApi
 	 * Search post
 	 */
 	@ApiMethod{ "name": "search" }
-	async ApiResult actionSearch()
+	async void actionSearch()
 	{
-		Map update_data = this.filter(new MapType{
-			"page": new IntegerType(),
-			"limit": new IntegerType(),
-			"post_type": [
-				new Allowed(["post", "page"]),
-				new StringType(),
-			],
-			"post_status": [
-				new Allowed(["publish"]),
-				new StringType(),
-			],
-		});
-		
-		string post_type = update_data.get("post_type");
-		string post_status = update_data.get("post_status");
-		int page = update_data.get("page", 0);
-		int limit = update_data.get("limit", 12);
-		
-		if (post_type == "") post_type = "post";
-		if (post_status == "") post_status = "publish";
-		
-		Query q = this.relation_post.select([
-				"posts.ID",
-				"posts.post_content",
-				"posts.post_title",
-				"posts.post_name",
-				"posts.post_status",
-				"posts.post_type",
-				"posts.post_date_gmt",
-				"posts.post_modified_gmt",
-			])
-			.calcFoundRows()
-			.where("post_type", "=", post_type)
-			.where("post_status", "=", post_status)
-			.page(page)
-			.limit(limit)
-		;
-		QueryResult items = await this.relation_post.fetchAll(q);
-		return this.result.success({
-			"data": {
-				"items": items.map(Map (Map item) => item),
-				"count": items.rows,
-				"limit": limit,
-				"page": items.getPage(),
-				"pages": items.getPages(),
-			}
-		})
+		await parent();
 	}
 }

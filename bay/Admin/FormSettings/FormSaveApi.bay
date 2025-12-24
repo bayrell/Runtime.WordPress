@@ -62,20 +62,24 @@ class FormSaveApi extends SaveApi
 	/**
 	 * Returns serialize rules for pk
 	 */
-	BaseType getPrimaryRules() => new MapType{
-		"id": new IntegerType()
-	};
+	void getPrimaryRules(BaseType rules)
+	{
+		rules.addType("id", new IntegerType());
+	}
 	
 	
 	/**
 	 * Returns serialize rules
 	 */
-	BaseType getType() => new MapType{
-		"id": new IntegerType(),
-		"name": [new Required(), new StringType()],
-		"api_name": [new Required(), new StringType()],
-		"email_to": new StringType(),
-		"settings": new MapType{
+	void getItemRules(BaseType rules)
+	{
+		rules.addType("id", new IntegerType());
+		rules.addType("name", new Required());
+		rules.addType("name", new StringType());
+		rules.addType("api_name", new Required());
+		rules.addType("api_name", new StringType());
+		rules.addType("email_to", new StringType());
+		rules.addType("settings", new MapType{
 			"fields": new VectorType(new MapType{
 				"name": new StringType(),
 				"type": new StringType(),
@@ -83,8 +87,8 @@ class FormSaveApi extends SaveApi
 				"placeholder": new StringType(),
 				"required": new StringType(),
 			})
-		}
-	};
+		});
+	}
 	
 	
 	/**
@@ -123,9 +127,9 @@ class FormSaveApi extends SaveApi
 	 * Save form
 	 */
 	@ApiMethod{ "name": "save" }
-	async ApiResult actionSave()
+	async void actionSave()
 	{
-		return await parent();
+		await parent();
 	}
 	
 	
@@ -133,8 +137,8 @@ class FormSaveApi extends SaveApi
 	 * Delete form
 	 */
 	@ApiMethod{ "name": "delete" }
-	async ApiResult actionDelete()
+	async void actionDelete()
 	{
-		return await parent();
+		await parent();
 	}
 }

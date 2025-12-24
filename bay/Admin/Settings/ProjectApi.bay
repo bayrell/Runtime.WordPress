@@ -47,11 +47,14 @@ class ProjectApi extends SaveApi
 	/**
 	 * Returns serialize rules
 	 */
-	BaseType getType() => new MapType{
-		"id": [new StringType(), new Required()],
-		"name": [new StringType(), new Required()],
-		"description": new StringType(),
-	};
+	void getItemRules(BaseType rules)
+	{
+		rules.addType("id", new Required());
+		rules.addType("id", new StringType());
+		rules.addType("name", new Required());
+		rules.addType("name", new StringType());
+		rules.addType("description", new StringType());
+	}
 	
 	
 	/**
@@ -145,9 +148,9 @@ class ProjectApi extends SaveApi
 	 * Reload cache
 	 */
 	@ApiMethod{ "name": "reload" }
-	async ApiResult reload()
+	async void reload()
 	{
-		return new ApiResult().fail();
+		this.fail();
 	}
 	
 	
@@ -155,7 +158,7 @@ class ProjectApi extends SaveApi
 	 * Action create
 	 */
 	@ApiMethod{ "name": "create" }
-	async ApiResult actionCreate()
+	async void actionCreate()
 	{
 		this.setData(this.request.get("item"));
 		
@@ -180,7 +183,7 @@ class ProjectApi extends SaveApi
 		/* Save style */
 		await this.saveStyle(project);
 		
-		return new ApiResult().success();
+		this.success();
 	}
 	
 	
@@ -188,7 +191,7 @@ class ProjectApi extends SaveApi
 	 * Read item
 	 */
 	@ApiMethod{ "name": "item" }
-	async ApiResult actionItem()
+	async void actionItem()
 	{
 		Project project = await ApiHook::getProject();
 		if (not project)
@@ -196,7 +199,7 @@ class ProjectApi extends SaveApi
 			throw new ApiError(new ItemNotFound("Project"));
 		}
 		
-		return new ApiResult().success({
+		this.success({
 			"data": {
 				"item": {
 					"id": project.getID(),
@@ -212,7 +215,7 @@ class ProjectApi extends SaveApi
 	 * Action save
 	 */
 	@ApiMethod{ "name": "save" }
-	async ApiResult actionSave()
+	async void actionSave()
 	{
 		/* Get project */
 		Project project = await ApiHook::getProject();
@@ -233,6 +236,6 @@ class ProjectApi extends SaveApi
 		await this.saveStyle(project);
 		
 		/* Returns result */
-		return new ApiResult().success();
+		this.success();
 	}
 }

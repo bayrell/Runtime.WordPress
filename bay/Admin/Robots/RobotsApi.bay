@@ -18,6 +18,8 @@
 
 namespace Runtime.WordPress.Admin.Robots;
 
+use Runtime.Serializer.MapType;
+use Runtime.Serializer.StringType;
 use Runtime.Web.ApiResult;
 use Runtime.Web.ApiRequest;
 use Runtime.Web.BaseApi;
@@ -37,10 +39,10 @@ class RobotsApi extends BaseApi
 	 * Action item
 	 */
 	@ApiMethod{ "name": "item" }
-	static async ApiResult actionItem(ApiRequest request)
+	async void actionItem()
 	{
 		string content = WP_Helper::get_option("robots.txt");
-		return new ApiResult().success({
+		this.success({
 			"data": {
 				"content": content,
 			}
@@ -52,12 +54,13 @@ class RobotsApi extends BaseApi
 	 * Action save
 	 */
 	@ApiMethod{ "name": "save" }
-	static async ApiResult actionSave(ApiRequest request)
+	async void actionSave()
 	{
-		string content = request.get("content");
-		
-		WP_Helper::update_option("robots.txt", content);
-		
-		return new ApiResult().success();
+		MapType rules = new MapType{
+			"content": new StringType(),
+		};
+		this.data = this.filter(this.request.data, rules);
+		WP_Helper::update_option("robots.txt", this.data.get("content"));
+		this.success();
 	}
 }

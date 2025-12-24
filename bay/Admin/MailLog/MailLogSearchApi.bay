@@ -81,20 +81,8 @@ class MailLogSearchApi extends SearchApi
 	 * Action search
 	 */
 	@ApiMethod{ "name": "search" }
-	async ApiResult actionSearch(ApiRequest request)
+	async void actionSearch()
 	{
-		MailLogSearchApi api = new MailLogSearchApi{
-			"action": "search",
-			"request": request,
-		};
-		
-		/* Set filter */
-		api.setFilter(request.data);
-		
-		/* Search */
-		await api.search();
-		api.setResult();
-		
-		return api.success();
+		this.success();
 	}
 }
