@@ -50,22 +50,13 @@ class FormSaveApi extends SaveApi
 	/**
 	 * Returns relation name
 	 */
-	string getRealtionName() => classof Form;
+	string getRelationName() => classof Form;
 	
 	
 	/**
 	 * Returns save rules
 	 */
 	Vector rules() => [];
-	
-	
-	/**
-	 * Returns serialize rules for pk
-	 */
-	void getPrimaryRules(BaseType rules)
-	{
-		rules.addType("id", new IntegerType());
-	}
 	
 	
 	/**

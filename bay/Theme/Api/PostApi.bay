@@ -140,7 +140,8 @@ class PostApi extends SearchApi
 			"posts.post_modified_gmt",
 		])
 		.where("post_type", "=", post_type)
-		.where("post_status", "=", post_status);
+		.where("post_status", "=", post_status)
+		.orderBy("post_modified_gmt", "desc");
 		
 		this.buildLangQuery(q);
 	}

@@ -37,7 +37,7 @@ class FormSearchApi extends SearchApi
 	/**
 	 * Returns relation name
 	 */
-	string getRealtionName() => classof Form;
+	string getRelationName() => classof Form;
 	
 	
 	/**

@@ -37,7 +37,7 @@ class MailLogSearchApi extends SearchApi
 	/**
 	 * Returns relation name
 	 */
-	string getRealtionName() => classof MailLog;
+	string getRelationName() => classof MailLog;
 	
 	
 	/**

@@ -42,22 +42,13 @@ class MailSaveApi extends SaveApi
 	/**
 	 * Returns relation name
 	 */
-	string getRealtionName() => classof MailSettings;
+	string getRelationName() => classof MailSettings;
 	
 	
 	/**
 	 * Returns save rules
 	 */
 	Vector rules() => [];
-	
-	
-	/**
-	 * Returns serialize rules for pk
-	 */
-	void getPrimaryRules(BaseType rules)
-	{
-		rules.addType("id", new IntegerType());
-	}
 	
 	
 	/**

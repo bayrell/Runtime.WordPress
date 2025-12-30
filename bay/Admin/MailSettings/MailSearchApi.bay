@@ -37,7 +37,7 @@ class MailSearchApi extends SearchApi
 	/**
 	 * Returns relation name
 	 */
-	string getRealtionName() => classof MailSettings;
+	string getRelationName() => classof MailSettings;
 	
 	
 	/**

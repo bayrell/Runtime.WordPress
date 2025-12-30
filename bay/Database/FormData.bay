@@ -56,25 +56,12 @@ class FormData extends Relation
 		new JsonType{"name": "data"},
 		new StringType{"name": "utm"},
 		new BooleanType{"name": "spam"},
-		new DateTimeType{"name": "gmtime_add"},
+		new DateTimeType{"name": "gmtime_add", "autocreate": true},
 		
 		/* Index */
 		new AutoIncrement{"name": "id"},
 		new Primary{"keys": ["id"]},
 	];
-	
-	
-	/**
-	 * Save
-	 */
-	async void save(Record<FormData> item, Dict params = null)
-	{
-		if (item.get("gmtime_add") == null)
-		{
-			item.set("gmtime_add", DateTime::now());
-		}
-		await parent(item, params);
-	}
 	
 	
 	/**

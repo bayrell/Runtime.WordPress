@@ -9,6 +9,7 @@
 		"Components/Form/FormModel.bay",
 		"Components/Gallery/Gallery.bay",
 		"Components/Gallery/GalleryModel.bay",
+		"Components/ImageType.bay",
 		"Hooks/AssetHook.bay",
 		"Hooks/Metrika.bay",
 		"ModuleDescription.bay"

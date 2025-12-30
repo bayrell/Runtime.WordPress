@@ -18,10 +18,13 @@
 
 namespace Runtime.WordPress.Admin.Gallery;
 
+use Runtime.Serializer.IntegerType;
+use Runtime.Serializer.MapType;
+use Runtime.Serializer.Required;
+use Runtime.Serializer.StringType;
 use Runtime.Web.Annotations.ApiMethod;
-use Runtime.Widget.Crud.CrudService;
-use Runtime.Widget.Crud.SaveApi;
-use Runtime.WordPress.Admin.Gallery.GalleryCrudService;
+use Runtime.Widget.Api.SaveApi;
+use Runtime.WordPress.Database.Gallery;
 
 
 class GallerySaveApi extends SaveApi
@@ -29,13 +32,23 @@ class GallerySaveApi extends SaveApi
 	/**
 	 * Returns api name
 	 */
-	pure string getApiName() => "admin.wordpress.gallery.save";
+	pure string getApiName() => "admin.wordpress.gallery";
 	
 	
 	/**
-	 * Returns service
+	 * Returns relation name
 	 */
-	CrudService createService() => new GalleryCrudService();
+	string getRelationName() => classof Gallery;
+	
+	
+	/**
+	 * Returns item rules
+	 */
+	void getItemRules(MapType rules)
+	{
+		rules.addType("api_name", new StringType());
+		rules.addType("api_name", new Required());
+	}
 	
 	
 	/**
@@ -51,7 +64,7 @@ class GallerySaveApi extends SaveApi
 	/**
 	 * Action save
 	 */
-	@ApiMethod
+	@ApiMethod{ "name": "save" }
 	async void actionSave()
 	{
 		await parent();
@@ -61,7 +74,7 @@ class GallerySaveApi extends SaveApi
 	/**
 	 * Action delete
 	 */
-	@ApiMethod
+	@ApiMethod{ "name": "delete" }
 	async void actionDelete()
 	{
 		await parent();

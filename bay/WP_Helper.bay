@@ -28,12 +28,14 @@ use Runtime.RawString;
 use Runtime.Exceptions.ItemNotFound;
 use Runtime.ORM.Connection;
 use Runtime.ORM.Query;
+use Runtime.ORM.QueryResult;
 use Runtime.Web.BaseApp;
 use Runtime.Web.Response;
 use Runtime.Web.RouteInfo;
 use Runtime.Web.RouteList;
 use Runtime.Web.RouteProvider;
 use Runtime.WordPress.Admin.AdminUI;
+use Runtime.WordPress.Theme.Components.ImageType;
 
 
 class WP_Helper
@@ -123,9 +125,12 @@ class WP_Helper
 	/**
 	 * Load images
 	 */
-	static async Dict loadImages(Connection connection, Collection<int> images)
+	static async Map loadImages(Collection<int> images, Connection connection = null)
 	{
-		Dict result = {};
+		Map result = {};
+		
+		/* Get connection */
+		if (not connection) connection = Connection::get();
 		
 		/* Get images metadata */
 		Query q = new Query()
@@ -135,7 +140,7 @@ class WP_Helper
 			.where("meta_key", "=", ["_wp_attachment_metadata", "_wp_attached_file"])
 			.where("post_id", "=", images)
 		;
-		Dict images_metadata = await connection.fetchAll(q);
+		QueryResult images_metadata = await connection.fetchAll(q);
 		
 		/* Get post */
 		Query q = new Query()
@@ -144,7 +149,7 @@ class WP_Helper
 			.addRawField("*")
 			.where("ID", "=", images)
 		;
-		Dict posts = await connection.fetchAll(q);
+		QueryResult posts = await connection.fetchAll(q);
 		
 		/* Upload dir */
 		string upload_url = "/wp-content/uploads";
@@ -153,27 +158,27 @@ class WP_Helper
 		for (int i=0; i<images.count(); i++)
 		{
 			int image_id = images.get(i);
-			Dict image = null;
+			ImageType image = null;
 			
 			/* Get post */
 			string post_time = "";
-			Dict post = posts.findItem(lib::equalAttr("ID", image_id));
+			Map post = posts.find(bool (Map row) use (image_id) => row.get("ID") == image_id);
 			if (post)
 			{
-				DateTime d = DateTime::fromString(post["post_modified_gmt"]);
+				DateTime d = DateTime::fromString(post.get("post_modified_gmt"));
 				post_time = d.timestamp();
 			}
 			
 			/* Load metadata */
-			Dict obj_file = images_metadata.findItem(
-				bool (Dict item) use (image_id) =>
-					item["meta_key"] == "_wp_attached_file" and
-					item["post_id"] == image_id
+			Map obj_file = images_metadata.find(
+				bool (Map item) use (image_id) =>
+					item.get("meta_key") == "_wp_attached_file" and
+					item.get("post_id") == image_id
 			);
-			Dict obj_metadata = images_metadata.findItem(
-				bool (Dict item) use (image_id) =>
-					item["meta_key"] == "_wp_attachment_metadata" and
-					item["post_id"] == image_id
+			Map obj_metadata = images_metadata.find(
+				bool (Map item) use (image_id) =>
+					item.get("meta_key") == "_wp_attachment_metadata" and
+					item.get("post_id") == image_id
 			);
 			if (not(obj_file and obj_metadata)) continue;
 			
@@ -192,7 +197,7 @@ class WP_Helper
 				
 				foreach ($sizes as $key => &$size)
 				{
-					$size = \Runtime\Dict::from([
+					$size = \Runtime\Map::create([
 						"size" => $key,
 						"file" => $image_dir_name . "/" .
 							basename($size["file"]) . $image_url_after,
@@ -202,15 +207,14 @@ class WP_Helper
 					]);
 				}
 				
-				$sizes = \Runtime\Dict::from($sizes);
-				$image = \Runtime\Dict::from([
-					"id" => $image_id,
-					"width" => $obj_metadata["width"],
-					"height" => $obj_metadata["height"],
-					"file" => $image_dir_name . "/" .
-						basename($obj_metadata["file"]) . $image_url_after,
-					"sizes" => $sizes,
-				]);
+				$sizes = \Runtime\Map::create($sizes);
+				$image = new ImageType();
+				$image->id = $image_id;
+				$image->width = $obj_metadata["width"];
+				$image->height = $obj_metadata["height"];
+				$image->file = $image_dir_name . "/" .
+					basename($obj_metadata["file"]) . $image_url_after;
+				$image->sizes = $sizes;
 			}
 			#endif
 			
