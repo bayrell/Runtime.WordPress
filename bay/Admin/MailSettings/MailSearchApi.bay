@@ -23,6 +23,7 @@ use Runtime.Web.ApiResult;
 use Runtime.Web.ApiRequest;
 use Runtime.Web.Annotations.ApiMethod;
 use Runtime.Widget.Api.SearchApi;
+use Runtime.WordPress.Admin.AdminMiddleware;
 use Runtime.WordPress.Database.MailSettings;
 
 
@@ -38,6 +39,15 @@ class MailSearchApi extends SearchApi
 	 * Returns relation name
 	 */
 	string getRelationName() => classof MailSettings;
+	
+	
+	/**
+	 * Returns middleware
+	 */
+	Vector<Middleware> getMiddleware() =>
+	[
+		new AdminMiddleware(),
+	];
 	
 	
 	/**

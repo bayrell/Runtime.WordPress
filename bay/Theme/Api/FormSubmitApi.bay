@@ -94,7 +94,7 @@ class FormSubmitApi extends BaseApi
 	async ApiResult actionSettings()
 	{
 		/* Validate data */
-		Map update_data = this.filter(new MapType{
+		Map update_data = this.filter(this.request.data, new MapType{
 			"form_name": new StringType(),
 		});
 		
@@ -136,15 +136,20 @@ class FormSubmitApi extends BaseApi
 		Map update_data = this.filter(this.request.data, new MapType{
 			"form_name": new StringType(),
 			"form_title": new StringType(),
-			"metrika_form_id": new StringType(),
+			"form_id": new StringType(),
 			"item": new Required(),
 		});
 		
 		/* Get data */
-		string site_name = this.storage.get("site_name");
+		string site_name = "";
 		string form_name = update_data.get("form_name");
 		string form_title = update_data.get("form_title");
-		string metrika_form_id = update_data.get("metrika_form_id");
+		string form_id = update_data.get("form_id");
+		
+		/* Site name */
+		#ifcode PHP then
+		$site_name = get_bloginfo("name");
+		#endif
 		
 		/* Find form */
 		Record<Form> form = await this.relation_form.findForm(form_name);
@@ -176,7 +181,7 @@ class FormSubmitApi extends BaseApi
 		Record<FormData> form_data = this.relation_form_data.createRecord();
 		form_data.form_id = form.id;
 		form_data.form_title = form_title ? form_title : form.name;
-		form_data.metrika_id = metrika_form_id ? metrika_form_id : "form";
+		form_data.metrika_id = form_id ? form_id : "form";
 		form_data.data = update_data.get("item");
 		form_data.spam = spam_check;
 		await form_data.save();

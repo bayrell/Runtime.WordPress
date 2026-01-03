@@ -35,8 +35,9 @@ use Runtime.Web.ApiResult;
 use Runtime.Web.Annotations.ApiMethod;
 use Runtime.Widget.Api.SaveApi;
 use Runtime.Widget.Api.Rules.ReadOnlyRule;
-use Runtime.WordPress.Database.Form;
+use Runtime.WordPress.Admin.AdminMiddleware;
 use Runtime.WordPress.Admin.FormSettings.FormItem;
+use Runtime.WordPress.Database.Form;
 
 
 class FormSaveApi extends SaveApi
@@ -51,6 +52,15 @@ class FormSaveApi extends SaveApi
 	 * Returns relation name
 	 */
 	string getRelationName() => classof Form;
+	
+	
+	/**
+	 * Returns middleware
+	 */
+	Vector<Middleware> getMiddleware() =>
+	[
+		new AdminMiddleware(),
+	];
 	
 	
 	/**

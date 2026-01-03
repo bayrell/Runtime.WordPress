@@ -21,6 +21,7 @@ namespace Runtime.WordPress.Admin.FormData;
 use Runtime.ORM.Query;
 use Runtime.Web.Annotations.ApiMethod;
 use Runtime.Widget.Api.SearchApi;
+use Runtime.WordPress.Admin.AdminMiddleware;
 use Runtime.WordPress.Database.FormData;
 
 
@@ -36,6 +37,15 @@ class FormDataSearchApi extends SearchApi
 	 * Returns relation name
 	 */
 	string getRelationName() => classof FormData;
+	
+	
+	/**
+	 * Returns middleware
+	 */
+	Vector<Middleware> getMiddleware() =>
+	[
+		new AdminMiddleware(),
+	];
 	
 	
 	/**

@@ -20,8 +20,11 @@ namespace Runtime.WordPress.Admin.MailLog;
 
 use Runtime.ApiResult;
 use Runtime.BaseModel;
+use Runtime.Serializer.DateTimeType;
+use Runtime.Serializer.IntegerType;
 use Runtime.Serializer.MapType;
 use Runtime.Serializer.ObjectType;
+use Runtime.Serializer.StringType;
 use Runtime.Web.RenderContainer;
 use Runtime.Widget.Table.TableModel;
 use Runtime.Widget.Table.TableLoader;
@@ -43,7 +46,17 @@ class MailLogPageModel extends BaseModel
 		parent(rules);
 		rules.addType("table", new ObjectType{
 			"class_name": classof TableModel,
-			"item_type": new MapType(),
+			"item_type": new MapType{
+				"id": new IntegerType(),
+				"worker": new StringType(),
+				"plan": new StringType(),
+				"status": new IntegerType(),
+				"dest": new StringType(),
+				"title": new StringType(),
+				"message": new StringType(),
+				"error": new StringType(),
+				"gmtime_send": new DateTimeType(),
+			},
 		});
 	}
 	

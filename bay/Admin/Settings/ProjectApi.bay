@@ -31,6 +31,7 @@ use Runtime.Web.ApiResult;
 use Runtime.Web.ApiRequest;
 use Runtime.Web.Annotations.ApiMethod;
 use Runtime.Widget.Api.SaveApi;
+use Runtime.WordPress.Admin.AdminMiddleware;
 use BayLang.Compiler.Project;
 use BayLang.Constructor.Backend.ApiHook;
 use BayLang_Plugin;
@@ -42,6 +43,15 @@ class ProjectApi extends SaveApi
 	 * Returns api name
 	 */
 	static string getApiName() => "admin.wordpress.project";
+	
+	
+	/**
+	 * Returns middleware
+	 */
+	Vector<Middleware> getMiddleware() =>
+	[
+		new AdminMiddleware(),
+	];
 	
 	
 	/**

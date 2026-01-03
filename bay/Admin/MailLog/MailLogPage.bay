@@ -43,12 +43,12 @@
 				<td>{{ row_number + 1 }}</td>
 				<td>{{ item.get("worker") }}</td>
 				<td>{{ item.get("plan") }}</td>
-				<td>{{ item.get("status") }}</td>
+				<td>{{ item.get("status") == "1" ? "Send" : "No" }}</td>
 				<td>{{ item.get("dest") }}</td>
 				<td>{{ item.get("title") }}</td>
 				<td>{{ item.get("error") }}</td>
 				<td>
-					%set DateTime send_time = item.get("send_time");
+					%set DateTime send_time = item.get("gmtime_send");
 					{{ send_time ? send_time.normalize().format() : "" }}
 				</td>
 				<td>
@@ -65,16 +65,18 @@
 				{
 					<FormRow label="Worker">{{ this.current_item.get("worker") }}</FormRow>
 					<FormRow label="Plan">{{ this.current_item.get("plan") }}</FormRow>
-					<FormRow label="Status">{{ this.current_item.get("status") }}</FormRow>
+					<FormRow label="Status">
+						{{ this.current_item.get("status") == "1" ? "Send" : "No" }}
+					</FormRow>
 					<FormRow label="Dest">{{ this.current_item.get("dest") }}</FormRow>
 					<FormRow label="Title">{{ this.current_item.get("title") }}</FormRow>
 					<FormRow label="Error">{{ this.current_item.get("error") }}</FormRow>
 					<FormRow label="Date">
-						%set DateTime send_time = this.current_item.get("send_time");
+						%set DateTime send_time = this.current_item.get("gmtime_send");
 						{{ send_time ? send_time.normalize().format() : "" }}
 					</FormRow>
 					<FormRow label="Message">
-						%render this.renderData(this.current_item.get("message"));
+						%render this.current_item.get("message");
 					</FormRow>
 				}
 			</slot>

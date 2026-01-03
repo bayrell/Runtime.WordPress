@@ -23,6 +23,7 @@ use Runtime.Web.ApiRequest;
 use Runtime.Web.ApiResult;
 use Runtime.Web.Annotations.ApiMethod;
 use Runtime.Widget.Api.SearchApi;
+use Runtime.WordPress.Admin.AdminMiddleware;
 use Runtime.WordPress.Database.Form;
 
 
@@ -38,6 +39,15 @@ class FormSearchApi extends SearchApi
 	 * Returns relation name
 	 */
 	string getRelationName() => classof Form;
+	
+	
+	/**
+	 * Returns middleware
+	 */
+	Vector<Middleware> getMiddleware() =>
+	[
+		new AdminMiddleware(),
+	];
 	
 	
 	/**

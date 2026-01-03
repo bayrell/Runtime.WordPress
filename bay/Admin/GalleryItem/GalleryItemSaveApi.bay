@@ -26,6 +26,7 @@ use Runtime.Serializer.StringType;
 use Runtime.ORM.Query;
 use Runtime.Web.Annotations.ApiMethod;
 use Runtime.Widget.Api.SaveApi;
+use Runtime.WordPress.Admin.AdminMiddleware;
 use Runtime.WordPress.Admin.Components.ImageRule;
 use Runtime.WordPress.Theme.Components.ImageType;
 use Runtime.WordPress.Database.GalleryItem;
@@ -43,6 +44,15 @@ class GalleryItemSaveApi extends SaveApi
 	 * Returns relation name
 	 */
 	string getRelationName() => classof GalleryItem;
+	
+	
+	/**
+	 * Returns middleware
+	 */
+	Vector<Middleware> getMiddleware() =>
+	[
+		new AdminMiddleware(),
+	];
 	
 	
 	/**

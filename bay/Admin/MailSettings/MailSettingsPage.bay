@@ -90,7 +90,7 @@ computed Map table() => [
 		"label": "SSL",
 		"value": string (Map item, Map field, int row_number)
 		{
-			string value = item.get("enable");
+			string value = item.get("ssl_enable");
 			if (value == "0") return "No";
 			if (value == "1") return "Yes";
 			return "";
@@ -125,8 +125,18 @@ computed Map form() => [
 		"component": classof Input,
 	},
 	{
+		"name": "port",
+		"label": "Port",
+		"component": classof Input,
+	},
+	{
 		"name": "login",
 		"label": "Login",
+		"component": classof Input,
+	},
+	{
+		"name": "password",
+		"label": "Password",
 		"component": classof Input,
 	},
 	{

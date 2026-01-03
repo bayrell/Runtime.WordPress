@@ -33,6 +33,9 @@
 		>
 			<slot name="top_buttons">
 				<RowButtons>
+					<Button class="button--default"
+						href={{ this.layout.url("admin:gallery:index") }}
+					>Back</Button>
 					<Button class="button--success"
 						@event:click="this.model.manager.showAddDialog()"
 					>Add</Button>

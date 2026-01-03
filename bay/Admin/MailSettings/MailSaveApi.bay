@@ -28,6 +28,7 @@ use Runtime.Web.ApiResult;
 use Runtime.Web.ApiRequest;
 use Runtime.Web.Annotations.ApiMethod;
 use Runtime.Widget.Api.SaveApi;
+use Runtime.WordPress.Admin.AdminMiddleware;
 use Runtime.WordPress.Database.MailSettings;
 
 
@@ -43,6 +44,15 @@ class MailSaveApi extends SaveApi
 	 * Returns relation name
 	 */
 	string getRelationName() => classof MailSettings;
+	
+	
+	/**
+	 * Returns middleware
+	 */
+	Vector<Middleware> getMiddleware() =>
+	[
+		new AdminMiddleware(),
+	];
 	
 	
 	/**

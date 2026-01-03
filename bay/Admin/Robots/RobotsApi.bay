@@ -25,6 +25,7 @@ use Runtime.Web.ApiRequest;
 use Runtime.Web.BaseApi;
 use Runtime.Web.Annotations.ApiMethod;
 use Runtime.WordPress.WP_Helper;
+use Runtime.WordPress.Admin.AdminMiddleware;
 
 
 class RobotsApi extends BaseApi
@@ -33,6 +34,15 @@ class RobotsApi extends BaseApi
 	 * Returns api name
 	 */
 	pure string getApiName() => "admin.wordpress.robots";
+	
+	
+	/**
+	 * Returns middleware
+	 */
+	Vector<Middleware> getMiddleware() =>
+	[
+		new AdminMiddleware(),
+	];
 	
 	
 	/**

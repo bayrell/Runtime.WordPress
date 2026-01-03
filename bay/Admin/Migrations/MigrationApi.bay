@@ -23,6 +23,7 @@ use Runtime.ORM.MigrationBuilder;
 use Runtime.Web.Annotations.ApiMethod;
 use Runtime.Web.BaseApi;
 use Runtime.WordPress.WP_Helper;
+use Runtime.WordPress.Admin.AdminMiddleware;
 
 
 class MigrationApi extends BaseApi
@@ -31,6 +32,15 @@ class MigrationApi extends BaseApi
 	 * Returns api name
 	 */
 	pure string getApiName() => "admin.wordpress.migration";
+	
+	
+	/**
+	 * Returns middleware
+	 */
+	Vector<Middleware> getMiddleware() =>
+	[
+		new AdminMiddleware(),
+	];
 	
 	
 	/**

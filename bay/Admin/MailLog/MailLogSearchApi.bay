@@ -23,7 +23,8 @@ use Runtime.Web.ApiResult;
 use Runtime.Web.ApiRequest;
 use Runtime.Web.Annotations.ApiMethod;
 use Runtime.Widget.Api.SearchApi;
-use Runtime.WordPress.Database.MailLog;
+use Runtime.WordPress.Admin.AdminMiddleware;
+use Runtime.WordPress.Database.MailDelivery;
 
 
 class MailLogSearchApi extends SearchApi
@@ -37,7 +38,16 @@ class MailLogSearchApi extends SearchApi
 	/**
 	 * Returns relation name
 	 */
-	string getRelationName() => classof MailLog;
+	string getRelationName() => classof MailDelivery;
+	
+	
+	/**
+	 * Returns middleware
+	 */
+	Vector<Middleware> getMiddleware() =>
+	[
+		new AdminMiddleware(),
+	];
 	
 	
 	/**
@@ -83,6 +93,6 @@ class MailLogSearchApi extends SearchApi
 	@ApiMethod{ "name": "search" }
 	async void actionSearch()
 	{
-		this.success();
+		await parent();
 	}
 }

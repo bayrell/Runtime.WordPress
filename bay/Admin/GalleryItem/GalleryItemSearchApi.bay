@@ -24,6 +24,7 @@ use Runtime.Serializer.Required;
 use Runtime.ORM.Query;
 use Runtime.Web.Annotations.ApiMethod;
 use Runtime.Widget.Api.SearchApi;
+use Runtime.WordPress.Admin.AdminMiddleware;
 use Runtime.WordPress.Admin.Components.ImageRule;
 use Runtime.WordPress.Database.GalleryItem;
 
@@ -40,6 +41,15 @@ class GalleryItemSearchApi extends SearchApi
 	 * Returns relation name
 	 */
 	string getRelationName() => classof GalleryItem;
+	
+	
+	/**
+	 * Returns middleware
+	 */
+	Vector<Middleware> getMiddleware() =>
+	[
+		new AdminMiddleware(),
+	];
 	
 	
 	/**

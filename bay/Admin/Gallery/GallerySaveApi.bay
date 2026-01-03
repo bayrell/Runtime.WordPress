@@ -24,6 +24,7 @@ use Runtime.Serializer.Required;
 use Runtime.Serializer.StringType;
 use Runtime.Web.Annotations.ApiMethod;
 use Runtime.Widget.Api.SaveApi;
+use Runtime.WordPress.Admin.AdminMiddleware;
 use Runtime.WordPress.Database.Gallery;
 
 
@@ -39,6 +40,15 @@ class GallerySaveApi extends SaveApi
 	 * Returns relation name
 	 */
 	string getRelationName() => classof Gallery;
+	
+	
+	/**
+	 * Returns middleware
+	 */
+	Vector<Middleware> getMiddleware() =>
+	[
+		new AdminMiddleware(),
+	];
 	
 	
 	/**
