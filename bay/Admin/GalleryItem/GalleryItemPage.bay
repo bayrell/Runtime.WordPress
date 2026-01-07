@@ -27,10 +27,7 @@
 
 <template>
 	<div class="gallery_item_page">
-		<TableWrap model={{ this.model.manager }}
-			table_fields={{ this.table }}
-			form_fields={{ this.form }}
-		>
+		<TableWrap model={{ this.model.manager }}>
 			<slot name="top_buttons">
 				<RowButtons>
 					<Button class="button--default"
@@ -54,54 +51,5 @@
 		</TableWrap>
 	</div>
 </template>
-
-<script>
-
-computed Vector table() =>
-[
-	{
-		"name": "row_number",
-	},
-	{
-		"name": "name",
-		"label": "Name",
-	},
-	{
-		"name": "image",
-		"label": "Image",
-		"component": classof Image,
-	},
-	{
-		"name": "pos",
-		"label": "pos",
-	},
-	{
-		"name": "buttons",
-		"slot": "row_buttons"
-	}
-];
-computed Vector form() =>
-[
-	{
-		"name": "name",
-		"label": "Name",
-		"component": classof Input,
-	},
-	{
-		"name": "image",
-		"label": "Image",
-		"component": classof Image,
-		"props": {
-			"upload": true,
-		},
-	},
-	{
-		"name": "pos",
-		"label": "Pos",
-		"component": classof Input,
-	},
-];
-
-</script>
 
 </class>

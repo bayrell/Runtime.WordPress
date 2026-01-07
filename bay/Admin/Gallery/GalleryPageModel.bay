@@ -74,9 +74,40 @@ class GalleryPageModel extends BaseModel
 		parent(params);
 		
 		this.manager = this.createWidget(classof Manager, {
+			"autoload": true,
 			"api_name": "admin.wordpress.gallery",
 			"page_name": "p",
 			"title": new Method(this, "getItemTitle"),
+			"primary_rules": new MapType
+			{
+				"id": new IntegerType()
+			},
+			"item_rules": new MapType{
+				"id": new IntegerType(),
+				"api_name": new StringType(),
+			},
+			"form_fields":
+			[
+				{
+					"name": "api_name",
+					"label": "Api name",
+					"component": "Runtime.Widget.Input",
+				},
+			],
+			"table_fields":
+			[
+				{
+					"name": "row_number",
+				},
+				{
+					"name": "api_name",
+					"label": "Api name",
+				},
+				{
+					"name": "buttons",
+					"slot": "row_buttons",
+				}
+			],
 		});
 	}
 	
@@ -99,7 +130,7 @@ class GalleryPageModel extends BaseModel
 	 */
 	async void loadData(RenderContainer container)
 	{
-		await this.manager.loadData(container);
+		await parent(container);
 	}
 	
 	

@@ -26,6 +26,7 @@ use Runtime.Serializer.MapType;
 use Runtime.Serializer.ObjectType;
 use Runtime.Serializer.StringType;
 use Runtime.Web.RenderContainer;
+use Runtime.Widget.BoolEnum;
 use Runtime.Widget.Table.Manager;
 use Runtime.Widget.Table.TableModel;
 use Runtime.Widget.Table.TableLoader;
@@ -35,8 +36,7 @@ use Runtime.WordPress.Admin.MailSettings.MailSettingsPage;
 class MailSettingsPageModel extends BaseModel
 {
 	string component = classof MailSettingsPage;
-	Manager manager = null
-	TableLoader loader = null;
+	Manager manager = null;
 	
 	
 	/**
@@ -45,34 +45,8 @@ class MailSettingsPageModel extends BaseModel
 	static void serialize(ObjectType rules)
 	{
 		parent(rules);
-		rules.addType("manager", new ObjectType{
-			"pk_type": static::getPrimaryRules(),
-			"item_type": static::getItemRules(),
-		});
+		rules.addType("manager", new ObjectType());
 	}
-	
-	
-	/**
-	 * Returns primary rules
-	 */
-	static MapType getPrimaryRules() => new MapType{
-		"id": new IntegerType(),
-	};
-	
-	
-	/**
-	 * Returns item rules
-	 */
-	static MapType getItemRules() => new MapType{
-		"id": new IntegerType(),
-		"enable": new IntegerType(),
-		"plan": new StringType(),
-		"host": new StringType(),
-		"port": new StringType(),
-		"login": new StringType(),
-		"password": new StringType(),
-		"ssl_enable": new IntegerType(),
-	};
 	
 	
 	/**
@@ -83,9 +57,103 @@ class MailSettingsPageModel extends BaseModel
 		parent(params);
 		
 		this.manager = this.createWidget(classof Manager, {
+			"autoload": true,
 			"api_name": "admin.wordpress.mail.settings",
 			"page_name": "p",
 			"title": new Method(this, "getItemTitle"),
+			"primary_rules": new MapType{
+				"id": new IntegerType(),
+			},
+			"item_rules": new MapType{
+				"id": new IntegerType(),
+				"enable": new IntegerType(),
+				"plan": new StringType(),
+				"host": new StringType(),
+				"port": new StringType(),
+				"login": new StringType(),
+				"password": new StringType(),
+				"ssl_enable": new IntegerType(),
+			},
+			"form_fields":
+			[
+				{
+					"name": "enable",
+					"label": "Enable",
+					"component": "Runtime.Widget.Select",
+					"props": {
+						"options": BoolEnum::options(),
+					}
+				},
+				{
+					"name": "plan",
+					"label": "Plan",
+					"component": "Runtime.Widget.Input",
+				},
+				{
+					"name": "host",
+					"label": "Host",
+					"component": "Runtime.Widget.Input",
+				},
+				{
+					"name": "port",
+					"label": "Port",
+					"component": "Runtime.Widget.Input",
+				},
+				{
+					"name": "login",
+					"label": "Login",
+					"component": "Runtime.Widget.Input",
+				},
+				{
+					"name": "password",
+					"label": "Password",
+					"component": "Runtime.Widget.Input",
+				},
+				{
+					"name": "ssl_enable",
+					"label": "SSL",
+					"component": "Runtime.Widget.Select",
+					"props": {
+						"options": BoolEnum::options(),
+					},
+				}
+			],
+			"table_fields":
+			[
+				{
+					"name": "row_number"
+				},
+				{
+					"name": "enable",
+					"label": "Enable",
+					"value": string (Map item) => BoolEnum::label(item.get("enable")),
+				},
+				{
+					"name": "plan",
+					"label": "Plan",
+				},
+				{
+					"name": "host",
+					"label": "Host",
+				},
+				{
+					"name": "port",
+					"label": "Port",
+				},
+				{
+					"name": "login",
+					"label": "Login",
+				},
+				{
+					"name": "ssl_enable",
+					"label": "SSL",
+					"value": string (Map item) => BoolEnum::label(item.get("enable")),
+				},
+				{
+					"name": "buttons",
+					"slot": "row_buttons",
+				}
+			],
 		});
 	}
 	
@@ -109,7 +177,6 @@ class MailSettingsPageModel extends BaseModel
 	async void loadData(RenderContainer container)
 	{
 		await parent(container);
-		await this.manager.loadData(container);
 	}
 	
 	

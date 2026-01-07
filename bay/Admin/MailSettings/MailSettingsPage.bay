@@ -27,10 +27,7 @@
 
 <template>
 	<div class="mail_settings_page">
-		<TableWrap model={{ this.model.manager }}
-			table_fields={{ this.table }}
-			form_fields={{ this.form }}
-		>
+		<TableWrap model={{ this.model.manager }}>
 			<slot name="top_buttons">
 				<RowButtons>
 					<Button class="button--success"
@@ -51,107 +48,5 @@
 		</TableWrap>
 	</div>
 </template>
-
-<script>
-
-computed Map table() => [
-	{
-		"name": "row_number"
-	},
-	{
-		"name": "enable",
-		"label": "Enable",
-		"value": string (Map item, Map field, int row_number)
-		{
-			string value = item.get("enable");
-			if (value == "0") return "No";
-			if (value == "1") return "Yes";
-			return "";
-		}
-	},
-	{
-		"name": "plan",
-		"label": "Plan",
-	},
-	{
-		"name": "host",
-		"label": "Host",
-	},
-	{
-		"name": "port",
-		"label": "Port",
-	},
-	{
-		"name": "login",
-		"label": "Login",
-	},
-	{
-		"name": "ssl_enable",
-		"label": "SSL",
-		"value": string (Map item, Map field, int row_number)
-		{
-			string value = item.get("ssl_enable");
-			if (value == "0") return "No";
-			if (value == "1") return "Yes";
-			return "";
-		}
-	},
-	{
-		"name": "buttons",
-		"slot": "row_buttons",
-	}
-];
-
-computed Map form() => [
-	{
-		"name": "enable",
-		"label": "Enable",
-		"component": classof Select,
-		"props": {
-			"options": [
-				{"key": "0", "value": "No"},
-				{"key": "1", "value": "Yes"},
-			]
-		}
-	},
-	{
-		"name": "plan",
-		"label": "Plan",
-		"component": classof Input,
-	},
-	{
-		"name": "host",
-		"label": "Host",
-		"component": classof Input,
-	},
-	{
-		"name": "port",
-		"label": "Port",
-		"component": classof Input,
-	},
-	{
-		"name": "login",
-		"label": "Login",
-		"component": classof Input,
-	},
-	{
-		"name": "password",
-		"label": "Password",
-		"component": classof Input,
-	},
-	{
-		"name": "ssl_enable",
-		"label": "SSL",
-		"component": classof Select,
-		"props": {
-			"options": [
-				{"key": "0", "value": "No"},
-				{"key": "1", "value": "Yes"},
-			],
-		},
-	}
-];
-
-</script>
 
 </class>

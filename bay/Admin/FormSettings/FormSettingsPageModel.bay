@@ -45,42 +45,8 @@ class FormSettingsPageModel extends BaseModel
 	static void serialize(ObjectType rules)
 	{
 		parent(rules);
-		rules.addType("manager", new ObjectType{
-			"pk_type": static::getPrimaryRules(),
-			"item_type": static::getItemRules(),
-		});
+		rules.addType("manager", new ObjectType());
 	}
-	
-	
-	/**
-	 * Returns primary rules
-	 */
-	static MapType getPrimaryRules() => new MapType
-	{
-		"id": new IntegerType()
-	};
-	
-	
-	/**
-	 * Returns item rules
-	 */
-	static MapType getItemRules() => new MapType
-	{
-		"id": new IntegerType(),
-		"name": new StringType(),
-		"api_name": new StringType(),
-		"email_to": new StringType(),
-		"settings": new MapType
-		{
-			"fields": new VectorType(new MapType{
-				"name": new StringType(),
-				"type": new StringType(),
-				"title": new StringType(),
-				"placeholder": new StringType(),
-				"required": new StringType(),
-			})
-		}
-	};
 	
 	
 	/**
@@ -91,9 +57,93 @@ class FormSettingsPageModel extends BaseModel
 		parent(params);
 		
 		this.manager = this.createWidget(classof Manager, {
+			"autoload": true,
 			"api_name": "admin.wordpress.forms.settings",
 			"page_name": "p",
 			"title": new Method(this, "getItemTitle"),
+			"primary_rules": new MapType
+			{
+				"id": new IntegerType()
+			},
+			"item_rules": new MapType
+			{
+				"id": new IntegerType(),
+				"name": new StringType(),
+				"api_name": new StringType(),
+				"email_to": new StringType(),
+				"settings": new MapType
+				{
+					"fields": new VectorType(new MapType{
+						"name": new StringType(),
+						"type": new StringType(),
+						"title": new StringType(),
+						"placeholder": new StringType(),
+						"required": new StringType(),
+					})
+				}
+			},
+			"form_fields":
+			[
+				{
+					"name": "name",
+					"label": "Name",
+					"component": "Runtime.Widget.Input",
+				},
+				{
+					"name": "api_name",
+					"label": "Api name",
+					"component": "Runtime.Widget.Input",
+				},
+				{
+					"name": "email_to",
+					"label": "Email to",
+					"component": "Runtime.Widget.Input",
+				},
+				{
+					"name": "fields",
+					"label": "Fields",
+					"component": "Runtime.WordPress.Admin.FormSettings.FieldSettings",
+					"value": Vector (Map item)
+					{
+						Map settings = item.get("settings");
+						if (not settings) return [];
+						Vector fields = settings.get("fields");
+						return fields ? fields : [];
+					},
+					"setValue": void (Map item, Vector value)
+					{
+						Map settings = item.get("settings");
+						if (not settings)
+						{
+							settings = {};
+							item.set("settings", settings);
+						}
+						settings.set("fields", value);
+					},
+				}
+			],
+			"table_fields":
+			[
+				{
+					"name": "row_number",
+				},
+				{
+					"name": "name",
+					"label": "Name",
+				},
+				{
+					"name": "api_name",
+					"label": "Api name",
+				},
+				{
+					"name": "email_to",
+					"label": "Email to",
+				},
+				{
+					"name": "buttons",
+					"slot": "row_buttons",
+				},
+			],
 		});
 	}
 	
@@ -116,7 +166,7 @@ class FormSettingsPageModel extends BaseModel
 	 */
 	async void loadData(RenderContainer container)
 	{
-		await this.manager.loadData(container);
+		await parent(container);
 	}
 	
 	

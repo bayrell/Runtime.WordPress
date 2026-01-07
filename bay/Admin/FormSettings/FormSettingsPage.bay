@@ -27,10 +27,7 @@
 
 <template>
 	<div class="form_settings_page">
-		<TableWrap model={{ this.model.manager }}
-			table_fields={{ this.table }}
-			form_fields={{ this.form }}
-		>
+		<TableWrap model={{ this.model.manager }}>
 			<slot name="top_buttons">
 				<RowButtons>
 					<Button class="button--success"
@@ -51,71 +48,5 @@
 		</TableWrap>
 	</div>
 </template>
-
-<script>
-
-computed Map table() => [
-	{
-		"name": "row_number",
-	},
-	{
-		"name": "name",
-		"label": "Name",
-	},
-	{
-		"name": "api_name",
-		"label": "Api name",
-	},
-	{
-		"name": "email_to",
-		"label": "Email to",
-	},
-	{
-		"name": "buttons",
-		"slot": "row_buttons",
-	},
-];
-
-computed Map form() => [
-	{
-		"name": "name",
-		"label": "Name",
-		"component": classof Input,
-	},
-	{
-		"name": "api_name",
-		"label": "Api name",
-		"component": classof Input,
-	},
-	{
-		"name": "email_to",
-		"label": "Email to",
-		"component": classof Input,
-	},
-	{
-		"name": "fields",
-		"label": "Fields",
-		"component": classof FieldSettings,
-		"value": Vector (Map item)
-		{
-			Map settings = item.get("settings");
-			if (not settings) return [];
-			Vector fields = settings.get("fields");
-			return fields ? fields : [];
-		},
-		"setValue": void (Map item, Vector value)
-		{
-			Map settings = item.get("settings");
-			if (not settings)
-			{
-				settings = {};
-				item.set("settings", settings);
-			}
-			settings.set("fields", value);
-		},
-	}
-];
-
-</script>
 
 </class>

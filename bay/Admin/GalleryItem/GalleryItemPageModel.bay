@@ -42,37 +42,8 @@ class GalleryItemPageModel extends BaseModel
 	static void serialize(ObjectType rules)
 	{
 		parent(rules);
-		rules.addType("manager", new ObjectType{
-			"pk_type": static::getPrimaryRules(),
-			"item_type": static::getItemRules(),
-			"foreign_key": new MapType{
-				"item_id": new IntegerType(),
-			},
-		});
+		rules.addType("manager", new ObjectType());
 	}
-	
-	
-	/**
-	 * Returns primary rules
-	 */
-	static MapType getPrimaryRules() => new MapType
-	{
-		"id": new IntegerType()
-	};
-	
-	
-	/**
-	 * Returns item rules
-	 */
-	static MapType getItemRules() => new MapType
-	{
-		"id": new IntegerType(),
-		"name": new StringType(),
-		"image": new ObjectType{
-			"class_name": classof ImageType,
-		},
-		"pos": new IntegerType(),
-	};
 	
 	
 	/**
@@ -83,9 +54,70 @@ class GalleryItemPageModel extends BaseModel
 		parent(params);
 		
 		this.manager = this.createWidget(classof Manager, {
+			"autoload": true,
 			"api_name": "admin.wordpress.gallery.item",
 			"page_name": "p",
 			"title": new Method(this, "getItemTitle"),
+			"primary_rules": new MapType
+			{
+				"id": new IntegerType()
+			},
+			"item_rules": new MapType
+			{
+				"id": new IntegerType(),
+				"name": new StringType(),
+				"image": new ObjectType{
+					"class_name": classof ImageType,
+				},
+				"pos": new IntegerType(),
+			},
+			"foreign_rules": new MapType{
+				"item_id": new IntegerType(),
+			},
+			"form_fields":
+			[
+				{
+					"name": "name",
+					"label": "Name",
+					"component": "Runtime.Widget.Input",
+				},
+				{
+					"name": "image",
+					"label": "Image",
+					"component": "Runtime.WordPress.Admin.Components.Image",
+					"props": {
+						"upload": true,
+					},
+				},
+				{
+					"name": "pos",
+					"label": "Pos",
+					"component": "Runtime.Widget.Input",
+				},
+			],
+			"table_fields":
+			[
+				{
+					"name": "row_number",
+				},
+				{
+					"name": "name",
+					"label": "Name",
+				},
+				{
+					"name": "image",
+					"label": "Image",
+					"component": "Runtime.WordPress.Admin.Components.Image",
+				},
+				{
+					"name": "pos",
+					"label": "pos",
+				},
+				{
+					"name": "buttons",
+					"slot": "row_buttons"
+				}
+			],
 		})
 	}
 	
@@ -111,7 +143,7 @@ class GalleryItemPageModel extends BaseModel
 		this.manager.setForeignKey({
 			"item_id": container.request.query.get("id"),
 		});
-		await this.manager.loadData(container);
+		await parent(container);
 	}
 	
 	
