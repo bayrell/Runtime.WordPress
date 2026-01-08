@@ -24,17 +24,14 @@
 
 <template>
 	<div class="wordpress_form" class={{ this.class }}>
-		%if (this.is_show)
-		{
-			<BaseForm fields={{ this.fields }} model={{ this.model }}>
-				<slot name="title">
-					%render this.renderSlot("title");
-				</slot>
-				<slot name="buttons">
-					%render this.renderSlot("buttons");
-				</slot>
-			</BaseForm>
-		}
+		<BaseForm fields={{ this.fields }} model={{ this.model }}>
+			<slot name="title">
+				%render this.renderSlot("title");
+			</slot>
+			<slot name="buttons">
+				%render this.renderSlot("buttons");
+			</slot>
+		</BaseForm>
 	</div>
 </template>
 
