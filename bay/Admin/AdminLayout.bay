@@ -40,7 +40,7 @@
 </template>
 
 <template>
-	<div class="default_layout wrap">
+	<div class="default_layout wrap wp_admin_layout">
 		%render this.renderTitle();
 		%render this.renderCurrentPage();
 	</div>

@@ -30,16 +30,16 @@ use Runtime.ORM.Annotations.TinyIntType;
 
 class MailSettings extends Relation
 {
-    /**
-     * Returns table name
-     */
-    pure string getTableName() => "mail_settings";
-    
-    
-    /**
-     * Returns table schema
-     */
-    pure memorize Collection<BaseObject> schema() =>
+	/**
+	 * Returns table name
+	 */
+	pure string getTableName() => "mail_settings";
+	
+	
+	/**
+	 * Returns table schema
+	 */
+	pure memorize Collection<BaseObject> schema() =>
 	[
 		/* Fields */
 		new BigIntType{"name": "id"},
