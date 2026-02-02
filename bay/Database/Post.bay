@@ -27,7 +27,7 @@ use Runtime.ORM.Record;
 use Runtime.ORM.Relation;
 
 
-class Post extends Relation
+class Post extends Record
 {
 	/**
 	 * Returns table name

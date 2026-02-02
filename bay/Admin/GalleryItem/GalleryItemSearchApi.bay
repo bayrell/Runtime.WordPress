@@ -38,9 +38,9 @@ class GalleryItemSearchApi extends SearchApi
 	
 	
 	/**
-	 * Returns relation name
+	 * Returns record name
 	 */
-	string getRelationName() => classof GalleryItem;
+	pure string getRecordName() => classof GalleryItem;
 	
 	
 	/**

@@ -41,9 +41,9 @@ class MailSaveApi extends SaveApi
 	
 	
 	/**
-	 * Returns relation name
+	 * Returns record name
 	 */
-	string getRelationName() => classof MailSettings;
+	pure string getRecordName() => classof MailSettings;
 	
 	
 	/**

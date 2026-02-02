@@ -49,9 +49,9 @@ class FormSaveApi extends SaveApi
 	
 	
 	/**
-	 * Returns relation name
+	 * Returns record name
 	 */
-	string getRelationName() => classof Form;
+	static string getRecordName() => classof Form;
 	
 	
 	/**

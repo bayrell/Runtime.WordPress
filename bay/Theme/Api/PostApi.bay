@@ -50,7 +50,7 @@ class PostApi extends SearchApi
 	/**
 	 * Returns relation name
 	 */
-	string getRelationName() => classof Post;
+	pure string getRecordName() => classof Post;
 	
 	
 	/**

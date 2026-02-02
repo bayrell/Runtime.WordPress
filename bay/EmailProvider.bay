@@ -86,8 +86,7 @@ class EmailProvider extends BaseProvider
 		content = render_container.renderApp();
 		
 		/* Create email */
-		MailDelivery email = new MailDelivery();
-		Record<MailDelivery> item = email.createRecord();
+		MailDelivery item = new MailDelivery();
 		item.worker = "email";
 		item.plan = plan;
 		item.uuid = rs::uid();
@@ -105,7 +104,7 @@ class EmailProvider extends BaseProvider
 	/**
 	 * Send message
 	 */
-	async void sendMessage(Record<MailDelivery> email)
+	async void sendMessage(MailDelivery email)
 	{
 		if (email == null) return;
 		if (email.status != 0) return;

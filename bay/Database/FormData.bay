@@ -35,7 +35,7 @@ use Runtime.WordPress.EmailProvider;
 use Runtime.WordPress.Theme.Components.Email.FormMessage;
 
 
-class FormData extends Relation
+class FormData extends Record
 {
 	/**
 	 * Returns table name
@@ -62,35 +62,4 @@ class FormData extends Relation
 		new AutoIncrement{"name": "id"},
 		new Primary{"keys": ["id"]},
 	];
-	
-	
-	/**
-	 * Send email
-	 */
-	async void sendEmail(
-		Record<Form> form, Record<FormData> form_data, EmailProvider email, string site_name
-	)
-	{
-		string email_dest = form.email_to;
-		string email_title = rs::join(" ", [
-			form_data.form_title,
-			"from",
-			site_name,
-			"N" ~ form_data.id,
-		]);
-		await email.send({
-			"dest": email_dest,
-			"title": email_title,
-			"component": classof FormMessage,
-			"props":
-			{
-				"site_name": site_name,
-				"form_name": form.name,
-				"form_title": form_data.form_title,
-				"invoice_id": form_data.id,
-				"metrika_form_id": form_data.metrika_id,
-				"data": form_data.data
-			},
-		});
-	}
 }

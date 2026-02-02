@@ -46,15 +46,17 @@ use Runtime.WordPress.EmailProvider;
 use Runtime.WordPress.Database.Form;
 use Runtime.WordPress.Database.FormData;
 use Runtime.WordPress.Database.FormIP;
+use Runtime.WordPress.Service.FormService;
 
 
 class FormSubmitApi extends BaseApi
 {
 	Record form = null;
-	Form relation_form = null;
-	FormData relation_form_data = null;
-	FormIP relation_form_ip = null;
-	EmailProvider email = null;
+	Form relation_form = new Relation(classof Form);
+	FormData relation_form_data = new Relation(classof FormData);
+	FormIP relation_form_ip = new Relation(classof FormIP);
+	FormService form_service = new FormService();
+	EmailProvider email = @.provider("email");
 	string client_ip = "";
 	
 	
@@ -62,19 +64,6 @@ class FormSubmitApi extends BaseApi
 	 * Returns api name
 	 */
 	pure string getApiName() => "runtime.wordpress.form.submit";
-	
-	
-	/**
-	 * Create object
-	 */
-	void constructor()
-	{
-		parent();
-		this.relation_form = new Form();
-		this.relation_form_data = new FormData();
-		this.relation_form_ip = new FormIP();
-		this.email = @.provider("email");
-	}
 	
 	
 	/**
@@ -100,7 +89,7 @@ class FormSubmitApi extends BaseApi
 		
 		/* Find form */
 		string form_name = update_data.get("form_name");
-		Record<Form> form = await this.relation_form.findForm(form_name);
+		Form form = await this.form_service.findForm(form_name);
 		if (not form)
 		{
 			throw new ApiError(new ItemNotFound(form_name, "Form"));
@@ -152,14 +141,14 @@ class FormSubmitApi extends BaseApi
 		#endif
 		
 		/* Find form */
-		Record<Form> form = await this.relation_form.findForm(form_name);
+		Form form = await this.form_service.findForm(form_name);
 		if (!form)
 		{
 			throw new ApiError(new ItemNotFound(form_name, "Form"));
 		}
 		
 		/* Validate item */
-		BaseType rules = this.relation_form.getRules(form);
+		BaseType rules = form.getRules();
 		Map item_data = rules.filter(update_data.get("item"), errors);
 		if (not item_data or errors.count() > 0)
 		{
@@ -169,7 +158,7 @@ class FormSubmitApi extends BaseApi
 		}
 		
 		/* Spam check */
-		bool spam_check = await this.relation_form_ip.checkSpam(this.client_ip);
+		bool spam_check = await this.form_service.checkSpam(this.client_ip);
 		if (spam_check)
 		{
 			return this.result.success({
@@ -178,18 +167,18 @@ class FormSubmitApi extends BaseApi
 		}
 		
 		/* Save form */
-		Record<FormData> form_data = this.relation_form_data.createRecord();
+		FormData form_data = this.relation_form_data.createRecord();
 		form_data.form_id = form.id;
 		form_data.form_title = form_title ? form_title : form.name;
 		form_data.metrika_id = form_id ? form_id : "form";
 		form_data.data = update_data.get("item");
 		form_data.spam = spam_check;
-		await form_data.save();
+		await this.relation_form_data.save(form_data);
 		
 		/* Send email */
 		if (not spam_check)
 		{
-			await this.relation_form_data.sendEmail(
+			await this.form_service.sendEmail(
 				form, form_data, this.email, site_name
 			);
 		}

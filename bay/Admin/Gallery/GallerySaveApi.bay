@@ -37,9 +37,9 @@ class GallerySaveApi extends SaveApi
 	
 	
 	/**
-	 * Returns relation name
+	 * Returns record name
 	 */
-	string getRelationName() => classof Gallery;
+	pure string getRecordName() => classof Gallery;
 	
 	
 	/**

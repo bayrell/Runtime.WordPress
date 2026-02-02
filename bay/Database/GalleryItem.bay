@@ -20,13 +20,14 @@ namespace Runtime.WordPress.Database;
 
 use Runtime.BaseObject;
 use Runtime.ORM.Relation;
+use Runtime.ORM.Record;
 use Runtime.ORM.Annotations.AutoIncrement;
 use Runtime.ORM.Annotations.BigIntType;
 use Runtime.ORM.Annotations.Primary;
 use Runtime.ORM.Annotations.StringType;
 
 
-class GalleryItem extends Relation
+class GalleryItem extends Record
 {
 	/**
 	 * Returns table name

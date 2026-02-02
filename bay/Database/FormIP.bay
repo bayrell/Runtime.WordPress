@@ -27,7 +27,7 @@ use Runtime.ORM.Annotations.Primary;
 use Runtime.ORM.Annotations.StringType;
 
 
-class FormIP extends Relation
+class FormIP extends Record
 {
 	/**
 	 * Returns table name
@@ -48,58 +48,4 @@ class FormIP extends Relation
 		/* Index */
 		new Primary{"keys": ["ip"]},
 	];
-	
-	
-	/**
-	 * Find client by ip
-	 */
-	async Record<FormIP> findClient(string client_ip)
-	{
-		return this.fetchRecord(
-			this.select().where("ip", "=", client_ip)
-		);
-	}
-	
-	
-	/**
-	 * Check spam
-	 */
-	async bool checkSpam(string client_ip)
-	{
-		int time = DateTime::now().getTimestamp();
-		
-		Record<FormIP> item = await this.findClient(client_ip);
-		if (not item)
-		{
-			item = this.createRecord();
-			item.count = 1;
-			item.ip = client_ip;
-			item.last = time;
-			
-			await item.save();
-			
-			return false;
-		}
-		
-		bool spam_result = false;
-		int count = item.count + 1;
-		
-		if (item.last + 15*60 > time)
-		{
-			if (count > 3)
-			{
-				spam_result = true;
-			}
-		}
-		else
-		{
-			count = 1;
-		}
-		
-		item.count = count;
-		item.last = time;
-		await item.save();
-		
-		return spam_result;
-	}
 }
