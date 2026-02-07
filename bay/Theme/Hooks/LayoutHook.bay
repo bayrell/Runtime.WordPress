@@ -18,9 +18,12 @@
 
 namespace Runtime.WordPress.Theme.Hooks;
 
+use Runtime.BaseLayoutModel;
 use Runtime.RawString;
+use Runtime.RenderContainer;
 use Runtime.VirtualDom;
 use Runtime.Hooks.RuntimeHook;
+use Runtime.Web.Hooks.AppHook;
 use Runtime.WordPress.WP_Helper;
 
 
@@ -31,8 +34,26 @@ class LayoutHook extends RuntimeHook
 	 */
 	void register_hooks()
 	{
+		this.register(AppHook::ROUTE_BEFORE, "initAdminBar");
 		this.register(static::LAYOUT_HEADER, "header");
 		this.register(static::LAYOUT_FOOTER, "footer");
+	}
+	
+	
+	/**
+	 * Init admin bar
+	 */
+	void initAdminBar(Map params)
+	{
+		RenderContainer container = params.get("container");
+		BaseLayoutModel layout = container.layout;
+		if (not layout) return;
+		
+		#ifcode PHP then
+		if (!is_admin() and !current_user_can("edit_pages")) return;
+		#endif
+		
+		layout.body_class.push("admin-bar");
 	}
 	
 	
