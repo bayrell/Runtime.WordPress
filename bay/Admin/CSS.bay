@@ -19,6 +19,7 @@
 <class name="Runtime.WordPress.Admin.CSS">
 
 <use name="Runtime.Widget.Button" component="true" />
+<use name="Runtime.Widget.CSS" as="BaseCSS" component="true" />
 <use name="Runtime.Widget.Input" component="true" />
 <use name="Runtime.Widget.RowButtons" component="true" />
 <use name="Runtime.Widget.Select" component="true" />

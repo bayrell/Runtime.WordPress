@@ -45,7 +45,8 @@ class ModuleDescription
 	 */
 	pure Dict<string> requiredModules() =>
 	{
-		'Runtime.WordPress': '>=0.1',
+		'Runtime.Widget': '>1.0',
+		'Runtime.WordPress': '>=1.0',
 	};
 	
 	
@@ -62,9 +63,9 @@ class ModuleDescription
 		}),
 		
 		/* Components */
-		Components::hook([
+		/*Components::hook([
 			"Runtime.WordPress.Admin.CSS",
-		]),
+		]),*/
 		
 		#ifdef BACKEND then
 		new Api("Runtime.WordPress.Admin.FormData.FormDataSearchApi"),
