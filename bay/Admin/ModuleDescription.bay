@@ -63,9 +63,7 @@ class ModuleDescription
 		}),
 		
 		/* Components */
-		/*Components::hook([
-			"Runtime.WordPress.Admin.CSS",
-		]),*/
+		Components::prependItems(["Runtime.WordPress.Admin.CSS"]),
 		
 		#ifdef BACKEND then
 		new Api("Runtime.WordPress.Admin.FormData.FormDataSearchApi"),

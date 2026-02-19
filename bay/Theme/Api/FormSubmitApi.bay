@@ -52,9 +52,9 @@ use Runtime.WordPress.Service.FormService;
 class FormSubmitApi extends BaseApi
 {
 	Record form = null;
-	Form relation_form = new Relation(classof Form);
-	FormData relation_form_data = new Relation(classof FormData);
-	FormIP relation_form_ip = new Relation(classof FormIP);
+	Relation relation_form = new Relation(classof Form);
+	Relation relation_form_data = new Relation(classof FormData);
+	Relation relation_form_ip = new Relation(classof FormIP);
 	FormService form_service = new FormService();
 	EmailProvider email = @.provider("email");
 	string client_ip = "";
