@@ -37,6 +37,7 @@ use Runtime.Web.ApiResult;
 use Runtime.Web.Annotations.ApiMethod;
 use Runtime.Widget.Api.SearchApi;
 use Runtime.WordPress.Database.Post;
+use Runtime.WordPress.WP_Helper;
 
 
 class PostApi extends SearchApi
@@ -64,6 +65,7 @@ class PostApi extends SearchApi
 		rules.addType("post_type", new StringType{ "default": "post" });
 		rules.addType("post_status", new Allowed(["publish"]));
 		rules.addType("post_status", new StringType{ "default": "publish" });
+		rules.addType("preview", new StringType());
 	}
 	
 	
@@ -139,9 +141,15 @@ class PostApi extends SearchApi
 			"posts.post_date_gmt",
 			"posts.post_modified_gmt",
 		])
-		.where("post_type", "=", post_type)
-		.where("post_status", "=", post_status)
 		.orderBy("post_modified_gmt", "desc");
+		
+		/* Add preview */
+		bool preview = this.data.get("preview") == "true" and WP_Helper::isAdmin();
+		if (not preview)
+		{
+			q.where("post_type", "=", post_type);
+			q.where("post_status", "=", post_status);
+		}
 		
 		this.buildLangQuery(q);
 	}

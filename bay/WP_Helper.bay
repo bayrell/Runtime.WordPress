@@ -123,6 +123,18 @@ class WP_Helper
 	
 	
 	/**
+	 * Returns true if user is admin
+	 */
+	static bool isAdmin()
+	{
+		#ifcode PHP then
+		return current_user_can("edit_pages");
+		#endif
+		return false;
+	}
+	
+	
+	/**
 	 * Load images
 	 */
 	static async Map loadImages(Collection<int> images, Connection connection = null)
