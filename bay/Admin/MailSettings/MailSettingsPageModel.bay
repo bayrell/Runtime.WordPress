@@ -27,7 +27,7 @@ use Runtime.Serializer.ObjectType;
 use Runtime.Serializer.StringType;
 use Runtime.Web.RenderContainer;
 use Runtime.Widget.BoolEnum;
-use Runtime.Widget.Table.Manager;
+use Runtime.Widget.Table.TableManager;
 use Runtime.Widget.Table.TableModel;
 use Runtime.Widget.Table.TableLoader;
 use Runtime.WordPress.Admin.MailSettings.MailSettingsPage;
@@ -36,7 +36,7 @@ use Runtime.WordPress.Admin.MailSettings.MailSettingsPage;
 class MailSettingsPageModel extends BaseModel
 {
 	string component = classof MailSettingsPage;
-	Manager manager = null;
+	TableManager manager = null;
 	
 	
 	/**
@@ -56,7 +56,7 @@ class MailSettingsPageModel extends BaseModel
 	{
 		parent(params);
 		
-		this.manager = this.createWidget(classof Manager, {
+		this.manager = this.createWidget(classof TableManager, {
 			"autoload": true,
 			"api_name": "admin.wordpress.mail.settings",
 			"page_name": "p",

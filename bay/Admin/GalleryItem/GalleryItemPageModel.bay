@@ -25,7 +25,7 @@ use Runtime.Serializer.MapType;
 use Runtime.Serializer.ObjectType;
 use Runtime.Serializer.StringType;
 use Runtime.Web.RenderContainer;
-use Runtime.Widget.Table.Manager;
+use Runtime.Widget.Table.TableManager;
 use Runtime.WordPress.Admin.GalleryItem.GalleryItemPage;
 use Runtime.WordPress.Theme.Components.ImageType;
 
@@ -33,7 +33,7 @@ use Runtime.WordPress.Theme.Components.ImageType;
 class GalleryItemPageModel extends BaseModel
 {
 	string component = classof GalleryItemPage;
-	Manager manager = null;
+	TableManager manager = null;
 	
 	
 	/**
@@ -53,7 +53,7 @@ class GalleryItemPageModel extends BaseModel
 	{
 		parent(params);
 		
-		this.manager = this.createWidget(classof Manager, {
+		this.manager = this.createWidget(classof TableManager, {
 			"autoload": true,
 			"api_name": "admin.wordpress.gallery.item",
 			"page_name": "p",

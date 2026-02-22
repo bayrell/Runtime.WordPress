@@ -25,14 +25,14 @@ use Runtime.Serializer.MapType;
 use Runtime.Serializer.ObjectType;
 use Runtime.Serializer.StringType;
 use Runtime.Web.RenderContainer;
-use Runtime.Widget.Table.Manager;
+use Runtime.Widget.Table.TableManager;
 use Runtime.WordPress.Admin.Gallery.GalleryPage;
 
 
 class GalleryPageModel extends BaseModel
 {
 	string component = classof GalleryPage;
-	Manager manager = null;
+	TableManager manager = null;
 	
 	
 	/**
@@ -42,8 +42,8 @@ class GalleryPageModel extends BaseModel
 	{
 		parent(rules);
 		rules.addType("manager", new ObjectType{
-			"pk_type": static::getPrimaryRules(),
-			"item_type": static::getItemRules(),
+			"primary_rules": static::getPrimaryRules(),
+			"item_rules": static::getItemRules(),
 		});
 	}
 	
@@ -73,7 +73,7 @@ class GalleryPageModel extends BaseModel
 	{
 		parent(params);
 		
-		this.manager = this.createWidget(classof Manager, {
+		this.manager = this.createWidget(classof TableManager, {
 			"autoload": true,
 			"api_name": "admin.wordpress.gallery",
 			"page_name": "p",

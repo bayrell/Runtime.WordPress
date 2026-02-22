@@ -28,7 +28,7 @@ use Runtime.Serializer.ObjectType;
 use Runtime.Serializer.StringType;
 use Runtime.Serializer.VectorType;
 use Runtime.Web.RenderContainer;
-use Runtime.Widget.Table.Manager;
+use Runtime.Widget.Table.TableManager;
 use Runtime.WordPress.Admin.FormSettings.FormItem;
 use Runtime.WordPress.Admin.FormSettings.FormSettingsPage;
 
@@ -36,7 +36,7 @@ use Runtime.WordPress.Admin.FormSettings.FormSettingsPage;
 class FormSettingsPageModel extends BaseModel
 {
 	string component = classof FormSettingsPage;
-	Manager manager = null;
+	TableManager manager = null;
 	
 	
 	/**
@@ -56,7 +56,7 @@ class FormSettingsPageModel extends BaseModel
 	{
 		parent(params);
 		
-		this.manager = this.createWidget(classof Manager, {
+		this.manager = this.createWidget(classof TableManager, {
 			"autoload": true,
 			"api_name": "admin.wordpress.forms.settings",
 			"page_name": "p",

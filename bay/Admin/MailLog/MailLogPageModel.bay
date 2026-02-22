@@ -46,7 +46,7 @@ class MailLogPageModel extends BaseModel
 		parent(rules);
 		rules.addType("table", new ObjectType{
 			"class_name": classof TableModel,
-			"item_type": new MapType{
+			"item_rules": new MapType{
 				"id": new IntegerType(),
 				"worker": new StringType(),
 				"plan": new StringType(),
