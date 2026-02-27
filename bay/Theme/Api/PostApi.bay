@@ -72,9 +72,9 @@ class PostApi extends SearchApi
 	/**
 	 * Returns serialize rules for pk
 	 */
-	void getPrimaryRules(BaseType rules)
+	MapType getPrimaryRules() => new MapType
 	{
-		rules.addType("id", new IntegerType());
+		"id": new IntegerType(),
 	}
 	
 	
