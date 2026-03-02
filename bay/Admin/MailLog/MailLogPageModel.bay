@@ -54,7 +54,7 @@ class MailLogPageModel extends BaseModel
 				"dest": new StringType(),
 				"title": new StringType(),
 				"message": new StringType(),
-				"error": new StringType(),
+				"send_email_error": new StringType(),
 				"gmtime_send": new DateTimeType(),
 			},
 		});

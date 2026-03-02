@@ -124,7 +124,7 @@ class FormService extends BaseObject
 				"form_name": form.name,
 				"form_title": form_data.form_title,
 				"invoice_id": form_data.id,
-				"metrika_form_id": form_data.metrika_id,
+				"metrika_id": form_data.metrika_id,
 				"data": form_data.data
 			},
 		});

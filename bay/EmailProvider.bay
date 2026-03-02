@@ -25,6 +25,7 @@ use Runtime.ORM.Connection;
 use Runtime.ORM.Query;
 use Runtime.ORM.QueryResult;
 use Runtime.ORM.Record;
+use Runtime.ORM.Relation;
 use Runtime.Web.RenderContainer;
 use Runtime.Web.RenderResponse;
 use Runtime.WordPress.Database.MailDelivery;
@@ -44,7 +45,7 @@ class EmailProvider extends BaseProvider
 	{
 		if (this.settings != null) return;
 		this.settings = {};
-		MailSettings relation = new MailSettings();
+		Relation<MailSettings> relation = new Relation(classof MailSettings);
 		Query q = relation.select().where("enable", "=", 1);
 		QueryResult items = await relation.fetchAll(q);
 		for (int i=0; i<items.count(); i++)
@@ -214,7 +215,7 @@ class EmailProvider extends BaseProvider
 	 */
 	async void sendNewMessages()
 	{
-		MailDelivery relation = new MailDelivery();
+		Relation<MailDelivery> relation = new Relation(classof MailDelivery);
 		Query q = relation.select()
 			.where("status", "=", 0)
 		;
