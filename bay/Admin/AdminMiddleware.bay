@@ -22,6 +22,7 @@ use Runtime.Exceptions.ApiError;
 use Runtime.Exceptions.RuntimeException;
 use Runtime.Web.BaseApi;
 use Runtime.Web.Middleware;
+use Runtime.Web.RenderContainer;
 
 
 class AdminMiddleware extends Middleware
@@ -43,7 +44,7 @@ class AdminMiddleware extends Middleware
 	/**
 	 * Run route
 	 */
-	async void route(BaseApi api)
+	async void route(RenderContainer container)
 	{
 		#ifcode PHP then
 		if (!is_admin())
