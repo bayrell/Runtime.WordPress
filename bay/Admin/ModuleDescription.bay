@@ -66,6 +66,8 @@ class ModuleDescription
 		Components::prependItems(["Runtime.WordPress.Admin.CSS"]),
 		
 		#ifdef BACKEND then
+		new Api("Runtime.WordPress.Admin.Cabinet.Users.UserSaveApi"),
+		new Api("Runtime.WordPress.Admin.Cabinet.Users.UserSearchApi"),
 		new Api("Runtime.WordPress.Admin.FormData.FormDataSearchApi"),
 		new Api("Runtime.WordPress.Admin.FormSettings.FormSaveApi"),
 		new Api("Runtime.WordPress.Admin.FormSettings.FormSearchApi"),

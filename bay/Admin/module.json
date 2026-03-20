@@ -3,6 +3,8 @@
 	"assets":
 	[
 		"Components/Image.bay",
+		"Cabinet/Users/UserModel.bay",
+		"Cabinet/Users/UserPage.bay",
 		"FormData/FormDataPage.bay",
 		"FormData/FormDataPageModel.bay",
 		"FormSettings/FieldSettings.bay",

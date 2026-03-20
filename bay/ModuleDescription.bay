@@ -73,7 +73,7 @@ class ModuleDescription
 		new Table("Runtime.WordPress.Database.MailDelivery"),
 		new Table("Runtime.WordPress.Database.MailSettings"),
 		new Table("Runtime.WordPress.Database.Post"),
-		new Migration("Runtime.WordPress.Database.Migrations.Core_2025_01"),
+		new Migration("Runtime.WordPress.Database.Migrations.Core_2026"),
 		new WP_Factory(),
 		#endif
 	];

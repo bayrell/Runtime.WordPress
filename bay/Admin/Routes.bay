@@ -132,6 +132,12 @@ class Routes extends BaseRoute
 				"name": "admin:robots:txt",
 				"model": "Runtime.WordPress.Admin.Robots.RobotsPageModel",
 			},
+			new RouteModel
+			{
+				"uri": "admin.php?page=baylang-cabinet-users",
+				"name": "admin:cabinet:users",
+				"model": "Runtime.WordPress.Admin.Cabinet.Users.UserModel",
+			},
 		];
 	}
 }

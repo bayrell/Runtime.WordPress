@@ -22,12 +22,12 @@ use Runtime.ORM.BaseMigration;
 use Runtime.ORM.Query;
 
 
-class Core_2025_01 extends BaseMigration
+class Core_2026 extends BaseMigration
 {
 	/**
 	 * Migration name
 	 */
-	string name = "core_2025_01";
+	string name = "core_2026";
 	
 	
 	/**
