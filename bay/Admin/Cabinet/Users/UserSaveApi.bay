@@ -87,20 +87,20 @@ class UserSaveApi extends SaveApi
 		rules.addType("name", new StringType());
 		rules.addType("password", new StringType());
 		rules.addType("repeat_password", new StringType());
-		rules.addType("status", new IntegerType());
+		rules.addType("is_deleted", new IntegerType());
 	}
 	
 	
 	/**
 	 * Returns item fields
 	 */
-	Vector<string> getItemFields() =>
+	Vector<string> getItemFields(string action) =>
 	[
 		"id",
 		"login",
 		"email",
 		"name",
-		"status",
+		"is_deleted",
 		"gmtime_add",
 		"gmtime_edit",
 	];
@@ -114,7 +114,7 @@ class UserSaveApi extends SaveApi
 		"login",
 		"email",
 		"name",
-		"status",
+		"is_deleted",
 	];
 	
 	

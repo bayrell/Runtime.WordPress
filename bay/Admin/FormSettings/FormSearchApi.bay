@@ -59,7 +59,7 @@ class FormSearchApi extends SearchApi
 	/**
 	 * Returns item fields
 	 */
-	Collection getItemFields() =>
+	Collection getItemFields(string action) =>
 	[
 		"id",
 		"name",

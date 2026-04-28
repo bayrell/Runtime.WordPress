@@ -64,7 +64,7 @@ class GallerySaveApi extends SaveApi
 	/**
 	 * Returns item fields
 	 */
-	Collection getItemFields() =>
+	Collection getItemFields(string action) =>
 	[
 		"id",
 		"api_name",

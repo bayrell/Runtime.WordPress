@@ -63,7 +63,6 @@ class ModuleDescription
 	pure Collection<Dict> entities() => 
 	[
 		#ifdef BACKEND then
-		new Hook("Runtime.WordPress.Theme.Hooks.ConstructorHook"),
 		new Provider("email", "Runtime.WordPress.EmailProvider"),
 		new Table("Runtime.WordPress.Database.Form"),
 		new Table("Runtime.WordPress.Database.FormData"),

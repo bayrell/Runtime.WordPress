@@ -81,7 +81,7 @@ class PostApi extends SearchApi
 	/**
 	 * Returns item fields
 	 */
-	Map getItemFields() => [
+	Map getItemFields(string action) => [
 		"ID",
 		"post_content",
 		"post_title",

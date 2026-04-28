@@ -56,7 +56,7 @@ class TermApi extends CrudApi
 	/**
 	 * Returns item fields
 	 */
-	Collection getItemFields() => [
+	Collection getItemFields(string action) => [
 		"term_id",
 		"name",
 		"slug",

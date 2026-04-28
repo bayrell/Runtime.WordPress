@@ -60,13 +60,13 @@ class UserSearchApi extends SearchApi
 	/**
 	 * Returns item fields
 	 */
-	Vector<string> getItemFields() =>
+	Vector<string> getItemFields(string action) =>
 	[
 		"id",
 		"login",
 		"email",
 		"name",
-		"status",
+		"is_deleted",
 	];
 	
 	

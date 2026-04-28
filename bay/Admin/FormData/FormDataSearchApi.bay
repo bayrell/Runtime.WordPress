@@ -51,7 +51,7 @@ class FormDataSearchApi extends SearchApi
 	/**
 	 * Returns item fields
 	 */
-	Collection getItemFields() =>
+	Collection getItemFields(string action) =>
 	[
 		"id",
 		"form_name",

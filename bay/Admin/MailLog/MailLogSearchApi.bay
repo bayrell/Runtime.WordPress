@@ -59,7 +59,7 @@ class MailLogSearchApi extends SearchApi
 	/**
 	 * Returns item fields
 	 */
-	Collection getItemFields() =>
+	Collection getItemFields(string action) =>
 	[
 		"id",
 		"worker",

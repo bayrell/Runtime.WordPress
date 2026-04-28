@@ -81,7 +81,7 @@ class MailSaveApi extends SaveApi
 	/**
 	 * Returns item fields
 	 */
-	Collection getItemFields() =>
+	Collection getItemFields(string action) =>
 	[
 		"id",
 		"enable",
