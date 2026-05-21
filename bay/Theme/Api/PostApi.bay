@@ -25,6 +25,7 @@ use Runtime.Serializer.IntegerType;
 use Runtime.Serializer.MapType;
 use Runtime.Serializer.StringType;
 use Runtime.ORM.Connection;
+use Runtime.ORM.ConnectionPool;
 use Runtime.ORM.Cursor;
 use Runtime.ORM.Query;
 use Runtime.ORM.QueryField;
@@ -42,6 +43,9 @@ use Runtime.WordPress.WP_Helper;
 
 class PostApi extends SearchApi
 {
+	Connection connection = null;
+	
+	
 	/**
 	 * Returns api name
 	 */
@@ -52,6 +56,16 @@ class PostApi extends SearchApi
 	 * Returns relation name
 	 */
 	pure string getRecordName() => classof Post;
+	
+	
+	/**
+	 * Init
+	 */
+	async void init()
+	{
+		ConnectionPool pool = ConnectionPool::get();
+		this.connection = await pool.getConnection();
+	}
 	
 	
 	/**
@@ -111,8 +125,7 @@ class PostApi extends SearchApi
 			.where("terms.slug", "=", lang)
 		;
 		
-		Connection conn = Connection::get();
-		Map row = await conn.fetchOne(q_taxonomy);
+		Map row = await this.connection.fetchOne(q_taxonomy);
 		if (not row) return;
 		
 		int term_taxonomy_id = row.get("term_taxonomy_id");
@@ -161,6 +174,7 @@ class PostApi extends SearchApi
 	@ApiMethod{ "name": "search" }
 	async void actionSearch()
 	{
+		await this.init();
 		await parent();
 	}
 	
@@ -171,6 +185,7 @@ class PostApi extends SearchApi
 	@ApiMethod{ "name": "item" }
 	async void actionItem()
 	{
+		await this.init();
 		await parent();
 	}
 }
