@@ -20,20 +20,22 @@
 	extends="Runtime.Widget.Dialog.Dialog"
 >
 
+<use name="Runtime.ApiResult" />
 <use name="Runtime.Widget.Button" component="true" />
+<use name="Runtime.Widget.RowButtons" component="true" />
 
 
 <style>
-.widget_dialog__shadow{
+.dialog_shadow{
 	opacity: 0.5;
 }
-.widget_dialog__title{
+.dialog_title{
 	display: flex;
 	align-items: center;
 	span{
 		flex: 1;
 	}
-	%(Button)widget_button{
+	.button{
 		display: flex;
 		align-items: center;
 		justify-content: center;
@@ -48,15 +50,19 @@
 		border-radius: 5px;
 	}
 }
-.widget_dialog %(Form)widget_form__button %(Button)widget_button{
+.dialog__footer{
+	align-items: center;
+	justify-content: center;
+}
+.dialog .form__button .button{
 	width: 100%;
 }
-.widget_dialog %(Input)widget_input, .widget_dialog %(TextArea)widget_textarea{
+.dialog .input, .dialog .textarea{
 	padding: 10px;
 	font-size: 16px;
 	border-radius: 5px;
 }
-.widget_dialog %(TextArea)widget_textarea{
+.dialog .textarea{
 	min-height: 150px;
 }
 </style>
@@ -65,22 +71,24 @@
 <template name="renderTitle">
 	%if (this.model.title != "")
 	{
-		<div class="widget_dialog__title">
-			<span class="widget_dialog__title__text">{{ this.model.title }}</span>
-			<Button class="widget_dialog__title__close"
-				@event:click={{ void(){ this.model.hide(); } }}
-			>x</Button>
-		</div>
+		<span class="dialog_title__text">{{ this.model.title }}</span>
 	}
 </template>
 
 
 <template name="renderContent">
-	%render this.renderWidget(this.model.form);
+	<div class="dialog__content">
+		%render this.renderWidget(this.model.form);
+	</div>
 </template>
 
 
-<template name="renderButtons">
+<template name="renderFooter">
+	<div class="dialog__footer">
+		<RowButtons>
+			<Button class="button--primary" @event:click="this.onSubmitClick()">{{ this.model.submit_button_label }}</Button>
+		</RowButtons>
+	</div>
 </template>
 
 
@@ -92,6 +100,19 @@
 void onShadowClick()
 {
 	this.model.hide();
+}
+
+
+/**
+ * Submit click
+ */
+async void onSubmitClick()
+{
+	ApiResult result = await this.model.form.submit();
+	if (result.isSuccess())
+	{
+		this.model.hide();
+	}
 }
 
 </script>

@@ -18,6 +18,9 @@
 
 namespace Runtime.WordPress.Theme.Components.Form;
 
+use Runtime.Serializer.ObjectType;
+use Runtime.Serializer.StringType;
+use Runtime.Web.RenderContainer;
 use Runtime.Widget.Dialog.DialogModel;
 use Runtime.Widget.Dialog.DialogModelException;
 use Runtime.WordPress.Theme.Components.Form.FormDialog;
@@ -28,8 +31,22 @@ class FormDialogModel extends DialogModel
 {
 	string component = classof FormDialog;
 	string widget_name = "form_dialog";
+	string title = "";
+	string submit_button_label = "";
 	FormModel form = null;
 	Dict form_settings = {};
+	
+	
+	/**
+	 * Serialize object
+	 */
+	static void serialize(ObjectType rules)
+	{
+		parent(rules);
+		rules.addType("title", new StringType());
+		rules.addType("submit_button_label", new StringType());
+		rules.addType("form", new ObjectType{});
+	}
 	
 	
 	/**
@@ -40,6 +57,8 @@ class FormDialogModel extends DialogModel
 		parent(params);
 		
 		if (params == null) return;
+		if (params.has("title")) this.title = params.get("title");
+		if (params.has("submit_button_label")) this.submit_button_label = params.get("submit_button_label");
 		if (params.has("form")) this.form = params.get("form");
 		if (params.has("form_settings")) this.form_settings = params.get("form_settings");
 	}
@@ -55,9 +74,37 @@ class FormDialogModel extends DialogModel
 		/* Add form */
 		if (not this.form)
 		{
-			this.form = this.addWidget(classof FormModel, this.form_settings.concat({
+			this.form = this.createWidget(classof FormModel, this.form_settings.concat({
 				"widget_name": "form",
 			}));
 		}
+	}
+	
+	
+	/**
+	 * Load data
+	 */
+	async void loadData(RenderContainer container)
+	{
+		await parent(container);
+		await this.form.loadData(container);
+	}
+	
+	
+	/**
+	 * Set form name
+	 */
+	void setFormName(string name)
+	{
+		this.form.form_name = name;
+	}
+	
+	
+	/**
+	 * Set form title
+	 */
+	void setFormTitle(string title)
+	{
+		this.form.form_title = title;
 	}
 }
