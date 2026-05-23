@@ -51,15 +51,19 @@ class FormDataSearchApi extends SearchApi
 	/**
 	 * Returns item fields
 	 */
-	Collection getItemFields(string action) =>
-	[
-		"id",
-		"form_name",
-		"form_title",
-		"metrika_id",
-		"data",
-		"gmtime_add",
-	];
+	Collection getItemFields(string action)
+	{
+		Vector fields =
+		[
+			"id",
+			"form_title",
+			"metrika_id",
+			"data",
+			"gmtime_add",
+		];
+		if (action == "convert") fields.push("form_name");
+		return fields;
+	}
 	
 	
 	/**
